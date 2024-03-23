@@ -7,7 +7,7 @@ import { env } from "~/env";
 
 // 2. Instantiate libSQL
 const libsql = createClient({
-  url: env.TURSO_DATABASE_URL,
+  url: env.DATABASE_URL,
   authToken: env.TURSO_AUTH_TOKEN,
 });
 
