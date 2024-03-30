@@ -5,7 +5,7 @@ import { cn } from "~/utils/cn";
 
 const Background: React.FC = () => {
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[#EFEFEF]">
+    <div className="h-screen w-screen overflow-hidden">
       {new Array(10).fill(0).map((_, i) => (
         <Circle key={`circle-#${i}`} />
       ))}
@@ -63,10 +63,10 @@ const Circle: React.FC = () => {
       className={cn(
         "absolute aspect-square rounded-full opacity-60",
         Math.random() < 1 / 3
-          ? "bg-[#9FEAAF]"
+          ? "bg-primary"
           : Math.random() < 0.5
-            ? "bg-[#BCEFA1]"
-            : "bg-[#6BBF94]",
+            ? "bg-secondary"
+            : "bg-accent",
       )}
     />
   );

@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --text: 0 0% 13%;
+    --background: 0 0% 94%;
+    --primary: 149 40% 58%;
+    --secondary: 99 71% 78%;
+    --accent: 133 64% 77%;
+    --modal: 36, 100%, 97%;
+  }
+}
+
+body {
+  background-color: hsl(var(--background));
+}

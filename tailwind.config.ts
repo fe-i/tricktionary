@@ -8,6 +8,14 @@ export default {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
+      colors: {
+        text: "hsl(var(--text))",
+        background: "hsl(var(--background))",
+        primary: "hsl(var(--primary))",
+        secondary: "hsl(var(--secondary))",
+        accent: "hsl(var(--accent))",
+        modal: "hsl(var(--modal))",
+      },
     },
   },
   plugins: [],
