@@ -1,7 +1,8 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Button from "~/components/button";
 import Layout from "~/components/layout";
+import LinkButton from "~/components/link-button";
 import Modal from "~/components/modal";
 
 export default function Home() {
@@ -9,6 +10,8 @@ export default function Home() {
   const router = useRouter();
   if (sessionData.status === "authenticated") {
     void router.push("/play");
+  } else if (sessionData.status === "loading") {
+    return <></>;
   }
 
   return (
@@ -17,7 +20,9 @@ export default function Home() {
         <h3 className="font-bold">FICTIONARY</h3>
         <p>The game of weird words and wacky definitions!</p>
         <div className="flex w-full items-center justify-end gap-4">
-          <Button variant="secondary">Learn to play</Button>
+          <LinkButton href="how-to" variant="secondary">
+            Learn to play
+          </LinkButton>
           <Button onClick={() => signIn("google")}>Sign in</Button>
         </div>
       </Modal>
