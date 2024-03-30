@@ -1,11 +1,5 @@
 import useWindowSize from "~/utils/use-window-size";
-import {
-  animate,
-  motion,
-  useMotionValue,
-  useMotionValueEvent,
-  useTransform,
-} from "framer-motion";
+import { animate, motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "~/utils/cn";
 
@@ -31,7 +25,11 @@ const Circle: React.FC = () => {
   const progress = useMotionValue(-1000);
   const y_val = useTransform(progress, (x) => (x - x0) * slope + y0);
 
-  void animate(progress, 2000, { duration: 2000 });
+  const dir = Math.random() < 0.5 ? -2000 : 2000;
+
+  void animate(progress, dir, {
+    duration: 2000,
+  });
 
   useEffect(() => {
     if (windowSize.width && windowSize.height) {
