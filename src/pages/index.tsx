@@ -10,6 +10,7 @@ export default function Home() {
   const router = useRouter();
   if (sessionData.status === "authenticated") {
     void router.push("/play");
+    return <></>;
   } else if (sessionData.status === "loading") {
     return <></>;
   }

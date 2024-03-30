@@ -8,6 +8,7 @@ const Play: React.FC = () => {
   const router = useRouter();
   if (sessionData.status === "unauthenticated") {
     void router.push("/");
+    return <></>;
   } else if (sessionData.status === "loading") {
     return <></>;
   }
