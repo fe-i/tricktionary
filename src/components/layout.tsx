@@ -1,6 +1,14 @@
 import Head from "next/head";
+import UnderlineHover from "./underline-hover";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Button from "./button";
 
-const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
+const Layout: React.FC<React.PropsWithChildren<{ noHeader?: boolean }>> = ({
+  noHeader = false,
+  children,
+}) => {
+  const sessionData = useSession();
+
   return (
     <>
       <Head>
@@ -9,7 +17,7 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+        <div className="text-text container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <svg className="absolute -z-10 h-full w-full">
             <filter id="roughpaper" x="0%" y="0%" width="100%" height="100%">
               <feTurbulence
@@ -24,6 +32,29 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
 
             <rect width="100%" height="100%" filter="url(#roughpaper)" />
           </svg>
+
+          {noHeader ? (
+            <></>
+          ) : (
+            <div className="absolute left-0 top-0 flex w-screen justify-between px-8 py-6">
+              <p>FICTIONARY</p>
+              <UnderlineHover>
+                <Button
+                  variant="blank"
+                  className="p-0"
+                  onClick={
+                    sessionData.status === "authenticated"
+                      ? () => signOut()
+                      : () => signIn("google")
+                  }
+                >
+                  {sessionData.status === "authenticated"
+                    ? "SIGN OUT"
+                    : "SIGN IN"}
+                </Button>
+              </UnderlineHover>
+            </div>
+          )}
           {children}
         </div>
       </main>

@@ -1,17 +1,24 @@
 import { forwardRef } from "react";
 import { cn } from "~/utils/cn";
 
-export type buttonVariantTypes = "primary" | "secondary" | "accent" | "gray";
+export type buttonVariantTypes =
+  | "primary"
+  | "secondary"
+  | "accent"
+  | "gray"
+  | "blank";
 export const buttonVariants: {
   primary: string;
   secondary: string;
   accent: string;
   gray: string;
+  blank: string;
 } = {
   primary: "bg-primary",
   secondary: "bg-secondary",
   accent: "bg-accent",
   gray: "bg-[#DDDDDD]",
+  blank: "bg-transparent",
 };
 
 interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
