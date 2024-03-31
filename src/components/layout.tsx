@@ -2,6 +2,7 @@ import Head from "next/head";
 import UnderlineHover from "./underline-hover";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Button from "./button";
+import Link from "./link";
 
 const Layout: React.FC<React.PropsWithChildren<{ noHeader?: boolean }>> = ({
   noHeader = false,
@@ -25,7 +26,7 @@ const Layout: React.FC<React.PropsWithChildren<{ noHeader?: boolean }>> = ({
                 baseFrequency="0.02"
                 numOctaves="10"
               />
-              <feDiffuseLighting lighting-color="#EFEFEF" surfaceScale="1.5">
+              <feDiffuseLighting lightingColor="#EFEFEF" surfaceScale="1.5">
                 <feDistantLight azimuth="60" elevation="65" />
               </feDiffuseLighting>
             </filter>
@@ -37,7 +38,10 @@ const Layout: React.FC<React.PropsWithChildren<{ noHeader?: boolean }>> = ({
             <></>
           ) : (
             <div className="absolute left-0 top-0 flex w-screen justify-between px-8 py-6">
-              <p>FICTIONARY</p>
+              <Link href="/" variant="getBolder">
+                FICTIONARY
+              </Link>
+
               <UnderlineHover>
                 <Button
                   variant="blank"
