@@ -25,7 +25,11 @@ const Button = forwardRef<
 >(({ children, className = "", variant = "primary", ...buttonProps }, ref) => {
   return (
     <button
-      className={cn("rounded px-4 py-2", buttonVariants[variant], className)}
+      className={cn(
+        "rounded px-4 py-2 transition-all hover:scale-[1.02] hover:brightness-[0.98] active:scale-100 active:brightness-105",
+        buttonVariants[variant],
+        className,
+      )}
       {...buttonProps}
       ref={ref}
     >
