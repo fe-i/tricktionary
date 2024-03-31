@@ -10,6 +10,20 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+          <svg className="absolute -z-10 h-full w-full">
+            <filter id="roughpaper" x="0%" y="0%" width="100%" height="100%">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.02"
+                numOctaves="10"
+              />
+              <feDiffuseLighting lighting-color="#EFEFEF" surfaceScale="1.5">
+                <feDistantLight azimuth="60" elevation="65" />
+              </feDiffuseLighting>
+            </filter>
+
+            <rect width="100%" height="100%" filter="url(#roughpaper)" />
+          </svg>
           {children}
         </div>
       </main>

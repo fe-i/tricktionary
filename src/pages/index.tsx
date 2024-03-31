@@ -21,10 +21,12 @@ export default function Home() {
         <h3 className="font-bold">FICTIONARY</h3>
         <p>The game of weird words and wacky definitions!</p>
         <div className="flex w-full items-center justify-end gap-4">
-          <LinkButton href="how-to" variant="secondary">
+          <LinkButton href="how-to" variant="gray">
             Learn to play
           </LinkButton>
-          <Button onClick={() => signIn("google")}>Sign in</Button>
+          <Button onClick={() => signIn("google")} variant="primary">
+            Sign in
+          </Button>
         </div>
       </Modal>
     </Layout>

@@ -11,7 +11,7 @@ export const buttonVariants: {
   primary: "bg-primary",
   secondary: "bg-secondary",
   accent: "bg-accent",
-  gray: "bg-gray-[#DDDDDD]",
+  gray: "bg-[#DDDDDD]",
 };
 
 interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
