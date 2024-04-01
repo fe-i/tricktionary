@@ -22,7 +22,7 @@ const Play: React.FC = () => {
   return (
     <Layout>
       <Modal className="flex flex-col items-center gap-4">
-        <h2 className="text-lg font-semibold">JOIN A GAME</h2>
+        <h2 className="text-2xl font-semibold">JOIN A GAME</h2>
         <input
           type="text"
           placeholder="#ABCD"

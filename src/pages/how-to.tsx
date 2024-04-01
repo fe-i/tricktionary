@@ -9,9 +9,9 @@ import {
 const HowTo: React.FC = () => {
   return (
     <Layout>
-      <div className="flex w-full flex-col items-start justify-start gap-4 py-4">
+      <div className="flex w-full flex-col items-start justify-start gap-6 px-2 py-4">
         <h1 className="text-4xl font-bold ">Instructions</h1>
-        <p>
+        <p className="ml-4">
           This game is all about your ability to trick your opponents. Read one
           word at a time from the word bank on the last page. Players write
           their own made-up definitions for that word, but one chosen player,
@@ -20,7 +20,7 @@ const HowTo: React.FC = () => {
           The more convincing you make your definition, the more likely you are
           to trick your opponents and win the game!{" "}
         </p>
-        <p>
+        <p className="ml-4">
           One player will be assinged the Know-it-All each round. The
           Know-it-All will choose one word from a predetermined word bank. Every
           other player will write down a made-up definition for that word submit
@@ -32,7 +32,7 @@ const HowTo: React.FC = () => {
           their fake definitions received.
         </p>
         <h1 className="mt-8 text-4xl font-bold">FAQ</h1>
-        <Accordion type="multiple" className="w-4/5">
+        <Accordion type="multiple" className="ml-4 w-4/5">
           <AccordionItem value="item-1">
             <AccordionTrigger>Is it accessible?</AccordionTrigger>
             <AccordionContent>

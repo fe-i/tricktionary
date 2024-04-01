@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <Layout>
       <Modal className="flex max-w-[25rem] flex-col items-start gap-4">
-        <h3 className="font-bold">FICTIONARY</h3>
+        <h3 className="text-2xl font-bold">FICTIONARY</h3>
         <p>The game of weird words and wacky definitions!</p>
         <div className="flex w-full items-center justify-end gap-4">
           <LinkButton href="how-to" variant="gray">
