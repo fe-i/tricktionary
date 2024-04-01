@@ -37,6 +37,9 @@ const Play: React.FC = () => {
             }
             setCode(val.toUpperCase());
           }}
+          onBlur={(e) => {
+            if (e.currentTarget.value === "#") setCode("");
+          }}
           maxLength={5}
           className="border-text w-64 rounded-lg border bg-transparent p-3 text-center text-3xl font-bold"
         />
