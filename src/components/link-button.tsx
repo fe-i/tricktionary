@@ -14,7 +14,7 @@ const LinkButton: React.FC<
       href={href}
       target={external ? "_blank" : "_self"}
       className={cn(
-        "rounded px-4 py-2 transition-all hover:scale-[1.02] hover:brightness-[0.98] active:scale-100 active:brightness-105",
+        "rounded-lg px-4 py-2 transition-all hover:scale-[1.02] hover:brightness-[0.98] active:scale-100 active:brightness-105",
         buttonVariants[variant],
       )}
     >

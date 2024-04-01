@@ -43,6 +43,12 @@ const Play: React.FC = () => {
           maxLength={5}
           className="border-text w-64 rounded-lg border bg-transparent p-3 text-center text-3xl font-bold"
         />
+        <Button
+          className="w-full text-xl font-semibold"
+          disabled={code.length != 5}
+        >
+          GO!
+        </Button>
         <Link href="/how-to" variant="underlined">
           Learn to play →
         </Link>

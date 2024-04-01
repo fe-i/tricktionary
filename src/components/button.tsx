@@ -29,21 +29,27 @@ interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
 const Button = forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<ButtonProps>
->(({ children, className = "", variant = "primary", ...buttonProps }, ref) => {
-  return (
-    <button
-      className={cn(
-        "rounded px-4 py-2 transition-all hover:scale-[1.02] hover:brightness-[0.98] active:scale-100 active:brightness-105",
-        buttonVariants[variant],
-        className,
-      )}
-      {...buttonProps}
-      ref={ref}
-    >
-      {children}
-    </button>
-  );
-});
+>(
+  (
+    { children, disabled, className = "", variant = "primary", ...buttonProps },
+    ref,
+  ) => {
+    return (
+      <button
+        className={cn(
+          "rounded-lg px-4 py-2 transition-all enabled:hover:scale-[1.02] enabled:hover:brightness-[0.98] enabled:active:scale-100 enabled:active:brightness-105",
+          disabled ? buttonVariants.gray : buttonVariants[variant],
+          className,
+        )}
+        {...buttonProps}
+        disabled={disabled}
+        ref={ref}
+      >
+        {children}
+      </button>
+    );
+  },
+);
 
 Button.displayName = "Button";
 
