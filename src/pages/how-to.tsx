@@ -9,7 +9,7 @@ import {
 const HowTo: React.FC = () => {
   return (
     <Layout>
-      <div className="flex w-full flex-col items-start justify-start gap-6 px-2 py-4">
+      <div className="flex w-full flex-col items-start justify-start gap-6 py-4">
         <h1 className="text-4xl font-bold ">Instructions</h1>
         <p className="ml-4">
           This game is all about your ability to trick your opponents. Read one

@@ -19,6 +19,12 @@ const Play: React.FC = () => {
     return <></>;
   }
 
+  const joinRoom = async () => {
+    // CHECK IF CODE EXISTS
+
+    await router.push(`/room/${code.slice(1)}`);
+  };
+
   return (
     <Layout>
       <Modal className="flex flex-col items-center gap-4">
@@ -37,6 +43,9 @@ const Play: React.FC = () => {
             }
             setCode(val.toUpperCase());
           }}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") await joinRoom();
+          }}
           onBlur={(e) => {
             if (e.currentTarget.value === "#") setCode("");
           }}
@@ -46,6 +55,7 @@ const Play: React.FC = () => {
         <Button
           className="w-full text-xl font-semibold"
           disabled={code.length != 5}
+          onClick={joinRoom}
         >
           GO!
         </Button>
