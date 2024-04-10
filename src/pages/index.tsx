@@ -21,7 +21,7 @@ export default function Home() {
         <h3 className="text-2xl font-bold">FICTIONARY</h3>
         <p>The game of weird words and wacky definitions!</p>
         <div className="flex w-full items-center justify-end gap-4">
-          <LinkButton href="how-to" variant="gray">
+          <LinkButton href="/how-to" variant="gray">
             Learn to play
           </LinkButton>
           <Button onClick={() => signIn("google")} variant="primary">

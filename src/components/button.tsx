@@ -17,7 +17,7 @@ export const buttonVariants: {
   primary: "bg-primary",
   secondary: "bg-secondary",
   accent: "bg-accent",
-  gray: "bg-[#DDDDDD]",
+  gray: "bg-[#CFCFCF]",
   blank: "bg-transparent",
 };
 
