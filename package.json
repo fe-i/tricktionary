@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.4.0",
+    "@formkit/auto-animate": "^0.8.2",
     "@libsql/client": "^0.5.6",
     "@prisma/adapter-libsql": "^5.11.0",
     "@prisma/client": "^5.11.0",
