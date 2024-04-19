@@ -12,9 +12,9 @@ const Play: React.FC = () => {
   const router = useRouter();
 
   const createMutation = api.room.create.useMutation({
-    onSuccess: (r) => {
+    onSuccess: async (r) => {
       if (r) {
-        console.log(r);
+        await router.push(`/room/${r.code}`);
       } else {
         console.log("You are already in a room!!");
       }
