@@ -1,4 +1,12 @@
 -- CreateTable
+CREATE TABLE "Room" (
+    "code" TEXT NOT NULL PRIMARY KEY,
+    "rounds" INTEGER NOT NULL DEFAULT 5,
+    "difficulty" TEXT NOT NULL,
+    "playing" BOOLEAN NOT NULL DEFAULT false
+);
+
+-- CreateTable
 CREATE TABLE "Post" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
@@ -40,7 +48,9 @@ CREATE TABLE "User" (
     "name" TEXT,
     "email" TEXT,
     "emailVerified" DATETIME,
-    "image" TEXT
+    "image" TEXT,
+    "roomCode" TEXT NOT NULL,
+    CONSTRAINT "User_roomCode_fkey" FOREIGN KEY ("roomCode") REFERENCES "Room" ("code") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -67,4 +77,3 @@ CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token"
 
 -- CreateIndex
 CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
-

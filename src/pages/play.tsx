@@ -5,10 +5,21 @@ import Button from "~/components/button";
 import Layout from "~/components/layout";
 import Link from "~/components/link";
 import Modal from "~/components/modal";
+import { api } from "~/utils/api";
 
 const Play: React.FC = () => {
   const sessionData = useSession();
   const router = useRouter();
+
+  const createMutation = api.room.create.useMutation({
+    onSuccess: (r) => {
+      if (r) {
+        console.log(r);
+      } else {
+        console.log("You are already in a room!!");
+      }
+    },
+  });
 
   const [code, setCode] = useState("");
 
@@ -58,6 +69,14 @@ const Play: React.FC = () => {
           onClick={joinRoom}
         >
           GO!
+        </Button>
+        <Button
+          className="w-full text-xl font-semibold"
+          onClick={async () => {
+            await createMutation.mutateAsync();
+          }}
+        >
+          Create a room
         </Button>
         <Link href="/how-to" variant="underlined">
           Learn to play →
