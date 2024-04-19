@@ -1,13 +1,13 @@
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
-import { Inter } from "next/font/google";
+import { Nunito } from "next/font/google";
 
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 
-const inter = Inter({
+const nunito = Nunito({
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -19,7 +19,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <main
-        className={`flex min-h-screen flex-col items-center justify-start font-sans ${inter.variable}`}
+        className={`flex min-h-screen flex-col items-center justify-start font-sans ${nunito.variable}`}
       >
         <Component {...pageProps} />
       </main>

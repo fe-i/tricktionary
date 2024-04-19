@@ -16,3 +16,6 @@
 body {
   background-color: hsl(var(--background));
 }
+h1 {
+  font-size: 30px;
+}
