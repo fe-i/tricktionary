@@ -1,4 +1,4 @@
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Button from "~/components/button";
@@ -37,7 +37,7 @@ const Play: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <Layout title="Play">
       <Modal className="flex flex-col items-center gap-4">
         <h2 className="text-2xl font-semibold">JOIN A GAME</h2>
         <input
@@ -61,7 +61,7 @@ const Play: React.FC = () => {
             if (e.currentTarget.value === "#") setCode("");
           }}
           maxLength={5}
-          className="border-text w-64 rounded-lg border bg-transparent p-3 text-center text-3xl font-bold"
+          className="w-64 rounded-lg border border-text bg-transparent p-3 text-center text-3xl font-bold"
         />
         <Button
           className="w-full text-xl font-semibold"

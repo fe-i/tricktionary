@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import Button from "~/components/button";
@@ -18,7 +18,7 @@ import {
 const Slug: React.FC = () => {
   const router = useRouter();
   const { slug } = router.query;
-  const { data: sessionData } = useSession();
+  // const { data: sessionData } = useSession();
   const [editingGame, setEditingGame] = useState(false);
 
   const parent = useRef(null);
@@ -83,7 +83,7 @@ const Slug: React.FC = () => {
                 <p>Enter a number of rounds between 3 and 10</p>
                 <input
                   type="number"
-                  className="bg-background w-44 rounded-md px-4 py-2 outline-none"
+                  className="w-44 rounded-md bg-background px-4 py-2 outline-none"
                   min={3}
                   max={10}
                   defaultValue={rounds}
@@ -120,11 +120,11 @@ const Slug: React.FC = () => {
           </div>
         </div>
 
-        <hr className="border-text my-2 w-full" />
+        <hr className="my-2 w-full border-text" />
         <div className="flex w-full flex-wrap justify-center gap-5">
           {roomData.players.map((player, i) => (
             <div
-              className="border-text pointer-events-none flex items-center gap-3 rounded-lg border px-6 py-3 hover:border-red-600"
+              className="pointer-events-none flex items-center gap-3 rounded-lg border border-text px-6 py-3 hover:border-red-600"
               key={i}
             >
               <p className="text-lg">{player}</p>
