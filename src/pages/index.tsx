@@ -22,10 +22,10 @@ export default function Home() {
         <p>The game of weird words and wacky definitions!</p>
         <div className="flex w-full items-center justify-end gap-4">
           <LinkButton href="/how-to" variant="gray">
-            Learn to play
+            Learn to Play
           </LinkButton>
           <Button onClick={() => signIn("google")} variant="primary">
-            Sign in
+            Sign In
           </Button>
         </div>
       </Modal>

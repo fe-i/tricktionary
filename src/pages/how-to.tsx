@@ -8,7 +8,7 @@ import {
 
 const HowTo: React.FC = () => {
   return (
-    <Layout>
+    <Layout title="How to Play">
       <div className="flex w-full flex-col items-start justify-start gap-6 py-4">
         <h1 className="text-4xl font-bold ">Instructions</h1>
         <p className="ml-4">
