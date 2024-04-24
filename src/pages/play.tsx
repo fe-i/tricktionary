@@ -29,22 +29,27 @@ const Play: React.FC = () => {
     parent.current && autoAnimate(parent.current);
   }, [parent]);
 
-  //   if (sessionData.status === "unauthenticated") {
-  //     void router.push("/");
-  //     return <></>;
-  //   } else if (sessionData.status === "loading") {
-  //     return <></>;
-  //   }
+  if (sessionData.status === "unauthenticated") {
+    void router.push("/");
+    return <></>;
+  } else if (sessionData.status === "loading") {
+    return <></>;
+  }
 
   const joinRoom = async () => {
-    // CHECK IF CODE EXISTS
-    await router.push(`/room/${code.slice(1)}`);
+    const codeVal = code.slice(1);
+    const result = api.room.findUnique.useQuery({ roomCode: codeVal });
+    if (result.data) {
+      await router.push(`/room/${codeVal}`);
+    }
   };
 
   return (
     <Layout title="Play">
       <Modal className="flex min-w-80 flex-col items-center gap-4" ref={parent}>
-        <h2 className="text-2xl font-semibold">JOIN A GAME</h2>
+        <h2 className="text-2xl font-semibold">
+          {joining ? "JOIN A GAME" : "PLAY"}
+        </h2>
         {joining && (
           <input
             type="text"

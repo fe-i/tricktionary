@@ -1,6 +1,6 @@
 // import { TRPCError } from "@trpc/server";
 import { randomBytes } from "crypto";
-// import { z } from "zod";
+import { z } from "zod";
 
 import {
   createTRPCRouter,
@@ -28,4 +28,11 @@ export const roomRouter = createTRPCRouter({
       },
     });
   }),
+  findUnique: protectedProcedure
+    .input(z.object({ roomCode: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.room.findUnique({
+        where: { code: input.roomCode },
+      });
+    }),
 });
