@@ -35,4 +35,11 @@ export const roomRouter = createTRPCRouter({
         where: { code: input.roomCode },
       });
     }),
+  exists: protectedProcedure
+    .input(z.object({ roomCode: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.room.findUnique({
+        where: { code: input.roomCode },
+      });
+    }),
 });

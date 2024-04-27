@@ -13,6 +13,7 @@ const Play: React.FC = () => {
   const router = useRouter();
   const [joining, setJoining] = useState(false);
   const parent = useRef<HTMLDivElement>(null);
+  const existsMutation = api.room.exists.useMutation();
 
   const createMutation = api.room.create.useMutation({
     onSuccess: async (r) => {
@@ -38,8 +39,9 @@ const Play: React.FC = () => {
 
   const joinRoom = async () => {
     const codeVal = code.slice(1);
-    const result = api.room.findUnique.useQuery({ roomCode: codeVal });
-    if (result.data) {
+    const result = await existsMutation.mutateAsync({ roomCode: codeVal });
+    console.log(result);
+    if (result) {
       await router.push(`/room/${codeVal}`);
     }
   };
@@ -72,7 +74,7 @@ const Play: React.FC = () => {
               if (e.currentTarget.value === "#") setCode("");
             }}
             maxLength={5}
-            className="border-text w-64 rounded-lg border bg-transparent p-3 text-center text-3xl font-bold"
+            className="w-64 rounded-lg border border-text bg-transparent p-3 text-center text-3xl font-bold"
           />
         )}
 
@@ -86,9 +88,9 @@ const Play: React.FC = () => {
         {!joining && (
           <>
             <div className="justify-apart flex w-full items-center gap-2">
-              <hr className="border-text w-full" />
+              <hr className="w-full border-text" />
               <p>OR</p>
-              <hr className="border-text w-full" />
+              <hr className="w-full border-text" />
             </div>
             <Button
               className="w-full text-xl font-semibold"

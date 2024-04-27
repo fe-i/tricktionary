@@ -8,7 +8,7 @@ const Header: React.FC = () => {
   const { status } = useSession();
 
   return (
-    <header className="container absolute left-auto right-auto top-0 flex justify-between px-6 py-6">
+    <header className="container absolute left-auto right-auto top-0 z-50 flex justify-between px-6 py-6">
       <Link href="/" variant="getBolder">
         FICTIONARY
       </Link>
