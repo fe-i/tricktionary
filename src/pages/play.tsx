@@ -52,7 +52,7 @@ const Play: React.FC = () => {
       } else {
         toast({
           title: "Already in a room!",
-          description: "Leave your current room before creating a new one.",
+          description: "Leave your current room before joining another one.",
         });
       }
     } else {
