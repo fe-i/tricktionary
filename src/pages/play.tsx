@@ -27,7 +27,7 @@ const Play: React.FC = () => {
 
   const [code, setCode] = useState("");
   useEffect(() => {
-    parent.current && autoAnimate(parent.current);
+    parent.current && autoAnimate(parent.current, {});
   }, [parent]);
 
   if (sessionData.status === "unauthenticated") {
@@ -48,8 +48,11 @@ const Play: React.FC = () => {
 
   return (
     <Layout title="Play">
-      <Modal className="flex min-w-80 flex-col items-center gap-4" ref={parent}>
-        <h2 className="text-2xl font-semibold">
+      <Modal
+        className="flex w-[22rem] flex-col items-center gap-4"
+        ref={parent}
+      >
+        <h2 className="w-full text-center text-2xl font-semibold">
           {joining ? "JOIN A GAME" : "PLAY"}
         </h2>
         {joining && (

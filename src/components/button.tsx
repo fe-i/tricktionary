@@ -37,7 +37,7 @@ const Button = forwardRef<
     return (
       <button
         className={cn(
-          "rounded-lg px-4 py-2 transition-all enabled:hover:scale-[1.02] enabled:hover:brightness-[0.98] enabled:active:scale-100 enabled:active:brightness-105",
+          "rounded-lg px-4 py-2 transition-all duration-500 enabled:hover:scale-[1.02] enabled:hover:brightness-[0.98] enabled:active:scale-100 enabled:active:brightness-105",
           disabled ? buttonVariants.gray : buttonVariants[variant],
           className,
         )}
