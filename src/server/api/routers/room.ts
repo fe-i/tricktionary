@@ -11,10 +11,6 @@ import {
 export const roomRouter = createTRPCRouter({
   create: protectedProcedure.mutation(async ({ ctx }) => {
     if (ctx.session.user.roomCode) return;
-    //   throw new TRPCError({
-    //     code: "CONFLICT",
-    //     message: "You are already in a room.",
-    //   });
 
     let code;
     do {
@@ -28,6 +24,23 @@ export const roomRouter = createTRPCRouter({
       },
     });
   }),
+
+  join: protectedProcedure
+    .input(z.object({ roomCode: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.session.user.roomCode) return;
+      console.log("hello");
+
+      return await ctx.db.room.update({
+        where: {
+          code: input.roomCode,
+        },
+        data: {
+          users: { connect: { id: ctx.session.user.id } },
+        },
+      });
+    }),
+
   findUnique: protectedProcedure
     .input(z.object({ roomCode: z.string() }))
     .query(async ({ ctx, input }) => {

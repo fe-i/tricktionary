@@ -28,6 +28,7 @@ const Play: React.FC = () => {
   // MUTATIONS
   const existsMutation = api.room.exists.useMutation();
   const createMutation = api.room.create.useMutation();
+  const joinMutation = api.room.join.useMutation();
 
   // AUTHENTICATION
   if (sessionData.status === "unauthenticated") {
@@ -40,9 +41,20 @@ const Play: React.FC = () => {
   // JOIN & CREATE FUNCTIONS
   const joinRoom = async () => {
     const codeVal = code.slice(1);
-    const result = await existsMutation.mutateAsync({ roomCode: codeVal });
-    if (result) {
-      await router.push(`/room/${codeVal}`);
+    const existsResult = await existsMutation.mutateAsync({
+      roomCode: codeVal,
+    });
+
+    if (existsResult) {
+      const joinResult = await joinMutation.mutateAsync({ roomCode: codeVal });
+      if (joinResult) {
+        await router.push(`/room/${codeVal}`);
+      } else {
+        toast({
+          title: "Already in a room!",
+          description: "Leave your current room before creating a new one.",
+        });
+      }
     } else {
       toast({
         title: "Room Not Found",
