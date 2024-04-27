@@ -6,6 +6,7 @@ import { Nunito } from "next/font/google";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import { Toaster } from "~/components/toaster";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -23,6 +24,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       >
         <Component {...pageProps} />
       </main>
+      <Toaster />
     </SessionProvider>
   );
 };

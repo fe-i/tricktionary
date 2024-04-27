@@ -7,29 +7,29 @@ import Link from "~/components/link";
 import Modal from "~/components/modal";
 import { api } from "~/utils/api";
 import autoAnimate from "@formkit/auto-animate";
+import { useToast } from "~/components/use-toast";
 
 const Play: React.FC = () => {
+  // HOOKS
   const sessionData = useSession();
   const router = useRouter();
+  const { toast } = useToast();
+
+  // STATE, REFS, & EFFECTS
   const [joining, setJoining] = useState(false);
-  const parent = useRef<HTMLDivElement>(null);
-  const existsMutation = api.room.exists.useMutation();
-
-  const createMutation = api.room.create.useMutation({
-    onSuccess: async (r) => {
-      if (r) {
-        await router.push(`/room/${r.code}`);
-      } else {
-        console.log("You are already in a room!!");
-      }
-    },
-  });
-
   const [code, setCode] = useState("");
+
+  const parent = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     parent.current && autoAnimate(parent.current, {});
   }, [parent]);
 
+  // MUTATIONS
+  const existsMutation = api.room.exists.useMutation();
+  const createMutation = api.room.create.useMutation();
+
+  // AUTHENTICATION
   if (sessionData.status === "unauthenticated") {
     void router.push("/");
     return <></>;
@@ -37,12 +37,29 @@ const Play: React.FC = () => {
     return <></>;
   }
 
+  // JOIN & CREATE FUNCTIONS
   const joinRoom = async () => {
     const codeVal = code.slice(1);
     const result = await existsMutation.mutateAsync({ roomCode: codeVal });
-    console.log(result);
     if (result) {
       await router.push(`/room/${codeVal}`);
+    } else {
+      toast({
+        title: "Room Not Found",
+        description: "Be sure to check your room code!",
+      });
+    }
+  };
+
+  const createRoom = async () => {
+    const result = await createMutation.mutateAsync();
+    if (result) {
+      await router.push(`/room/${result.code}`);
+    } else {
+      toast({
+        title: "Already in a room!",
+        description: "Leave your current room before creating a new one.",
+      });
     }
   };
 
@@ -97,9 +114,7 @@ const Play: React.FC = () => {
             </div>
             <Button
               className="w-full text-xl font-semibold"
-              onClick={async () => {
-                await createMutation.mutateAsync();
-              }}
+              onClick={createRoom}
             >
               Create a room
             </Button>
