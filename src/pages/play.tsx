@@ -14,6 +14,7 @@ const Play: React.FC = () => {
   const sessionData = useSession();
   const router = useRouter();
   const { toast } = useToast();
+  const ctx = api.useUtils();
 
   // STATE, REFS, & EFFECTS
   const [joining, setJoining] = useState(false);
@@ -29,6 +30,7 @@ const Play: React.FC = () => {
   const existsMutation = api.room.exists.useMutation();
   const createMutation = api.room.create.useMutation();
   const joinMutation = api.room.join.useMutation();
+  const leaveMutation = api.room.leaveRoom.useMutation();
 
   // AUTHENTICATION
   if (sessionData.status === "unauthenticated") {
@@ -38,7 +40,26 @@ const Play: React.FC = () => {
     return <></>;
   }
 
-  // JOIN & CREATE FUNCTIONS
+  // ROOM CRUD FUNCTIONS
+  const createRoom = async () => {
+    const result = await createMutation.mutateAsync();
+    await sessionData.update();
+    if (result) {
+      await router.push(`/room/${result.code}`);
+    }
+  };
+
+  const leaveRoom = async () => {
+    const result = await leaveMutation.mutateAsync();
+    if (result) {
+      toast({
+        title: "Left your room!",
+        description: "Room successfully exited",
+      });
+      await sessionData.update();
+    }
+  };
+
   const joinRoom = async () => {
     const codeVal = code.slice(1);
     const existsResult = await existsMutation.mutateAsync({
@@ -46,14 +67,11 @@ const Play: React.FC = () => {
     });
 
     if (existsResult) {
-      const joinResult = await joinMutation.mutateAsync({ roomCode: codeVal });
-      if (joinResult) {
+      const result = await joinMutation.mutateAsync({ roomCode: codeVal });
+      await sessionData.update();
+
+      if (result) {
         await router.push(`/room/${codeVal}`);
-      } else {
-        toast({
-          title: "Already in a room!",
-          description: "Leave your current room before joining another one.",
-        });
       }
     } else {
       toast({
@@ -61,18 +79,6 @@ const Play: React.FC = () => {
         description: "Be sure to check your room code!",
       });
       setCode("");
-    }
-  };
-
-  const createRoom = async () => {
-    const result = await createMutation.mutateAsync();
-    if (result) {
-      await router.push(`/room/${result.code}`);
-    } else {
-      toast({
-        title: "Already in a room!",
-        description: "Leave your current room before creating a new one.",
-      });
     }
   };
 
@@ -128,10 +134,7 @@ const Play: React.FC = () => {
             </div>
             <Button
               className="w-full text-xl font-semibold"
-              onClick={async () =>
-                //do something
-                alert("Left room!!!")
-              }
+              onClick={leaveRoom}
             >
               Leave Room
             </Button>

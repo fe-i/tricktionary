@@ -14,18 +14,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/select";
+import { api } from "~/utils/api";
 
 const Slug: React.FC = () => {
   const sessionData = useSession();
   const router = useRouter();
   const { slug } = router.query;
+  const joinMutation = api.room.join.useMutation();
 
   // AUTHENTICATION
-  if (
-    sessionData.status === "unauthenticated" ||
+  if (sessionData.status === "unauthenticated") {
+    void router.push("/");
+  } else if (
+    sessionData.status === "authenticated" &&
     sessionData.data?.user.roomCode !== slug
   ) {
-    void router.push("/");
+    if (sessionData.data?.user.roomCode === null) {
+      joinMutation
+        .mutateAsync({ roomCode: slug?.toString() ?? "" })
+        .then(async () => {
+          await sessionData.update();
+        })
+        .catch(() => 0);
+    } else {
+      void router.push("/");
+    }
   }
 
   const [editingGame, setEditingGame] = useState(false);
