@@ -44,14 +44,27 @@ export const roomRouter = createTRPCRouter({
   leaveRoom: protectedProcedure.mutation(async ({ ctx }) => {
     if (!ctx.session.user.roomCode) return;
 
-    return await ctx.db.room.update({
+    const roomUpdate = await ctx.db.room.update({
       where: {
         code: ctx.session.user.roomCode,
       },
       data: {
         users: { disconnect: { id: ctx.session.user.id } },
       },
+      include: {
+        users: true,
+      },
     });
+
+    if (roomUpdate.users.length === 0) {
+      return await ctx.db.room.delete({
+        where: {
+          code: ctx.session.user.roomCode,
+        },
+      });
+    } else {
+      return roomUpdate;
+    }
   }),
 
   findUnique: protectedProcedure
