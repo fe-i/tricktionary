@@ -60,6 +60,7 @@ const Play: React.FC = () => {
         title: "Room Not Found",
         description: "Be sure to check your room code!",
       });
+      setCode("");
     }
   };
 
@@ -82,7 +83,7 @@ const Play: React.FC = () => {
         ref={parent}
       >
         <h2 className="w-full text-center text-2xl font-semibold">
-          {joining ? "JOIN A GAME" : "PLAY"}
+          {joining ? "JOIN A ROOM" : "PLAY"}
         </h2>
         {joining && (
           <input
@@ -110,15 +111,16 @@ const Play: React.FC = () => {
           />
         )}
 
-        <Button
-          className="w-full text-xl font-semibold"
-          disabled={joining && code.length != 5}
-          onClick={joining ? joinRoom : () => setJoining(true)}
-        >
-          {joining ? "Go!" : "Join a room"}
-        </Button>
-        {!joining && (
+        {sessionData.data?.user.roomCode ? (
           <>
+            <Button
+              className="w-full text-xl font-semibold"
+              onClick={async () =>
+                await router.push(`/room/${sessionData.data?.user.roomCode}`)
+              }
+            >
+              Return to {sessionData.data?.user.roomCode}
+            </Button>
             <div className="justify-apart flex w-full items-center gap-2">
               <hr className="w-full border-text" />
               <p>OR</p>
@@ -126,15 +128,53 @@ const Play: React.FC = () => {
             </div>
             <Button
               className="w-full text-xl font-semibold"
-              onClick={createRoom}
+              onClick={async () =>
+                //do something
+                alert("Left room!!!")
+              }
             >
-              Create a room
+              Leave Room
             </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              className="w-full text-xl font-semibold"
+              variant={code.length != 5 && joining ? "accent" : "primary"}
+              onClick={
+                joining
+                  ? code.length === 5
+                    ? joinRoom
+                    : () => setJoining(false)
+                  : () => setJoining(true)
+              }
+            >
+              {joining
+                ? code.length === 5
+                  ? "Join!"
+                  : "Return to Menu"
+                : "Join a Room"}
+            </Button>
+            {!joining && (
+              <>
+                <div className="justify-apart flex w-full items-center gap-2">
+                  <hr className="w-full border-text" />
+                  <p>OR</p>
+                  <hr className="w-full border-text" />
+                </div>
+                <Button
+                  className="w-full text-xl font-semibold"
+                  onClick={createRoom}
+                >
+                  Create a Room
+                </Button>
+              </>
+            )}
           </>
         )}
 
         <Link href="/how-to" variant="underlined">
-          Learn to play →
+          Learn to Play →
         </Link>
       </Modal>
     </Layout>

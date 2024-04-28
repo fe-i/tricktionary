@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import Button from "~/components/button";
@@ -16,9 +16,18 @@ import {
 } from "~/components/select";
 
 const Slug: React.FC = () => {
+  const sessionData = useSession();
   const router = useRouter();
   const { slug } = router.query;
-  // const { data: sessionData } = useSession();
+
+  // AUTHENTICATION
+  if (
+    sessionData.status === "unauthenticated" ||
+    sessionData.data?.user.roomCode !== slug
+  ) {
+    void router.push("/");
+  }
+
   const [editingGame, setEditingGame] = useState(false);
 
   const parent = useRef(null);
