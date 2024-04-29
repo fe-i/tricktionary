@@ -21,45 +21,58 @@ const Slug: React.FC = () => {
   const router = useRouter();
   const { slug } = router.query;
   const joinMutation = api.room.join.useMutation();
-
-  // AUTHENTICATION
-  if (sessionData.status === "unauthenticated") {
-    void router.push("/");
-  } else if (
-    sessionData.status === "authenticated" &&
-    sessionData.data?.user.roomCode !== slug
-  ) {
-    if (sessionData.data?.user.roomCode === null) {
-      joinMutation
-        .mutateAsync({ roomCode: slug?.toString() ?? "" })
-        .then(async () => {
-          await sessionData.update();
-        })
-        .catch(() => 0);
-    } else {
-      void router.push("/");
-    }
-  }
+  const roomQuery = api.room.findUnique.useQuery({
+    roomCode: slug?.toString() ?? "",
+  });
+  const roomData = roomQuery.data;
 
   const [editingGame, setEditingGame] = useState(false);
 
   const parent = useRef(null);
 
-  // Query room using slug
-  const roomData = {
-    rounds: 5,
-    difficulty: "Medium",
-    players: ["Santiago", "Fei", "Zhi Heng"],
-    hostId: "abc",
-  };
-  const [difficulty, setDifficulty] = useState(roomData.difficulty);
-  const [rounds, setRounds] = useState(roomData.rounds);
+  const [difficulty, setDifficulty] = useState(roomData?.difficulty);
+  const [rounds, setRounds] = useState(roomData?.rounds);
 
-  const isOwner = true; //sessionData?.user.id === hostId;
+  const isOwner = sessionData.data?.user.id === roomData?.hostId;
 
   useEffect(() => {
     parent.current && autoAnimate(parent.current);
   }, [parent]);
+
+  // AUTHENTICATION
+
+  if (roomQuery.isLoading) {
+    // Checking room exists
+    return <Layout>Loading</Layout>;
+  } else if (!roomQuery.data) {
+    // Room does not exist
+    void router.push("/");
+    return <></>;
+  } else {
+    // Room exists
+    if (sessionData.status === "unauthenticated") {
+      // Not logged in
+      void router.push("/");
+    } else if (
+      sessionData.status === "authenticated" &&
+      sessionData.data?.user.roomCode !== slug
+    ) {
+      // Logged in, not part of this room
+      if (sessionData.data?.user.roomCode === null) {
+        // Not part of any room, join this room
+        joinMutation
+          .mutateAsync({ roomCode: slug?.toString() ?? "" })
+          .then(async () => {
+            await sessionData.update();
+          })
+          .catch(() => 0);
+      } else {
+        // Part of another room, go home
+        void router.push("/");
+        return <></>;
+      }
+    }
+  }
 
   return (
     <Layout>
@@ -70,7 +83,7 @@ const Slug: React.FC = () => {
               <h1 className="text-4xl font-bold">#{slug}</h1>
               <p className="text-lg font-medium">
                 {rounds} rounds • {difficulty} difficulty •{" "}
-                {roomData.players.length} players
+                {roomData?.users.length} players
               </p>
             </div>
             {isOwner ? (
@@ -144,12 +157,12 @@ const Slug: React.FC = () => {
 
         <hr className="my-2 w-full border-text" />
         <div className="flex w-full flex-wrap justify-center gap-5">
-          {roomData.players.map((player, i) => (
+          {roomData?.users.map((player, i) => (
             <div
               className="pointer-events-none flex items-center gap-3 rounded-lg border border-text px-6 py-3 hover:border-red-600"
               key={i}
             >
-              <p className="text-lg">{player}</p>
+              <p className="text-lg">{player.name}</p>
               {isOwner ? (
                 <X
                   onClick={() => {

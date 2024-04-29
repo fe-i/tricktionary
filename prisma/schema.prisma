@@ -17,10 +17,11 @@ datasource db {
 
 model Room {
     code       String  @id
-    users      User[] // Will the host just be the user at index 0
+    users      User[]
     rounds     Int     @default(5)
     difficulty String  @default("Medium")
     playing    Boolean @default(false)
+    hostId     String  @unique
 }
 
 model Post {
