@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
-// import { revalidatePath } from "next/cache";
 import * as cheerio from "cheerio";
+
+export const dynamic = "force-dynamic";
 
 const Word = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
@@ -19,7 +20,6 @@ const Word = async (req: NextApiRequest, res: NextApiResponse) => {
       .text()
       .trim()
       .split("\n\t\t\t\t");
-    // revalidatePath("/word"); //not sure if this will work, this refreshes the api so it doesn't cache the one on deploy
 
     return res.status(200).json({ word: data[0], definition: data[1] });
   }
