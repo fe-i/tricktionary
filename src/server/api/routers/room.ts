@@ -83,4 +83,27 @@ export const roomRouter = createTRPCRouter({
         where: { code: input.roomCode },
       });
     }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        difficulty: z.enum(["Easy", "Medium", "Hard"]),
+        rounds: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session.user.roomCode) return;
+
+      const room = await ctx.db.room.findUnique({
+        where: { code: ctx.session.user.roomCode },
+      });
+
+      if (room?.hostId !== ctx.session.user.id) return;
+
+      return await ctx.db.room.update({
+        where: { code: ctx.session.user.roomCode },
+        data: {
+          ...input,
+        },
+      });
+    }),
 });

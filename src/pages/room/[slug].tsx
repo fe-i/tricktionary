@@ -21,6 +21,7 @@ const Slug: React.FC = () => {
   const router = useRouter();
   const { slug } = router.query;
   const joinMutation = api.room.join.useMutation();
+  const updateMutation = api.room.update.useMutation();
   const roomQuery = api.room.findUnique.useQuery({
     roomCode: slug?.toString() ?? "",
   });
@@ -30,14 +31,22 @@ const Slug: React.FC = () => {
 
   const parent = useRef(null);
 
-  const [difficulty, setDifficulty] = useState(roomData?.difficulty);
-  const [rounds, setRounds] = useState(roomData?.rounds);
+  type difficulties = "Easy" | "Medium" | "Hard";
+  const [difficulty, setDifficulty] = useState<difficulties>(
+    (roomData?.difficulty as difficulties) ?? "Medium",
+  );
+  const [rounds, setRounds] = useState(roomData?.rounds ?? 5);
 
   const isOwner = sessionData.data?.user.id === roomData?.hostId;
 
   useEffect(() => {
     parent.current && autoAnimate(parent.current);
   }, [parent]);
+  useEffect(() => {
+    if (!roomData) return;
+    setDifficulty(roomData.difficulty as difficulties);
+    setRounds(roomData.rounds);
+  }, [roomData]);
 
   // AUTHENTICATION
 
@@ -74,6 +83,8 @@ const Slug: React.FC = () => {
     }
   }
 
+  console.log(roomData);
+
   return (
     <Layout>
       <div className="flex w-full flex-col items-start justify-start gap-3 px-2 py-4">
@@ -83,13 +94,19 @@ const Slug: React.FC = () => {
               <h1 className="text-4xl font-bold">#{slug}</h1>
               <p className="text-lg font-medium">
                 {rounds} rounds • {difficulty} difficulty •{" "}
-                {roomData?.users.length} players
+                {roomData?.users.length} player
+                {roomData?.users.length === 1 ? "" : "s"}
               </p>
             </div>
             {isOwner ? (
               <>
                 <Button
-                  onClick={() => setEditingGame((p) => !p)}
+                  onClick={async () => {
+                    if (editingGame === true) {
+                      await updateMutation.mutateAsync({ difficulty, rounds });
+                    }
+                    setEditingGame((p) => !p);
+                  }}
                   variant={editingGame ? "primary" : "gray"}
                   className="h-fit"
                 >
@@ -136,7 +153,7 @@ const Slug: React.FC = () => {
                 <Select
                   defaultValue="Medium"
                   onValueChange={(value) => {
-                    setDifficulty(value); // MUTATE ROOM HERE
+                    setDifficulty(value as difficulties); // MUTATE ROOM HERE
                   }}
                 >
                   <SelectTrigger className="w-44 outline-none">
@@ -163,7 +180,7 @@ const Slug: React.FC = () => {
               key={i}
             >
               <p className="text-lg">{player.name}</p>
-              {isOwner ? (
+              {isOwner && player.id !== roomData?.hostId ? (
                 <X
                   onClick={() => {
                     //Mutate room remove this player from the game
