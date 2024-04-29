@@ -9,7 +9,7 @@ const Word = async (req: NextApiRequest, res: NextApiResponse) => {
   if (session) {
     const words = [];
 
-    for (let i = 0; i < Number(quantity || 1); i++) {
+    for (let i = 0; i < Number(quantity ?? 1); i++) {
       const response = await fetch("https://randomword.com", {
         headers: {
           "User-Agent": Date.now().toFixed(), // USED TO GET NEW WORDS ON RELOAD
