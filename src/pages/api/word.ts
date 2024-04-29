@@ -4,12 +4,14 @@ import * as cheerio from "cheerio";
 
 const Word = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
-  const { quantity } = req.query;
+  const quantity = Number(req.query.quantity ?? 1);
+
+  if (quantity > 5) return res.status(404).send("😭");
 
   if (session) {
     const words = [];
 
-    for (let i = 0; i < Number(quantity ?? 1); i++) {
+    for (let i = 0; i < quantity; i++) {
       const response = await fetch("https://randomword.com", {
         headers: {
           "User-Agent": Date.now().toFixed(), // USED TO GET NEW WORDS ON RELOAD
