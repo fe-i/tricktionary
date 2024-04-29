@@ -73,8 +73,11 @@ model User {
     sessions      Session[]
     posts         Post[]
 
-    roomCode String?
-    Room     Room?   @relation(fields: [roomCode], references: [code])
+    roomCode    String?
+    Room        Room?   @relation(fields: [roomCode], references: [code])
+    gamesPlayed Int     @default(0)
+    gamesWon    Int     @default(0)
+    highScore   Int     @default(0)
 }
 
 model VerificationToken {
