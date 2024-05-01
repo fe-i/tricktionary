@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Header } from "./header";
+import { Header } from "./ui/header";
 
 const Layout: React.FC<
   React.PropsWithChildren<{ title?: string; noHeader?: boolean }>
@@ -35,7 +35,6 @@ const Layout: React.FC<
               <feDistantLight azimuth="60" elevation="65" />
             </feDiffuseLighting>
           </filter>
-
           <rect width="100%" height="100%" filter="url(#roughpaper)" />
         </svg>
 

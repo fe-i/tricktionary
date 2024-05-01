@@ -143,7 +143,7 @@ const Play: React.FC = () => {
           <>
             <Button
               className="w-full text-xl font-semibold"
-              variant={code.length != 5 && joining ? "accent" : "primary"}
+              variant={code.length !== 5 && joining ? "accent" : "primary"}
               onClick={
                 joining
                   ? code.length === 5
