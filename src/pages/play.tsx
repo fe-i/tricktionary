@@ -43,7 +43,6 @@ const Play: React.FC = () => {
   // ROOM CRUD FUNCTIONS
   const createRoom = async () => {
     const result = await createMutation.mutateAsync();
-    await sessionData.update();
     if (result) {
       await router.push(`/room/${result.code}`);
     }

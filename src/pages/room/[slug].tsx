@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "~/components/layout";
 
 import { api } from "~/utils/api";
-import { AuthStates, useAuth } from "~/components/game/auth-wrapper";
+import { AuthStates, useAuth } from "~/components/game/use-auth";
 import {
   ChooseWord,
   ChooserWait,
