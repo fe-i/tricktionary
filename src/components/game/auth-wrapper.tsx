@@ -1,14 +1,15 @@
-import { useRouter } from "next/router";
-import Layout from "../layout";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 
-export const AuthWrapper: React.FC<
-  React.PropsWithChildren<{ slug: string }>
-> = ({ slug, children }) => {
+export enum AuthStates {
+  UNAUTHORIZED,
+  LOADING,
+  AUTHORIZED,
+}
+
+export const useAuth = (slug: string): AuthStates => {
   const joinMutation = api.room.join.useMutation();
   const sessionData = useSession();
-  const router = useRouter();
 
   const roomQuery = api.room.findUnique.useQuery({
     roomCode: slug?.toString() ?? "",
@@ -16,24 +17,21 @@ export const AuthWrapper: React.FC<
 
   if (sessionData.status === "unauthenticated") {
     // Not logged in
-    void router.push("/");
-    return <></>;
+    return AuthStates.UNAUTHORIZED;
   }
 
   if (roomQuery.isLoading) {
     // Checking room exists
-    return <Layout>Loading</Layout>;
+    return AuthStates.LOADING;
   } else if (!roomQuery.data) {
     // Room does not exist
-    void router.push("/");
-    return <></>;
+    return AuthStates.UNAUTHORIZED;
   } else {
     // Room exists
     if (
       sessionData.status === "authenticated" &&
       sessionData.data?.user.roomCode !== slug
     ) {
-      console.log(sessionData.data?.user.roomCode);
       // Logged in, not part of this room
       if (sessionData.data?.user.roomCode === null) {
         if (!joinMutation.isPending) {
@@ -46,14 +44,13 @@ export const AuthWrapper: React.FC<
             .catch(() => 0);
         }
 
-        return <Layout>Loading</Layout>;
+        return AuthStates.LOADING;
       } else {
         // Part of another room, go home
-        void router.push("/");
-        return <></>;
+        return AuthStates.UNAUTHORIZED;
       }
     }
   }
 
-  return children;
+  return AuthStates.AUTHORIZED;
 };
