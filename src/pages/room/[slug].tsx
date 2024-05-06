@@ -4,7 +4,14 @@ import Layout from "~/components/layout";
 
 import { api } from "~/utils/api";
 import { AuthStates, useAuth } from "~/components/game/auth-wrapper";
-import WaitingRoom from "~/components/game/waiting-room";
+import {
+  ChooseWord,
+  ChooserWait,
+  Voting,
+  WaitingRoom,
+  WriteFakes,
+  WriterWait,
+} from "~/components/game";
 
 const Slug: React.FC = () => {
   const sessionData = useSession();
@@ -27,6 +34,17 @@ const Slug: React.FC = () => {
   if (!roomData?.playing) {
     return <WaitingRoom />;
   } else {
+    if (sessionData.data?.user.id === roomData.chooserId) {
+      return roomData.definition ? <ChooserWait /> : <ChooseWord />;
+    } else {
+      return !roomData.definition ? (
+        <WriterWait />
+      ) : roomData.fakeDefinitions.length ? (
+        <Voting />
+      ) : (
+        <WriteFakes />
+      );
+    }
   }
 };
 

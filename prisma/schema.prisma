@@ -22,6 +22,22 @@ model Room {
     difficulty String  @default("Medium")
     playing    Boolean @default(false)
     hostId     String  @unique
+
+    // Differ by round
+    chooserId       String?
+    word            String?
+    definition      String?
+    fakeDefinitions FakeDefinition[]
+}
+
+model FakeDefinition {
+    id       String @id @default(cuid())
+    room     Room   @relation(fields: [roomCode], references: [code])
+    roomCode String
+
+    userId     String
+    definition String
+    votes      Int    @default(0)
 }
 
 model Post {

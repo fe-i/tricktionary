@@ -73,7 +73,7 @@ export const roomRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.room.findUnique({
         where: { code: input.roomCode },
-        include: { users: true },
+        include: { users: true, fakeDefinitions: true },
       });
     }),
   exists: protectedProcedure
