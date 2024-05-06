@@ -95,6 +95,7 @@ export const roomRouter = createTRPCRouter({
 
       const room = await ctx.db.room.findUnique({
         where: { code: ctx.session.user.roomCode },
+        select: { hostId: true },
       });
 
       if (room?.hostId !== ctx.session.user.id) return;
@@ -106,4 +107,24 @@ export const roomRouter = createTRPCRouter({
         },
       });
     }),
+  startGame: protectedProcedure.mutation(async ({ ctx }) => {
+    if (!ctx.session.user.roomCode) return;
+
+    const room = await ctx.db.room.findUnique({
+      where: { code: ctx.session.user.roomCode },
+      select: { hostId: true, users: { select: { id: true } } },
+    });
+
+    if (!room || room.hostId !== ctx.session.user.id) return;
+
+    const chooser = room.users[Math.floor(Math.random() * room.users.length)];
+
+    return await ctx.db.room.update({
+      where: { code: ctx.session.user.roomCode },
+      data: {
+        playing: true,
+        chooserId: chooser?.id,
+      },
+    });
+  }),
 });

@@ -1,5 +1,7 @@
+import Layout from "../layout";
+
 const WriterWait: React.FC = () => {
-  return <></>;
+  return <Layout></Layout>;
 };
 
 export default WriterWait;

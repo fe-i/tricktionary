@@ -32,17 +32,23 @@ const Slug: React.FC = () => {
   }
 
   if (!roomData?.playing) {
-    return <WaitingRoom />;
+    return (
+      <WaitingRoom
+        onStart={async () => {
+          await roomQuery.refetch();
+        }}
+      />
+    );
   } else {
     if (sessionData.data?.user.id === roomData.chooserId) {
-      return roomData.definition ? <ChooserWait /> : <ChooseWord />;
+      return !roomData.definition ? <ChooseWord /> : <ChooserWait />;
     } else {
       return !roomData.definition ? (
         <WriterWait />
-      ) : roomData.fakeDefinitions.length ? (
-        <Voting />
-      ) : (
+      ) : !roomData.fakeDefinitions.length ? (
         <WriteFakes />
+      ) : (
+        <Voting />
       );
     }
   }

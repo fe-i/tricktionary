@@ -1,5 +1,7 @@
+import Layout from "../layout";
+
 const ChooseWord: React.FC = () => {
-  return <></>;
+  return <Layout></Layout>;
 };
 
 export default ChooseWord;

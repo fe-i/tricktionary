@@ -16,11 +16,14 @@ import {
 } from "~/components/select";
 import { api } from "~/utils/api";
 
-const WaitingRoom: React.FC = () => {
+const WaitingRoom: React.FC<{ onStart: () => Promise<void> }> = ({
+  onStart,
+}) => {
   const sessionData = useSession();
   const router = useRouter();
   const slug = router.query.slug?.toString() ?? "";
   const updateMutation = api.room.update.useMutation();
+  const startMutation = api.room.startGame.useMutation();
   const roomQuery = api.room.findUnique.useQuery({
     roomCode: slug,
   });
@@ -70,6 +73,7 @@ const WaitingRoom: React.FC = () => {
                         difficulty,
                         rounds,
                       });
+                      // PUSHER
                     }
                     setEditingGame((p) => !p);
                   }}
@@ -79,7 +83,11 @@ const WaitingRoom: React.FC = () => {
                   {editingGame ? "Save Game" : "Edit Game"}
                 </Button>
                 <Button
-                  onClick={() => console.log("Play")}
+                  onClick={async () => {
+                    await startMutation.mutateAsync();
+                    await onStart();
+                    // PUSHER
+                  }}
                   variant="primary"
                   className="h-fit"
                   disabled={editingGame}
