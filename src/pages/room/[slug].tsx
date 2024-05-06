@@ -42,6 +42,7 @@ const Slug: React.FC = () => {
   useEffect(() => {
     parent.current && autoAnimate(parent.current);
   }, [parent]);
+
   useEffect(() => {
     if (!roomData) return;
     setDifficulty(roomData.difficulty as difficulties);
@@ -49,6 +50,11 @@ const Slug: React.FC = () => {
   }, [roomData]);
 
   // AUTHENTICATION
+
+  if (sessionData.status === "unauthenticated") {
+    // Not logged in
+    void router.push("/");
+  }
 
   if (roomQuery.isLoading) {
     // Checking room exists
@@ -59,10 +65,7 @@ const Slug: React.FC = () => {
     return <></>;
   } else {
     // Room exists
-    if (sessionData.status === "unauthenticated") {
-      // Not logged in
-      void router.push("/");
-    } else if (
+    if (
       sessionData.status === "authenticated" &&
       sessionData.data?.user.roomCode !== slug
     ) {

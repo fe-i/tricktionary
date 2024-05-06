@@ -11,9 +11,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "../dropdown-menu";
+import { useRouter } from "next/router";
 
 const Header: React.FC = () => {
   const { data, status } = useSession();
+  const router = useRouter();
 
   return (
     <header className="container absolute left-auto right-auto top-0 z-50 flex items-center justify-between gap-8 px-6 py-4">
@@ -33,7 +35,14 @@ const Header: React.FC = () => {
             <DropdownMenuSeparator />
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>
-              <Button variant="blank" className="p-0" onClick={() => signOut()}>
+              <Button
+                variant="blank"
+                className="p-0"
+                onClick={async () => {
+                  await signOut();
+                  //   await router.push("/");
+                }}
+              >
                 Sign Out
               </Button>
             </DropdownMenuItem>
