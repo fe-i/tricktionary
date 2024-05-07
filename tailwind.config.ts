@@ -15,6 +15,7 @@ export default {
         secondary: "hsl(var(--secondary))",
         accent: "hsl(var(--accent))",
         modal: "hsl(var(--modal))",
+        muted: "hsl(var(--muted))",
       },
       keyframes: {
         "accordion-down": {

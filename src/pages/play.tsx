@@ -14,7 +14,6 @@ const Play: React.FC = () => {
   const sessionData = useSession();
   const router = useRouter();
   const { toast } = useToast();
-  const ctx = api.useUtils();
 
   // STATE, REFS, & EFFECTS
   const [joining, setJoining] = useState(false);
@@ -115,7 +114,6 @@ const Play: React.FC = () => {
             className="w-64 rounded-lg border border-text bg-transparent p-3 text-center text-3xl font-bold"
           />
         )}
-
         {sessionData.data?.user.roomCode ? (
           <>
             <Button
@@ -174,7 +172,6 @@ const Play: React.FC = () => {
             )}
           </>
         )}
-
         <Link href="/how-to" variant="underlined">
           Learn to Play →
         </Link>
