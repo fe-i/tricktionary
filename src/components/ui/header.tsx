@@ -38,10 +38,7 @@ const Header: React.FC = () => {
               <Button
                 variant="blank"
                 className="p-0"
-                onClick={async () => {
-                  await signOut();
-                  //   await router.push("/");
-                }}
+                onClick={() => void signOut()}
               >
                 Sign Out
               </Button>
