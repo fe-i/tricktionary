@@ -6,8 +6,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "generate": "prisma generate",
     "studio": "drizzle-kit introspect:sqlite && drizzle-kit studio",
+    "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start"
   },
