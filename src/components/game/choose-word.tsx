@@ -17,12 +17,16 @@ const ChooseWord: React.FC = () => {
     roomCode: slug,
   });
 
-  useEffect(() => {
-    if (words.length) return;
+  const getWords = () => {
     fetch("/api/word?quantity=4")
       .then((r) => r.json())
       .then((data) => setWords(data as WordType[]))
       .catch(() => 0);
+  };
+
+  useEffect(() => {
+    if (words.length) return;
+    getWords();
   }, [words]);
 
   if (!words.length) return <Layout>Loading...</Layout>;
@@ -50,10 +54,7 @@ const ChooseWord: React.FC = () => {
         <Button
           variant="gray"
           onClick={() => {
-            fetch("/api/word?quantity=4")
-              .then((r) => r.json())
-              .then((data) => setWords(data as WordType[]))
-              .catch(() => 0);
+            getWords();
           }}
         >
           Shuffle
