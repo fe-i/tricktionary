@@ -3,13 +3,16 @@ import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
 import Button from "../button";
-import type { RoomWithUsers } from "~/pages/room/[slug]";
 
 type WordType = { word: string; definition: string };
 
-const ChooseWord: React.FC<{ roomData: RoomWithUsers }> = ({ roomData }) => {
+const ChooseWord: React.FC<{
+  updateRoom: () => Promise<void>;
+}> = ({ updateRoom }) => {
   const [words, setWords] = useState<WordType[]>([]);
   const [idx, setIdx] = useState(-1);
+
+  const chooseWordMutation = api.room.chooseWord.useMutation();
 
   const getWords = () => {
     fetch("/api/word?quantity=4")
@@ -51,7 +54,15 @@ const ChooseWord: React.FC<{ roomData: RoomWithUsers }> = ({ roomData }) => {
         >
           Shuffle
         </Button>
-        <Button>Submit</Button>
+        <Button
+          onClick={async () => {
+            if (!words[idx]) return;
+            await chooseWordMutation.mutateAsync({ ...words[idx] });
+            await updateRoom();
+          }}
+        >
+          Submit
+        </Button>
       </div>
     </Layout>
   );

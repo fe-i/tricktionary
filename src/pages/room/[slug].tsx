@@ -33,6 +33,10 @@ const Slug: React.FC = () => {
 
   const authData = useAuth(slug, roomData, roomQuery.isLoading);
 
+  const updateRoom: () => Promise<void> = async () => {
+    await roomQuery.refetch();
+  };
+
   if (authData === AuthStates.UNAUTHORIZED) {
     void router.push("/");
     return <></>;
@@ -41,18 +45,11 @@ const Slug: React.FC = () => {
   }
 
   if (!roomData?.playing) {
-    return (
-      <WaitingRoom
-        roomData={roomData}
-        onStart={async () => {
-          await roomQuery.refetch();
-        }}
-      />
-    );
+    return <WaitingRoom roomData={roomData} onStart={updateRoom} />;
   } else {
     if (sessionData.data?.user.id === roomData.chooserId) {
       return !roomData.definition ? (
-        <ChooseWord roomData={roomData} />
+        <ChooseWord updateRoom={updateRoom} />
       ) : (
         <ChooserWait />
       );
