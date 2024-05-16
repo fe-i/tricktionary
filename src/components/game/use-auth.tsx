@@ -1,4 +1,5 @@
 import { useSession } from "next-auth/react";
+import type { RoomWithUsers } from "~/pages/room/[slug]";
 import { api } from "~/utils/api";
 
 export enum AuthStates {
@@ -7,23 +8,23 @@ export enum AuthStates {
   AUTHORIZED,
 }
 
-export const useAuth = (slug: string): AuthStates => {
+export const useAuth = (
+  slug: string,
+  roomData: RoomWithUsers,
+  roomLoading: boolean,
+): AuthStates => {
   const joinMutation = api.room.join.useMutation();
   const sessionData = useSession();
-
-  const roomQuery = api.room.findUnique.useQuery({
-    roomCode: slug?.toString() ?? "",
-  });
 
   if (sessionData.status === "unauthenticated") {
     // Not logged in
     return AuthStates.UNAUTHORIZED;
   }
 
-  if (roomQuery.isLoading) {
+  if (roomLoading) {
     // Checking room exists
     return AuthStates.LOADING;
-  } else if (!roomQuery.data) {
+  } else if (!roomData) {
     // Room does not exist
     return AuthStates.UNAUTHORIZED;
   } else {

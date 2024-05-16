@@ -1,15 +1,8 @@
 import Layout from "../layout";
-import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import type { RoomWithUsers } from "~/pages/room/[slug]";
 
-const WriterWait: React.FC = () => {
-  const router = useRouter();
-
-  const slug = router.query.slug?.toString() ?? "";
-  const roomQuery = api.room.findUnique.useQuery({
-    roomCode: slug,
-  });
-  const roomData = roomQuery.data;
+const WriterWait: React.FC<{ roomData: RoomWithUsers }> = ({ roomData }) => {
   return <Layout></Layout>;
 };
 

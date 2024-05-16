@@ -1,21 +1,15 @@
 import Layout from "../layout";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
 import Button from "../button";
+import type { RoomWithUsers } from "~/pages/room/[slug]";
 
 type WordType = { word: string; definition: string };
 
-const ChooseWord: React.FC = () => {
-  const router = useRouter();
+const ChooseWord: React.FC<{ roomData: RoomWithUsers }> = ({ roomData }) => {
   const [words, setWords] = useState<WordType[]>([]);
   const [idx, setIdx] = useState(-1);
-
-  const slug = router.query.slug?.toString() ?? "";
-  const roomQuery = api.room.findUnique.useQuery({
-    roomCode: slug,
-  });
 
   const getWords = () => {
     fetch("/api/word?quantity=4")
@@ -30,8 +24,6 @@ const ChooseWord: React.FC = () => {
   }, [words]);
 
   if (!words.length) return <Layout>Loading...</Layout>;
-
-  const roomData = roomQuery.data;
 
   return (
     <Layout>

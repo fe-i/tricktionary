@@ -1,16 +1,8 @@
-import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import Layout from "../layout";
+import type { RoomWithUsers } from "~/pages/room/[slug]";
 
-const WriteFakes: React.FC = () => {
-  const router = useRouter();
-
-  const slug = router.query.slug?.toString() ?? "";
-  const roomQuery = api.room.findUnique.useQuery({
-    roomCode: slug,
-  });
-  const roomData = roomQuery.data;
-
+const WriteFakes: React.FC<{ roomData: RoomWithUsers }> = ({ roomData }) => {
   return (
     <Layout>
       <p>Your word is</p>

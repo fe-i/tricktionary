@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import Button from "~/components/button";
 import Layout from "~/components/layout";
+import type { RoomWithUsers } from "~/pages/room/[slug]";
 
 import autoAnimate from "@formkit/auto-animate";
 
@@ -16,18 +17,15 @@ import {
 } from "~/components/select";
 import { api } from "~/utils/api";
 
-const WaitingRoom: React.FC<{ onStart: () => Promise<void> }> = ({
-  onStart,
-}) => {
+const WaitingRoom: React.FC<{
+  onStart: () => Promise<void>;
+  roomData: RoomWithUsers;
+}> = ({ onStart, roomData }) => {
   const sessionData = useSession();
   const router = useRouter();
   const slug = router.query.slug?.toString() ?? "";
   const updateMutation = api.room.update.useMutation();
   const startMutation = api.room.startGame.useMutation();
-  const roomQuery = api.room.findUnique.useQuery({
-    roomCode: slug,
-  });
-  const roomData = roomQuery.data;
 
   const [editingGame, setEditingGame] = useState(false);
 
