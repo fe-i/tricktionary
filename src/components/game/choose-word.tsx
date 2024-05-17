@@ -46,18 +46,13 @@ const ChooseWord: React.FC<{
         ))}
       </div>
       <div className="flex items-center gap-4">
-        <Button
-          variant="gray"
-          onClick={() => {
-            getWords();
-          }}
-        >
+        <Button variant="gray" onClick={getWords}>
           Shuffle
         </Button>
         <Button
           onClick={async () => {
             if (!words[idx]) return;
-            await chooseWordMutation.mutateAsync({ ...words[idx] });
+            await chooseWordMutation.mutateAsync({ ...words[idx]! });
             await updateRoom();
           }}
         >
