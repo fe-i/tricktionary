@@ -30,11 +30,11 @@ const ChooseWord: React.FC<{
 
   return (
     <Layout>
-      <h2 className="-mb-8 text-3xl font-bold underline">Choose a word</h2>
+      <h2 className="-mb-4 text-3xl font-bold underline">Choose</h2>
       <p className="w-4/5 text-center">
-        Choose a word you think will blend in with the fakes!
+        Select a word you think will blend in with the fakes!
       </p>
-      <div className="grid w-full grid-rows-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid w-full grid-rows-1 gap-4 px-4 md:grid-cols-2 md:gap-8 md:px-8 lg:grid-cols-3">
         {words.map(({ word, definition }, i) => (
           <WordCard
             word={word}

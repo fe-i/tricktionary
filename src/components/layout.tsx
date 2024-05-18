@@ -23,7 +23,7 @@ const Layout: React.FC<
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
-      <div className="container flex flex-col items-center justify-center gap-12 px-6 py-16 text-text">
+      <div className="container flex flex-col items-center justify-center gap-8 px-6 py-16 text-text">
         <svg className="fixed left-0 top-0 -z-10 h-full w-full">
           <filter id="roughpaper" x="0%" y="0%" width="100%" height="100%">
             <feTurbulence
