@@ -11,9 +11,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "../dropdown-menu";
+import { useRouter } from "next/router";
 
 const Header: React.FC = () => {
   const { data, status } = useSession();
+  const router = useRouter();
 
   return (
     <header className="container absolute left-auto right-auto top-0 z-50 flex items-center justify-between gap-8 px-6 py-4">
@@ -31,7 +33,20 @@ const Header: React.FC = () => {
           <DropdownMenuContent>
             <DropdownMenuLabel>{data.user.name}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            {data.user.roomCode ? (
+              <DropdownMenuItem
+                onClick={() => void router.push(`/room/${data.user.roomCode}`)}
+              >
+                Return to {data.user.roomCode}
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem onClick={() => void router.push("/play")}>
+                Play
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem onClick={() => void router.push("/profile")}>
+              Profile
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => void signOut()}>
               Sign Out
             </DropdownMenuItem>

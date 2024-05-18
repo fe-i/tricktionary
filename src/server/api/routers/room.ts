@@ -1,12 +1,6 @@
-// import { TRPCError } from "@trpc/server";
 import { randomBytes } from "crypto";
 import { z } from "zod";
-
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  //   publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const roomRouter = createTRPCRouter({
   create: protectedProcedure.mutation(async ({ ctx }) => {
@@ -76,6 +70,7 @@ export const roomRouter = createTRPCRouter({
         include: { users: true, fakeDefinitions: true },
       });
     }),
+
   exists: protectedProcedure
     .input(z.object({ roomCode: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -83,6 +78,7 @@ export const roomRouter = createTRPCRouter({
         where: { code: input.roomCode },
       });
     }),
+
   update: protectedProcedure
     .input(
       z.object({
@@ -107,6 +103,7 @@ export const roomRouter = createTRPCRouter({
         },
       });
     }),
+
   startGame: protectedProcedure.mutation(async ({ ctx }) => {
     if (!ctx.session.user.roomCode) return;
 
