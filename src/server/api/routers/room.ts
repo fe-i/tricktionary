@@ -152,4 +152,39 @@ export const roomRouter = createTRPCRouter({
         },
       });
     }),
+
+  submitDefinition: protectedProcedure
+    .input(
+      z.object({
+        definition: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session.user.roomCode) return;
+
+      const room = await ctx.db.room.findUnique({
+        where: { code: ctx.session.user.roomCode },
+        select: { chooserId: true, fakeDefinitions: true },
+      });
+
+      if (room?.chooserId === ctx.session.user.id) return;
+      if (
+        room?.fakeDefinitions
+          .map((el) => el.userId)
+          .includes(ctx.session.user.id)
+      )
+        return;
+
+      return await ctx.db.room.update({
+        where: { code: ctx.session.user.roomCode },
+        data: {
+          fakeDefinitions: {
+            create: {
+              definition: input.definition,
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      });
+    }),
 });
