@@ -37,13 +37,21 @@ export const roomRouter = createTRPCRouter({
     const roomUpdate = await ctx.db.room.update({
       where: { code: ctx.session.user.roomCode },
       data: { users: { disconnect: { id: ctx.session.user.id } } },
-      include: { users: { select: { id: true } } },
+      select: { users: { select: { id: true } }, hostId: true },
     });
 
-    if (roomUpdate.users.length === 0)
+    if (roomUpdate.users.length === 0) {
       return await ctx.db.room.delete({
         where: { code: ctx.session.user.roomCode },
       });
+    } else if (roomUpdate.hostId === ctx.session.user.id) {
+      return await ctx.db.room.update({
+        where: { code: ctx.session.user.roomCode },
+        data: {
+          hostId: roomUpdate.users[0]?.id,
+        },
+      });
+    }
 
     return roomUpdate;
   }),
