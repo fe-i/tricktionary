@@ -86,7 +86,10 @@ const WaitingRoom: React.FC<{
                   }}
                   variant="primary"
                   className="h-fit"
-                  disabled={editingGame}
+                  disabled={
+                    editingGame ||
+                    (roomData?.users && roomData?.users.length < 3)
+                  }
                 >
                   Play
                 </Button>
