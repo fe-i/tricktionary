@@ -29,7 +29,7 @@ const Play: React.FC = () => {
   const existsMutation = api.room.exists.useMutation();
   const createMutation = api.room.create.useMutation();
   const joinMutation = api.room.join.useMutation();
-  const leaveMutation = api.room.leaveRoom.useMutation();
+  const leaveMutation = api.room.leave.useMutation();
 
   // AUTHENTICATION
   if (sessionData.status === "unauthenticated") {

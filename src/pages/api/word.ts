@@ -6,7 +6,7 @@ const Word = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
   const quantity = Number(req.query.quantity ?? 1);
 
-  if (quantity > 5) return res.status(404).send("😭");
+  if (quantity > 6) return res.status(404).send("😭");
 
   if (session) {
     const words = [];

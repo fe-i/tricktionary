@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Layout from "~/components/layout";
-
 import { api } from "~/utils/api";
 import type { Prisma } from "@prisma/client";
 import { AuthStates, useAuth } from "~/components/game/use-auth";
@@ -16,7 +15,8 @@ import {
 
 export type RoomWithUsers =
   | Prisma.RoomGetPayload<{
-      include: { users: true };
+      select: { word: true };
+      include: { users: { select: { id: true; name: true; image: true } } };
     }>
   | undefined
   | null;

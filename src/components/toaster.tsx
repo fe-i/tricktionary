@@ -10,7 +10,7 @@ import {
 } from "~/components/toast";
 import { useToast } from "~/components/use-toast";
 
-export function Toaster() {
+export const Toaster: React.FC = () => {
   const { toasts } = useToast();
 
   return (
@@ -32,4 +32,4 @@ export function Toaster() {
       <ToastViewport />
     </ToastProvider>
   );
-}
+};

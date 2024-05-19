@@ -1,12 +1,6 @@
-// import { TRPCError } from "@trpc/server";
 import { randomBytes } from "crypto";
 import { z } from "zod";
-
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  //   publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const roomRouter = createTRPCRouter({
   create: protectedProcedure.mutation(async ({ ctx }) => {
@@ -30,42 +24,28 @@ export const roomRouter = createTRPCRouter({
     .input(z.object({ roomCode: z.string() }))
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user.roomCode) return;
-      console.log("hello");
 
       return await ctx.db.room.update({
-        where: {
-          code: input.roomCode,
-        },
-        data: {
-          users: { connect: { id: ctx.session.user.id } },
-        },
+        where: { code: input.roomCode },
+        data: { users: { connect: { id: ctx.session.user.id } } },
       });
     }),
 
-  leaveRoom: protectedProcedure.mutation(async ({ ctx }) => {
+  leave: protectedProcedure.mutation(async ({ ctx }) => {
     if (!ctx.session.user.roomCode) return;
 
     const roomUpdate = await ctx.db.room.update({
-      where: {
-        code: ctx.session.user.roomCode,
-      },
-      data: {
-        users: { disconnect: { id: ctx.session.user.id } },
-      },
-      include: {
-        users: true,
-      },
+      where: { code: ctx.session.user.roomCode },
+      data: { users: { disconnect: { id: ctx.session.user.id } } },
+      include: { users: { select: { id: true } } },
     });
 
-    if (roomUpdate.users.length === 0) {
+    if (roomUpdate.users.length === 0)
       return await ctx.db.room.delete({
-        where: {
-          code: ctx.session.user.roomCode,
-        },
+        where: { code: ctx.session.user.roomCode },
       });
-    } else {
-      return roomUpdate;
-    }
+
+    return roomUpdate;
   }),
 
   findUnique: protectedProcedure
@@ -73,9 +53,15 @@ export const roomRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.room.findUnique({
         where: { code: input.roomCode },
-        include: { users: true, fakeDefinitions: true },
+        include: {
+          users: {
+            select: { id: true, name: true, image: true },
+          },
+          fakeDefinitions: true,
+        },
       });
     }),
+
   exists: protectedProcedure
     .input(z.object({ roomCode: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -83,6 +69,7 @@ export const roomRouter = createTRPCRouter({
         where: { code: input.roomCode },
       });
     }),
+
   update: protectedProcedure
     .input(
       z.object({
@@ -107,6 +94,7 @@ export const roomRouter = createTRPCRouter({
         },
       });
     }),
+
   startGame: protectedProcedure.mutation(async ({ ctx }) => {
     if (!ctx.session.user.roomCode) return;
 
@@ -121,10 +109,7 @@ export const roomRouter = createTRPCRouter({
 
     return await ctx.db.room.update({
       where: { code: ctx.session.user.roomCode },
-      data: {
-        playing: true,
-        chooserId: chooser?.id,
-      },
+      data: { playing: true, chooserId: chooser?.id },
     });
   }),
 
@@ -147,9 +132,7 @@ export const roomRouter = createTRPCRouter({
 
       return await ctx.db.room.update({
         where: { code: ctx.session.user.roomCode },
-        data: {
-          ...input,
-        },
+        data: { ...input },
       });
     }),
 

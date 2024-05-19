@@ -5,6 +5,7 @@ export default {
   schema: "./drizzle/schema.ts",
   out: "./drizzle",
   driver: "turso",
+  dialect: "sqlite",
   dbCredentials: {
     url: env.DATABASE_URL as string,
     authToken: env.TURSO_AUTH_TOKEN as string,
