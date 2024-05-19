@@ -24,42 +24,28 @@ export const roomRouter = createTRPCRouter({
     .input(z.object({ roomCode: z.string() }))
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user.roomCode) return;
-      console.log("hello");
 
       return await ctx.db.room.update({
-        where: {
-          code: input.roomCode,
-        },
-        data: {
-          users: { connect: { id: ctx.session.user.id } },
-        },
+        where: { code: input.roomCode },
+        data: { users: { connect: { id: ctx.session.user.id } } },
       });
     }),
 
-  leaveRoom: protectedProcedure.mutation(async ({ ctx }) => {
+  leave: protectedProcedure.mutation(async ({ ctx }) => {
     if (!ctx.session.user.roomCode) return;
 
     const roomUpdate = await ctx.db.room.update({
-      where: {
-        code: ctx.session.user.roomCode,
-      },
-      data: {
-        users: { disconnect: { id: ctx.session.user.id } },
-      },
-      include: {
-        users: true,
-      },
+      where: { code: ctx.session.user.roomCode },
+      data: { users: { disconnect: { id: ctx.session.user.id } } },
+      include: { users: { select: { id: true } } },
     });
 
-    if (roomUpdate.users.length === 0) {
+    if (roomUpdate.users.length === 0)
       return await ctx.db.room.delete({
-        where: {
-          code: ctx.session.user.roomCode,
-        },
+        where: { code: ctx.session.user.roomCode },
       });
-    } else {
-      return roomUpdate;
-    }
+
+    return roomUpdate;
   }),
 
   findUnique: protectedProcedure
@@ -67,7 +53,12 @@ export const roomRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.room.findUnique({
         where: { code: input.roomCode },
-        include: { users: true, fakeDefinitions: true },
+        include: {
+          users: {
+            select: { id: true, name: true, image: true },
+          },
+          fakeDefinitions: true,
+        },
       });
     }),
 
@@ -118,10 +109,7 @@ export const roomRouter = createTRPCRouter({
 
     return await ctx.db.room.update({
       where: { code: ctx.session.user.roomCode },
-      data: {
-        playing: true,
-        chooserId: chooser?.id,
-      },
+      data: { playing: true, chooserId: chooser?.id },
     });
   }),
 
@@ -144,9 +132,7 @@ export const roomRouter = createTRPCRouter({
 
       return await ctx.db.room.update({
         where: { code: ctx.session.user.roomCode },
-        data: {
-          ...input,
-        },
+        data: { ...input },
       });
     }),
 });

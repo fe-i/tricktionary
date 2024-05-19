@@ -33,7 +33,7 @@ const Play: React.FC = () => {
           <AvatarFallback>{sessionData.data?.user.name?.at(0)}</AvatarFallback>
         </Avatar>
         <UnderlineHover>
-          <h1>{sessionData.data?.user.name}</h1>
+          <h1 className="font-bold">{sessionData.data?.user.name}</h1>
         </UnderlineHover>
         <p>&quot;Title&quot;</p>
         <p>Games Played: {profileData?.gamesPlayed}</p>

@@ -15,7 +15,8 @@ import {
 
 export type RoomWithUsers =
   | Prisma.RoomGetPayload<{
-      include: { users: true };
+      select: { word: true };
+      include: { users: { select: { id: true; name: true; image: true } } };
     }>
   | undefined
   | null;
