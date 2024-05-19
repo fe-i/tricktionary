@@ -12,21 +12,29 @@ const WriteFakes: React.FC<{ roomData: RoomWithUsers }> = ({ roomData }) => {
   return (
     <Layout>
       <Modal className="flex w-[22rem] flex-col gap-4 text-center">
-        <p>Your word is</p>
-        <h2 className="text-3xl font-bold capitalize underline">
-          {roomData?.word}
-        </h2>
-        <p>Create a fake definition to deceive other players!</p>
-        <div>
+        <div className="flex flex-col gap-2">
+          <p>The word is...</p>
+          <h2 className="text-3xl font-bold">
+            {roomData?.word?.toUpperCase()}
+          </h2>
+          <p>Write a fake definition to deceive other players!</p>
+        </div>
+        <div className="flex flex-col gap-2">
           <textarea
-            className="aspect-[2] w-full rounded border border-text bg-background p-4 text-lg outline-none"
+            className="text-md aspect-[2] max-h-32 w-full rounded border border-text bg-background p-2 outline-none"
             placeholder="Your fake definition..."
+            maxLength={100}
+            onChange={(e) => {
+              const val = e.currentTarget.value;
+              setFakeDefinition(val);
+            }}
             onBlur={(e) => {
               const val = e.currentTarget.value;
               setFakeDefinition(val);
             }}
-          ></textarea>
+          />
           <Button
+            className="w-full"
             onClick={async () => {
               await submitMutation.mutateAsync({ definition: fakeDefinition });
               //   await updateRoom();

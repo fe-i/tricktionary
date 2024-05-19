@@ -1,5 +1,7 @@
+import Layout from "../layout";
+
 const Voting: React.FC = () => {
-  return <></>;
+  return <Layout></Layout>;
 };
 
 export default Voting;
