@@ -38,6 +38,8 @@ model FakeDefinition {
     userId     String
     definition String
     votes      Int    @default(0)
+
+    @@unique([roomCode, userId])
 }
 
 model Post {

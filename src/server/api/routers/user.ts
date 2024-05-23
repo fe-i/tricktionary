@@ -23,4 +23,17 @@ export const userRouter = createTRPCRouter({
         data: { ...input },
       });
     }),
+
+  didWriteDefinition: protectedProcedure.query(async ({ ctx }) => {
+    if (!ctx.session.user.id || !ctx.session.user.roomCode) return;
+
+    return await ctx.db.fakeDefinition.findUnique({
+      where: {
+        roomCode_userId: {
+          userId: ctx.session.user.id,
+          roomCode: ctx.session.user.roomCode,
+        },
+      },
+    });
+  }),
 });

@@ -10,7 +10,8 @@ import {
   Voting,
   WaitingRoom,
   WriteFakes,
-  WriterWait,
+  WriterWaitToVote,
+  WriterWaitForWord,
 } from "~/components/game";
 
 export type RoomWithUsers =
@@ -30,6 +31,11 @@ const Slug: React.FC = () => {
     roomCode: slug,
   });
   const roomData = roomQuery.data;
+  const didWriteQuery = api.user.didWriteDefinition.useQuery();
+  const didWrite = didWriteQuery.data;
+
+  const shouldVote =
+    roomData?.fakeDefinitions.length === roomData?.users.length;
 
   const authData = useAuth(slug, roomData, roomQuery.isLoading);
 
@@ -54,13 +60,19 @@ const Slug: React.FC = () => {
         <ChooserWait />
       );
     } else {
-      return !roomData.definition ? (
-        <WriterWait roomData={roomData} />
-      ) : !roomData.fakeDefinitions.length ? (
-        <WriteFakes roomData={roomData} />
-      ) : (
-        <Voting />
-      );
+      if (!roomData.definition) {
+        return <WriterWaitForWord roomData={roomData} />;
+      }
+
+      if (shouldVote) {
+        return <Voting />;
+      }
+
+      if (!didWrite) {
+        return <WriteFakes roomData={roomData} />;
+      }
+
+      return <WriterWaitToVote roomData={roomData} />;
     }
   }
 };

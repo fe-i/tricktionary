@@ -14,6 +14,8 @@ const Profile: React.FC = () => {
   const sessionData = useSession();
   const router = useRouter();
   const { toast } = useToast();
+
+  // STATE
   const [editing, setEditing] = useState(false);
 
   // QUERIES & MUTATIONS
@@ -27,7 +29,6 @@ const Profile: React.FC = () => {
   } else if (sessionData.status === "loading") {
     return <></>;
   }
-
   if (!profileData) return <></>;
 
   return (
@@ -62,7 +63,7 @@ const Profile: React.FC = () => {
               <h1 className="font-bold">{sessionData.data?.user.name}</h1>
             </UnderlineHover>
           )}
-          <h2 className="text-lg">&quot;Title&quot;</h2>
+          <h2 className="mt-3 text-lg">&quot;Title&quot;</h2>
         </div>
         <hr />
         <div className="flex w-full flex-col gap-2">
@@ -86,8 +87,14 @@ export default Profile;
 
 const Stat: React.FC<{ title: string; value: number }> = ({ title, value }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex justify-between">
       <h3 className="text-lg font-bold">{title}</h3>
+      {/* <div className="relative w-4/5 overflow-hidden">
+        <h3 className="text-lg font-bold after:absolute after:content-['...................................................................']">
+          {title}
+        </h3>
+      </div> */}
+
       <h3>{value.toLocaleString()}</h3>
     </div>
   );
