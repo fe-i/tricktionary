@@ -7,7 +7,7 @@ import { api } from "~/utils/api";
 
 const Voting: React.FC<{ roomData: RoomWithUsers }> = ({ roomData }) => {
   const [idx, setIdx] = useState(-1);
-  const definitionsQuery = api.room.getDefinitionsForVoting.useQuery();
+  const definitionsQuery = api.definitions.getDefinitionsForVoting.useQuery();
   const definitions = definitionsQuery.data;
 
   if (!definitions) return <Layout>Loading...</Layout>;
