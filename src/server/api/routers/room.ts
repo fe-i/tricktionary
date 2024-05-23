@@ -178,4 +178,41 @@ export const roomRouter = createTRPCRouter({
         },
       });
     }),
+
+  getDefinitionsForVoting: protectedProcedure.query(async ({ ctx, input }) => {
+    // const fakeDefinitions = await ctx.db.fakeDefinition.findMany({
+    //   where: {
+    //     roomCode: ctx.session.user.roomCode,
+    //     NOT: { userId: ctx.session.user.id },
+    //   },
+    //   select: {
+    //     definition: true,
+    //   },
+    // });
+    const room = await ctx.db.room.findUnique({
+      where: {
+        code: ctx.session.user.roomCode,
+      },
+      select: {
+        definition: true,
+        fakeDefinitions: {
+          where: {
+            NOT: {
+              userId: ctx.session.user.id,
+            },
+          },
+          select: {
+            definition: true,
+          },
+        },
+      },
+    });
+
+    if (!room) return;
+
+    return [
+      room.definition,
+      ...room.fakeDefinitions.map((fd) => fd.definition),
+    ];
+  }),
 });
