@@ -5,7 +5,7 @@ import { cn } from "~/utils/cn";
 
 const Background: React.FC = () => {
   return (
-    <div className="h-screen w-screen overflow-hidden">
+    <div className="absolute left-0 top-0 -z-10 h-screen w-screen overflow-hidden">
       {new Array(10).fill(0).map((_, i) => (
         <Circle key={`circle-#${i}`} />
       ))}

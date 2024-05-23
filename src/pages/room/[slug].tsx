@@ -61,18 +61,18 @@ const Slug: React.FC = () => {
       );
     } else {
       if (!roomData.definition) {
-        return <WriterWaitForWord roomData={roomData} />;
+        return <WriterWaitForWord chooserId={roomData.chooserId ?? ""} />;
       }
 
       if (shouldVote) {
-        return <Voting />;
+        return <Voting roomData={roomData} />;
       }
 
       if (!didWrite) {
         return <WriteFakes roomData={roomData} />;
       }
 
-      return <WriterWaitToVote roomData={roomData} />;
+      return <WriterWaitToVote />;
     }
   }
 };

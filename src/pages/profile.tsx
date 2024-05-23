@@ -19,7 +19,7 @@ const Profile: React.FC = () => {
   const [editing, setEditing] = useState(false);
 
   // QUERIES & MUTATIONS
-  const { data: profileData } = api.user.findUnique.useQuery();
+  const { data: profileData } = api.user.currentStats.useQuery();
   const updateMutation = api.user.update.useMutation();
 
   // AUTHENTICATION
