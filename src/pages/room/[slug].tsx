@@ -69,7 +69,7 @@ const Slug: React.FC = () => {
       }
 
       if (!didWrite) {
-        return <WriteFakes roomData={roomData} />;
+        return <WriteFakes roomData={roomData} updateRoom={updateRoom} />;
       }
 
       return <WriterWaitToVote />;
