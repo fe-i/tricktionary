@@ -1,9 +1,14 @@
 import Head from "next/head";
 import { Header } from "~/components/ui/header";
+import { cn } from "~/utils/cn";
 
 const Layout: React.FC<
-  React.PropsWithChildren<{ title?: string; noHeader?: boolean }>
-> = ({ title, noHeader = false, children }) => {
+  React.PropsWithChildren<{
+    title?: string;
+    className?: string;
+    noHeader?: boolean;
+  }>
+> = ({ title, className = "", noHeader = false, children }) => {
   return (
     <>
       <Head>
@@ -23,7 +28,12 @@ const Layout: React.FC<
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
-      <div className="container flex flex-col items-center justify-center gap-8 px-6 py-16 text-text">
+      <div
+        className={cn(
+          "container mt-16 flex flex-col items-center justify-center gap-8 px-6 text-text",
+          className,
+        )}
+      >
         <svg className="fixed left-0 top-0 -z-10 h-full w-full">
           <filter id="roughpaper" x="0%" y="0%" width="100%" height="100%">
             <feTurbulence
@@ -37,7 +47,6 @@ const Layout: React.FC<
           </filter>
           <rect width="100%" height="100%" filter="url(#roughpaper)" />
         </svg>
-
         {!noHeader && <Header />}
         {children}
       </div>

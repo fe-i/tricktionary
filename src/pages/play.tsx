@@ -172,9 +172,7 @@ const Play: React.FC = () => {
             )}
           </>
         )}
-        <Link href="/how-to" variant="underlined">
-          Learn to Play →
-        </Link>
+        <Link href="/how-to">Learn to Play →</Link>
       </Modal>
     </Layout>
   );

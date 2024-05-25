@@ -3,22 +3,7 @@ import { cn } from "~/utils/cn";
 import { UnderlineHover } from "./underline-hover";
 import NextLink from "next/link";
 
-export type linkVariantTypes =
-  | "underlined"
-  | "underlineOnHover"
-  | "getBolder"
-  | "blank";
-export const linkVariants: {
-  underlined: string;
-  underlineOnHover: string;
-  getBolder: string;
-  blank: string;
-} = {
-  underlined: "underline",
-  underlineOnHover: "",
-  getBolder: "font-normal hover:font-semibold",
-  blank: "",
-};
+export type linkVariantTypes = "underlineOnHover" | "getBolder" | "blank";
 
 interface LinkProps extends React.HTMLProps<HTMLAnchorElement> {
   variant?: linkVariantTypes;
@@ -26,16 +11,15 @@ interface LinkProps extends React.HTMLProps<HTMLAnchorElement> {
 }
 
 const Link = forwardRef<HTMLAnchorElement, React.PropsWithChildren<LinkProps>>(
-  ({ children, className = "", variant = "underlined", ...linkProps }, ref) => {
+  (
+    { children, className = "", variant = "underlineOnHover", ...linkProps },
+    ref,
+  ) => {
     if (variant === "underlineOnHover") {
       return (
         <UnderlineHover>
           <NextLink
-            className={cn(
-              "text-text transition-all",
-              linkVariants[variant],
-              className,
-            )}
+            className={cn("text-text transition-all", className)}
             {...linkProps}
             ref={ref}
           >
@@ -49,7 +33,7 @@ const Link = forwardRef<HTMLAnchorElement, React.PropsWithChildren<LinkProps>>(
       <NextLink
         className={cn(
           "text-text transition-all",
-          linkVariants[variant],
+          variant === "getBolder" ? "font-normal hover:font-semibold" : "",
           className,
         )}
         {...linkProps}

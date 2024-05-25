@@ -3,11 +3,11 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { useToast } from "~/components/use-toast";
-import { Modal } from "~/components/modal";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/avatar";
 import { Button } from "~/components/button";
 import { useState } from "react";
 import { UnderlineHover } from "~/components/underline-hover";
+import { Modal } from "~/components/modal";
 
 const Profile: React.FC = () => {
   // HOOKS
@@ -89,13 +89,7 @@ const Stat: React.FC<{ title: string; value: number }> = ({ title, value }) => {
   return (
     <div className="flex justify-between">
       <h3 className="text-lg font-bold">{title}</h3>
-      {/* <div className="relative w-4/5 overflow-hidden">
-        <h3 className="text-lg font-bold after:absolute after:content-['...................................................................']">
-          {title}
-        </h3>
-      </div> */}
-
-      <h3>{value.toLocaleString()}</h3>
+      <p>{value.toLocaleString()}</p>
     </div>
   );
 };
