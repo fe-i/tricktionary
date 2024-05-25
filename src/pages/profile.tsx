@@ -38,11 +38,11 @@ const Profile: React.FC = () => {
 
   // MANAGING TITLES
   const createTitle = (title: string) => {
-    createTitleMutation.mutateAsync({ title });
+    void createTitleMutation.mutateAsync({ title });
   };
 
-  const obtainTitle = (titleId: string) => {
-    obtainTitleMutation.mutateAsync({ titleId });
+  const obtainTitle = (titleId: number) => {
+    void obtainTitleMutation.mutateAsync({ titleId });
   };
 
   return (
