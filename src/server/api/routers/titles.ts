@@ -11,4 +11,27 @@ export const titleRouter = createTRPCRouter({
         },
       });
     }),
+
+  obtainTitle: protectedProcedure
+    .input(z.object({ titleId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session.user.id) return;
+
+      try {
+        const updatedTitle = await ctx.db.title.update({
+          where: { id: input.titleId },
+          data: {
+            users: {
+              connect: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
+        });
+
+        return updatedTitle;
+      } catch (error) {
+        console.error("Error updating title:", error);
+      }
+    }),
 });
