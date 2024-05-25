@@ -14,7 +14,7 @@ const WriteFakes: React.FC<{
 
   return (
     <Layout>
-      <Modal className="flex w-[22rem] flex-col gap-4 text-center">
+      <Modal className="flex flex-col gap-4 text-center">
         <div className="flex flex-col gap-2">
           <p>The word is...</p>
           <h2 className="text-3xl font-bold">

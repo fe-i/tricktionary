@@ -82,10 +82,7 @@ const Play: React.FC = () => {
 
   return (
     <Layout title="Play">
-      <Modal
-        className="flex w-[22rem] flex-col items-center gap-4"
-        ref={parent}
-      >
+      <Modal className="flex flex-col items-center gap-4" ref={parent}>
         <h2 className="w-full text-center text-2xl font-semibold">
           {joining ? "JOIN A ROOM" : "PLAY"}
         </h2>

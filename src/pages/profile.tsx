@@ -33,7 +33,7 @@ const Profile: React.FC = () => {
 
   return (
     <Layout title="Profile">
-      <Modal className="flex w-[22rem] flex-col items-center gap-4">
+      <Modal className="flex flex-col items-center gap-4">
         <Avatar className="h-[4rem] w-[4rem]">
           {sessionData.data?.user.image && (
             <AvatarImage src={sessionData.data.user.image} />

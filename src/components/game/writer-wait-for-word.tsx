@@ -11,7 +11,7 @@ const WriterWaitForWord: React.FC<{ chooserId: string }> = ({ chooserId }) => {
   return (
     <Layout>
       <Background />
-      <Modal className="w-[22rem]">
+      <Modal>
         <h1 className="mb-6 text-center font-bold">The word is being chosen</h1>
         <p className="text-center">
           {chooser?.name} is choosing the word for this round.

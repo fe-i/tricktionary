@@ -6,7 +6,7 @@ const WriterWaitToVote: React.FC = () => {
   return (
     <Layout>
       <Background />
-      <Modal className="w-[22rem]">
+      <Modal>
         <h1 className="mb-6 text-center font-bold">Definition submitted!</h1>
         <p className="text-center">
           Thanks for writing your definition! Once the rest of the players write
