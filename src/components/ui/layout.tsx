@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Header } from "./ui/header";
+import { Header } from "~/components/ui/header";
 
 const Layout: React.FC<
   React.PropsWithChildren<{ title?: string; noHeader?: boolean }>
@@ -45,4 +45,4 @@ const Layout: React.FC<
   );
 };
 
-export default Layout;
+export { Layout };

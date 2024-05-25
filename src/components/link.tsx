@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { cn } from "~/utils/cn";
-import UnderlineHover from "./underline-hover";
+import { UnderlineHover } from "./underline-hover";
 import NextLink from "next/link";
 
 export type linkVariantTypes =
@@ -63,4 +63,4 @@ const Link = forwardRef<HTMLAnchorElement, React.PropsWithChildren<LinkProps>>(
 
 Link.displayName = "Link";
 
-export default Link;
+export { Link };

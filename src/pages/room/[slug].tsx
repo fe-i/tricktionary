@@ -1,6 +1,6 @@
+import { Layout } from "~/components/ui/layout";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Layout from "~/components/layout";
 import { api } from "~/utils/api";
 import type { Prisma } from "@prisma/client";
 import { AuthStates, useAuth } from "~/components/game/use-auth";

@@ -2,8 +2,8 @@ import { X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import Button from "~/components/button";
-import Layout from "~/components/layout";
+import { Layout } from "~/components/ui/layout";
+import { Button } from "~/components/button";
 import type { RoomWithUsers } from "~/pages/room/[slug]";
 import autoAnimate from "@formkit/auto-animate";
 import {

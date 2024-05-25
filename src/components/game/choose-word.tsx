@@ -1,8 +1,8 @@
-import Layout from "../layout";
+import { Layout } from "~/components/ui/layout";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
-import Button from "../button";
+import { Button } from "~/components/button";
 
 type WordType = { word: string; definition: string };
 

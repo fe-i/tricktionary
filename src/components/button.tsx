@@ -7,6 +7,7 @@ export type buttonVariantTypes =
   | "accent"
   | "gray"
   | "blank";
+
 export const buttonVariants: {
   primary: string;
   secondary: string;
@@ -53,4 +54,4 @@ const Button = forwardRef<
 
 Button.displayName = "Button";
 
-export default Button;
+export { Button };

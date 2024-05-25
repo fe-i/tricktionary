@@ -1,6 +1,6 @@
+import { Layout } from "~/components/ui/layout";
 import type { RoomWithUsers } from "~/pages/room/[slug]";
-import Layout from "../layout";
-import Button from "../button";
+import { Button } from "~/components/button";
 import { cn } from "~/utils/cn";
 import { useState } from "react";
 import { api } from "~/utils/api";

@@ -1,6 +1,6 @@
-import Layout from "../layout";
-import Background from "../background";
-import Modal from "../modal";
+import { Layout } from "~/components/ui/layout";
+import { Background } from "~/components/ui/background";
+import { Modal } from "~/components/modal";
 
 const WriterWaitToVote: React.FC = () => {
   return (

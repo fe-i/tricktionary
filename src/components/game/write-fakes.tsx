@@ -1,9 +1,9 @@
-import { api } from "~/utils/api";
-import Layout from "../layout";
+import { Layout } from "~/components/ui/layout";
 import type { RoomWithUsers } from "~/pages/room/[slug]";
-import Button from "../button";
+import { Button } from "~/components/button";
 import { useState } from "react";
-import Modal from "../modal";
+import { api } from "~/utils/api";
+import { Modal } from "~/components/modal";
 
 const WriteFakes: React.FC<{
   roomData: RoomWithUsers;

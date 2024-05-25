@@ -13,7 +13,7 @@ const Background: React.FC = () => {
   );
 };
 
-export default Background;
+export { Background };
 
 const Circle: React.FC = () => {
   const { windowSize } = useWindowSize();

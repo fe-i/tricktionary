@@ -1,10 +1,10 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import Button from "~/components/button";
-import Layout from "~/components/layout";
-import Link from "~/components/link";
-import Modal from "~/components/modal";
+import { Button } from "~/components/button";
+import { Layout } from "~/components/ui/layout";
+import { Link } from "~/components/link";
+import { Modal } from "~/components/modal";
 import { api } from "~/utils/api";
 import autoAnimate from "@formkit/auto-animate";
 import { useToast } from "~/components/use-toast";

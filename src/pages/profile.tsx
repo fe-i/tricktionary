@@ -1,13 +1,13 @@
+import { Layout } from "~/components/ui/layout";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Layout from "~/components/layout";
 import { api } from "~/utils/api";
 import { useToast } from "~/components/use-toast";
-import Modal from "~/components/modal";
+import { Modal } from "~/components/modal";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/avatar";
-import Button from "~/components/button";
+import { Button } from "~/components/button";
 import { useState } from "react";
-import UnderlineHover from "~/components/underline-hover";
+import { UnderlineHover } from "~/components/underline-hover";
 
 const Profile: React.FC = () => {
   // HOOKS

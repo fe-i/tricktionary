@@ -23,4 +23,4 @@ const LinkButton: React.FC<
   );
 };
 
-export default LinkButton;
+export { LinkButton };

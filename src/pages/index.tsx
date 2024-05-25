@@ -1,11 +1,11 @@
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Button from "~/components/button";
-import Layout from "~/components/layout";
-import LinkButton from "~/components/link-button";
-import Modal from "~/components/modal";
+import { Layout } from "~/components/ui/layout";
+import { Button } from "~/components/button";
+import { LinkButton } from "~/components/link-button";
+import { Modal } from "~/components/modal";
 
-export default function Home() {
+const Home: React.FC = () => {
   const sessionData = useSession();
   const router = useRouter();
   if (sessionData.status === "authenticated") {
@@ -31,32 +31,6 @@ export default function Home() {
       </Modal>
     </Layout>
   );
-}
+};
 
-// const hello = api.post.hello.useQuery({ text: "from tRPC" });
-
-// function AuthShowcase() {
-//   const { data: sessionData } = useSession();
-
-//   const { data: secretMessage } = api.post.getSecretMessage.useQuery(
-//     undefined, // no input
-//     { enabled: sessionData?.user !== undefined },
-//   );
-
-//   return (
-//     <div className="flex flex-col items-center justify-center gap-4">
-//       <p className="text-center text-2xl text-white">
-//         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-//         {secretMessage && <span> - {secretMessage}</span>}
-//       </p>
-//       <button
-//         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-//         onClick={
-//           sessionData ? () => void signOut() : () => void signIn("google")
-//         }
-//       >
-//         {sessionData ? "Sign out" : "Sign in"}
-//       </button>
-//     </div>
-//   );
-// }
+export default Home;

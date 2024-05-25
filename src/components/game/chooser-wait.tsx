@@ -1,6 +1,6 @@
-import Background from "../background";
-import Layout from "../layout";
-import Modal from "../modal";
+import { Layout } from "~/components/ui/layout";
+import { Background } from "~/components/ui/background";
+import { Modal } from "~/components/modal";
 
 const ChooserWait: React.FC = () => {
   return (

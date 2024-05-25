@@ -11,7 +11,7 @@ const UnderlineHover: React.FC<
     <div
       className={cn(
         "relative",
-        "after:bg-text after:absolute after:bottom-0 after:left-0 after:w-full after:scale-x-0 after:transition-transform",
+        "after:absolute after:bottom-0 after:left-0 after:w-full after:scale-x-0 after:bg-text after:transition-transform",
         !disabled &&
           "hover:after:origin-left hover:after:scale-x-100 group-hover/box:after:origin-left group-hover/box:after:scale-x-100",
         thin ? "after:h-[1px]" : "after:h-[2px]",
@@ -23,4 +23,4 @@ const UnderlineHover: React.FC<
   );
 };
 
-export default UnderlineHover;
+export { UnderlineHover };

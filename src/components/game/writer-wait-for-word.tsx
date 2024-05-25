@@ -1,7 +1,7 @@
-import Layout from "../layout";
+import { Layout } from "~/components/ui/layout";
+import { Background } from "~/components/ui/background";
+import { Modal } from "~/components/modal";
 import { api } from "~/utils/api";
-import Background from "../background";
-import Modal from "../modal";
 
 const WriterWaitForWord: React.FC<{ chooserId: string }> = ({ chooserId }) => {
   const { data: chooser } = api.user.findUnique.useQuery({
