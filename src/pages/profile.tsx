@@ -20,7 +20,12 @@ const Profile: React.FC = () => {
 
   // QUERIES & MUTATIONS
   const { data: profileData } = api.user.currentStats.useQuery();
+  const { data: titles } = api.user.getTitles.useQuery();
   const updateMutation = api.user.update.useMutation();
+
+  // MANAGING TITLES
+  const createTitleMutation = api.titles.create.useMutation();
+  const obtainTitleMutation = api.user.obtainTitle.useMutation();
 
   // AUTHENTICATION
   if (sessionData.status === "unauthenticated") {
@@ -30,6 +35,15 @@ const Profile: React.FC = () => {
     return <></>;
   }
   if (!profileData) return <></>;
+
+  // MANAGING TITLES
+  const createTitle = (title: string) => {
+    createTitleMutation.mutateAsync({ title });
+  };
+
+  const obtainTitle = (titleId: string) => {
+    obtainTitleMutation.mutateAsync({ titleId });
+  };
 
   return (
     <Layout title="Profile">
@@ -45,17 +59,20 @@ const Profile: React.FC = () => {
             <input
               className="text-md w-full rounded border border-text bg-background p-2 outline-none"
               placeholder="Name"
+              minLength={1}
               maxLength={64}
               onBlur={async (e) => {
                 const val = e.currentTarget.value;
-                if (val.length < 3) return;
-                await updateMutation.mutateAsync({ name: val }).then(
-                  () =>
-                    void toast({
+                if (val.length < 1) return;
+                await updateMutation
+                  .mutateAsync({ name: val })
+                  .then(async () => {
+                    toast({
                       title: "Changes saved!",
                       description: "Profile successfully updated",
-                    }),
-                );
+                    });
+                    await sessionData.update();
+                  });
               }}
             />
           ) : (
@@ -63,7 +80,9 @@ const Profile: React.FC = () => {
               <h1 className="font-bold">{sessionData.data?.user.name}</h1>
             </UnderlineHover>
           )}
-          <h2 className="mt-3 text-lg">&quot;Title&quot;</h2>
+          <h2 className="mt-3 text-lg">
+            {!!titles?.length ? titles?.map((t) => t.title)[0] : "No Title"}
+          </h2>
         </div>
         <hr />
         <div className="flex w-full flex-col gap-2">

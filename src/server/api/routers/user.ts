@@ -24,6 +24,44 @@ export const userRouter = createTRPCRouter({
     });
   }),
 
+  getTitles: protectedProcedure.query(async ({ ctx }) => {
+    if (!ctx.session.user.id) return;
+
+    return await ctx.db.title.findMany({
+      where: { users: { some: { id: ctx.session.user.id } } },
+    });
+  }),
+
+  obtainTitle: protectedProcedure
+    .input(
+      z.object({
+        titleId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session.user.id) return;
+
+      try {
+        // Update the title to add the user
+        const updatedTitle = await ctx.db.title.update({
+          where: {
+            id: input.titleId,
+          },
+          data: {
+            users: {
+              connect: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
+        });
+
+        return updatedTitle;
+      } catch (error) {
+        console.error("Error updating title:", error);
+      }
+    }),
+
   update: protectedProcedure
     .input(
       z.object({
