@@ -5,12 +5,14 @@
 
 @layer base {
   :root {
-    --text: 0 0% 13%;
+    --text: 0 0% 10%;
     --background: 0 0% 94%;
     --primary: 119 49% 63%;
     --secondary: 99 71% 78%;
     --accent: 133 64% 77%;
-    --modal: 36 100% 97%;
+    --warning: 46 96% 71%;
+    --danger: 0 96% 65%;
+    --modal: 0 0% 94%;
     --muted: 0 0% 60%;
   }
 }

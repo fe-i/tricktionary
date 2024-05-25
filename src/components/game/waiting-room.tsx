@@ -22,8 +22,18 @@ const WaitingRoom: React.FC<{
   const sessionData = useSession();
   const router = useRouter();
   const slug = router.query.slug?.toString() ?? "";
+
   const updateMutation = api.room.update.useMutation();
   const startMutation = api.room.startGame.useMutation();
+  const leaveMutation = api.room.leave.useMutation();
+
+  const leaveRoom = async () => {
+    const result = await leaveMutation.mutateAsync();
+    if (result) {
+      await sessionData.update();
+      await router.push("/");
+    }
+  };
 
   const [editingGame, setEditingGame] = useState(false);
 
@@ -60,7 +70,10 @@ const WaitingRoom: React.FC<{
                 {roomData?.users.length === 1 ? "" : "s"}
               </p>
             </div>
-            {isOwner ? (
+            <Button variant="danger" className="h-fit" onClick={leaveRoom}>
+              Leave Room
+            </Button>
+            {isOwner && (
               <>
                 <Button
                   onClick={async () => {
@@ -94,8 +107,6 @@ const WaitingRoom: React.FC<{
                   Play
                 </Button>
               </>
-            ) : (
-              <></>
             )}
           </div>
           <div

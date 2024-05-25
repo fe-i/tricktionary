@@ -127,6 +127,7 @@ const Play: React.FC = () => {
               <hr className="w-full border-text" />
             </div>
             <Button
+              variant="danger"
               className="w-full text-xl font-semibold"
               onClick={leaveRoom}
             >

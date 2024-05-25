@@ -1,4 +1,4 @@
-import useWindowSize from "~/utils/use-window-size";
+import { useWindowSize } from "~/utils/use-window-size";
 import { animate, motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "~/utils/cn";

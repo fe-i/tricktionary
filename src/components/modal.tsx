@@ -9,7 +9,7 @@ const Modal = forwardRef<
     <div
       ref={ref}
       className={cn(
-        "w-[22rem] rounded-lg bg-background px-10 py-8 backdrop-blur-md",
+        "w-[22rem] rounded-lg bg-modal px-10 py-6 backdrop-blur-md",
         className,
       )}
     >

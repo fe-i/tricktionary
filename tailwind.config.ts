@@ -14,6 +14,8 @@ export default {
         primary: "hsl(var(--primary))",
         secondary: "hsl(var(--secondary))",
         accent: "hsl(var(--accent))",
+        warning: "hsl(var(--warning))",
+        danger: "hsl(var(--danger))",
         modal: "hsl(var(--modal))",
         muted: "hsl(var(--muted))",
       },

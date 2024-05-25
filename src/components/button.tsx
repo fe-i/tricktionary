@@ -6,6 +6,8 @@ export type buttonVariantTypes =
   | "secondary"
   | "accent"
   | "gray"
+  | "warning"
+  | "danger"
   | "blank";
 
 export const buttonVariants: {
@@ -13,12 +15,16 @@ export const buttonVariants: {
   secondary: string;
   accent: string;
   gray: string;
+  warning: string;
+  danger: string;
   blank: string;
 } = {
   primary: "bg-primary",
   secondary: "bg-secondary",
   accent: "bg-accent",
-  gray: "bg-[#CFCFCF]",
+  gray: "bg-[#cfcfcf]",
+  warning: "bg-warning",
+  danger: "bg-danger text-white",
   blank: "bg-transparent",
 };
 
@@ -40,6 +46,7 @@ const Button = forwardRef<
         className={cn(
           "rounded-lg px-4 py-2 transition-all duration-500 enabled:hover:scale-[1.02] enabled:hover:brightness-[0.98] enabled:active:scale-95 enabled:active:brightness-105",
           disabled ? buttonVariants.gray : buttonVariants[variant],
+          disabled ? "cursor-not-allowed" : "",
           className,
         )}
         {...buttonProps}
