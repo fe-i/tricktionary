@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { shuffle } from "~/utils/shuffle";
 
 export const definitionsRouter = createTRPCRouter({
   getDefinitionsForVoting: protectedProcedure.query(async ({ ctx }) => {
@@ -24,10 +25,14 @@ export const definitionsRouter = createTRPCRouter({
 
     if (!room) return;
 
-    return [
+    const defs = [
       room.definition,
       ...room.fakeDefinitions.map((fd) => fd.definition),
     ];
+
+    shuffle(defs);
+
+    return defs;
   }),
 
   //   voteForDefinition:
