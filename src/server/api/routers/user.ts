@@ -33,11 +33,7 @@ export const userRouter = createTRPCRouter({
   }),
 
   obtainTitle: protectedProcedure
-    .input(
-      z.object({
-        titleId: z.string(),
-      }),
-    )
+    .input(z.object({ titleId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       if (!ctx.session.user.id) return;
 

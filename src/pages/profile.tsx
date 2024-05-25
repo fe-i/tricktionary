@@ -41,7 +41,7 @@ const Profile: React.FC = () => {
     createTitleMutation.mutateAsync({ title });
   };
 
-  const obtainTitle = (titleId: string) => {
+  const obtainTitle = (titleId: number) => {
     obtainTitleMutation.mutateAsync({ titleId });
   };
 
