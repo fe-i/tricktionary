@@ -5,7 +5,7 @@ import { api } from "~/utils/api";
 
 const WriterWaitForWord: React.FC<{ chooserId: string }> = ({ chooserId }) => {
   const { data: chooser } = api.user.findUnique.useQuery({
-    userId: chooserId,
+    id: chooserId,
   });
 
   return (
