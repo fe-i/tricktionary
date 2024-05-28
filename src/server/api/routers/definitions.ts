@@ -1,5 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { shuffle } from "~/utils/shuffle";
+import { z } from "zod";
 
 export const definitionsRouter = createTRPCRouter({
   getDefinitionsForVoting: protectedProcedure.query(async ({ ctx }) => {
@@ -34,5 +35,32 @@ export const definitionsRouter = createTRPCRouter({
     return defs;
   }),
 
-  //   voteForDefinition:
+  voteForDefinition: protectedProcedure
+    .input(
+      z.object({
+        definitionId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session.user.roomCode) return;
+
+      if (!input.definitionId) {
+        return await ctx.db.room.update({
+          where: { code: ctx.session.user.roomCode },
+          data: {},
+        });
+      }
+
+      return await ctx.db.room.update({
+        where: { code: ctx.session.user.roomCode },
+        data: {
+          fakeDefinitions: {
+            create: {
+              definition: input.definition,
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      });
+    }),
 });

@@ -28,6 +28,7 @@ model Room {
     word            String?
     definition      String?
     fakeDefinitions FakeDefinition[]
+    correct_voters  Vote[]
 }
 
 model FakeDefinition {
@@ -37,7 +38,7 @@ model FakeDefinition {
 
     userId     String
     definition String
-    votes      Int    @default(0)
+    votes      Vote[]
 
     @@unique([roomCode, userId])
 }
@@ -78,14 +79,13 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
-    roomCode       String?
-    Room           Room?   @relation(fields: [roomCode], references: [code])
-    titles         Title[]
-    titleId        Int?
-    gamesPlayed    Int     @default(0)
-    gamesWon       Int     @default(0)
-    highScore      Int     @default(0)
-    correct_voters Vote[]
+    roomCode    String?
+    Room        Room?   @relation(fields: [roomCode], references: [code])
+    titles      Title[]
+    titleId     Int?
+    gamesPlayed Int     @default(0)
+    gamesWon    Int     @default(0)
+    highScore   Int     @default(0)
 }
 
 model Title {
@@ -95,9 +95,12 @@ model Title {
 }
 
 model Vote {
-    user         User    @relation(fields: [userId], references: [id])
-    definitionId String?
-    userId       String
+    userId String
+
+    Room             Room            @relation(fields: [roomCode], references: [code])
+    roomCode         String
+    FakeDefinition   FakeDefinition? @relation(fields: [fakeDefinitionId], references: [id])
+    fakeDefinitionId String?
 
     @@unique([userId])
 }
