@@ -95,14 +95,12 @@ model Title {
 }
 
 model Vote {
-    userId String
+    userId String @id
 
     Room             Room            @relation(fields: [roomCode], references: [code])
     roomCode         String
     FakeDefinition   FakeDefinition? @relation(fields: [fakeDefinitionId], references: [id])
     fakeDefinitionId String?
-
-    @@unique([userId])
 }
 
 model VerificationToken {

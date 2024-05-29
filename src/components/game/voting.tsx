@@ -9,6 +9,7 @@ const Voting: React.FC<{ roomData: RoomWithUsers }> = ({ roomData }) => {
   const [idx, setIdx] = useState(-1);
   const definitionsQuery = api.definitions.getDefinitionsForVoting.useQuery();
   const definitions = definitionsQuery.data;
+  const voteMutation = api.definitions.voteForDefinition.useMutation();
 
   if (!definitions) return <Layout>Loading...</Layout>;
 
@@ -16,7 +17,14 @@ const Voting: React.FC<{ roomData: RoomWithUsers }> = ({ roomData }) => {
     <Layout>
       <div className="mt-6 flex w-full items-center justify-between">
         <h1 className="font-bold">Voting time!</h1>
-        <Button variant="primary" disabled={idx === -1}>
+        <Button
+          variant="primary"
+          disabled={idx === -1}
+          onClick={async () => {
+            if (!definitions[idx]) return;
+            await voteMutation.mutateAsync({ definition: definitions[idx] });
+          }}
+        >
           Submit
         </Button>
       </div>
