@@ -2,7 +2,6 @@ import { Layout } from "~/components/ui/layout";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import type { Prisma } from "@prisma/client";
 import { AuthStates, useAuth } from "~/components/game/use-auth";
 import {
   ChooseWord,
@@ -13,14 +12,6 @@ import {
   WriterWaitToVote,
   WriterWaitForWord,
 } from "~/components/game";
-
-export type RoomWithUsers =
-  | Prisma.RoomGetPayload<{
-      select: { word: true };
-      include: { users: { select: { id: true; name: true; image: true } } };
-    }>
-  | undefined
-  | null;
 
 const Slug: React.FC = () => {
   const sessionData = useSession();
@@ -37,7 +28,7 @@ const Slug: React.FC = () => {
   const shouldVote =
     roomData?.fakeDefinitions.length === roomData?.users.length;
 
-  const authData = useAuth(slug, roomData, roomQuery.isLoading);
+  const authData = useAuth(slug, !!roomData, roomQuery.isLoading);
 
   const updateRoom: () => Promise<void> = async () => {
     await roomQuery.refetch();
@@ -65,11 +56,11 @@ const Slug: React.FC = () => {
       }
 
       if (shouldVote) {
-        return <Voting roomData={roomData} />;
+        return <Voting word={roomData.word} />;
       }
 
       if (!didWrite) {
-        return <WriteFakes roomData={roomData} updateRoom={updateRoom} />;
+        return <WriteFakes word={roomData.word} updateRoom={updateRoom} />;
       }
 
       return <WriterWaitToVote />;

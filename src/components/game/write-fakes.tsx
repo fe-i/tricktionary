@@ -1,14 +1,13 @@
 import { Layout } from "~/components/ui/layout";
-import type { RoomWithUsers } from "~/pages/room/[slug]";
 import { Button } from "~/components/button";
 import { useState } from "react";
 import { api } from "~/utils/api";
 import { Modal } from "~/components/modal";
 
 const WriteFakes: React.FC<{
-  roomData: RoomWithUsers;
+  word: string;
   updateRoom: () => Promise<void>;
-}> = ({ roomData, updateRoom }) => {
+}> = ({ word, updateRoom }) => {
   const [fakeDefinition, setFakeDefinition] = useState("");
   const submitMutation = api.room.submitDefinition.useMutation();
 
@@ -17,9 +16,7 @@ const WriteFakes: React.FC<{
       <Modal className="flex flex-col gap-4 text-center">
         <div className="flex flex-col gap-2">
           <p>The word is...</p>
-          <h2 className="text-3xl font-bold">
-            {roomData?.word?.toUpperCase()}
-          </h2>
+          <h2 className="text-3xl font-bold">{word.toUpperCase()}</h2>
           <p>Write a fake definition to deceive other players!</p>
         </div>
         <div className="flex flex-col gap-2">

@@ -1,7 +1,27 @@
-import { Room } from "@prisma/client";
 import { randomBytes } from "crypto";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+// import { omit } from "radash";
+
+type Omit = <T extends object, K extends [...(keyof T)[]]>(
+  obj: T,
+  ...keys: K
+) => {
+  [K2 in Exclude<keyof T, K[number]>]: T[K2];
+};
+
+const omit: Omit = (obj, ...keys) => {
+  const ret = {} as {
+    [K in keyof typeof obj]: (typeof obj)[K];
+  };
+  let key: keyof typeof obj;
+  for (key in obj) {
+    if (!keys.includes(key)) {
+      ret[key] = obj[key];
+    }
+  }
+  return ret;
+};
 
 export const roomRouter = createTRPCRouter({
   create: protectedProcedure.mutation(async ({ ctx }) => {
@@ -70,9 +90,9 @@ export const roomRouter = createTRPCRouter({
         },
       });
 
-      if (room?.definition) room.definition = "";
+      if (!room) return;
 
-      return room;
+      return omit<typeof room, ["definition"]>(room, "definition");
     }),
 
   exists: protectedProcedure

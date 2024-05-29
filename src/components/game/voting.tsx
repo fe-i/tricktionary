@@ -1,11 +1,10 @@
 import { Layout } from "~/components/ui/layout";
-import type { RoomWithUsers } from "~/pages/room/[slug]";
 import { Button } from "~/components/button";
 import { cn } from "~/utils/cn";
 import { useState } from "react";
 import { api } from "~/utils/api";
 
-const Voting: React.FC<{ roomData: RoomWithUsers }> = ({ roomData }) => {
+const Voting: React.FC<{ word: string }> = ({ word }) => {
   const [idx, setIdx] = useState(-1);
   const definitionsQuery = api.definitions.getDefinitionsForVoting.useQuery();
   const definitions = definitionsQuery.data;
@@ -29,9 +28,8 @@ const Voting: React.FC<{ roomData: RoomWithUsers }> = ({ roomData }) => {
         </Button>
       </div>
       <p className="-mt-4 w-full text-left">
-        Find the real definition for{" "}
-        <span className="font-bold">{roomData?.word}</span> among all of the
-        other defintions! Good luck!
+        Find the real definition for <span className="font-bold">{word}</span>{" "}
+        among all of the other defintions! Good luck!
       </p>
       <div className="grid w-full grid-rows-1 gap-4 px-4 md:grid-cols-2 md:gap-8 md:px-8 lg:grid-cols-3">
         {definitions.map((def, i) => (

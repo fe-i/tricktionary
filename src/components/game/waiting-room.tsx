@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { Layout } from "~/components/ui/layout";
 import { Button } from "~/components/button";
-import type { RoomWithUsers } from "~/pages/room/[slug]";
 import autoAnimate from "@formkit/auto-animate";
 import {
   Select,
@@ -14,10 +13,22 @@ import {
   SelectValue,
 } from "~/components/select";
 import { api } from "~/utils/api";
+import type { Prisma } from "@prisma/client";
+
+type RoomDataType =
+  | Omit<
+      Prisma.RoomGetPayload<{
+        select: { word: true };
+        include: { users: { select: { id: true; name: true; image: true } } };
+      }>,
+      "definition"
+    >
+  | undefined
+  | null;
 
 const WaitingRoom: React.FC<{
   onStart: () => Promise<void>;
-  roomData: RoomWithUsers;
+  roomData: RoomDataType;
 }> = ({ onStart, roomData }) => {
   const sessionData = useSession();
   const router = useRouter();

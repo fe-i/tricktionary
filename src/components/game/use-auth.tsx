@@ -1,5 +1,4 @@
 import { useSession } from "next-auth/react";
-import type { RoomWithUsers } from "~/pages/room/[slug]";
 import { api } from "~/utils/api";
 
 export enum AuthStates {
@@ -10,7 +9,7 @@ export enum AuthStates {
 
 export const useAuth = (
   slug: string,
-  roomData: RoomWithUsers,
+  roomExists: boolean,
   roomLoading: boolean,
 ): AuthStates => {
   const joinMutation = api.room.join.useMutation();
@@ -24,7 +23,7 @@ export const useAuth = (
   if (roomLoading) {
     // Checking room exists
     return AuthStates.LOADING;
-  } else if (!roomData) {
+  } else if (!roomExists) {
     // Room does not exist
     return AuthStates.UNAUTHORIZED;
   } else {
