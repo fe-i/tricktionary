@@ -1,3 +1,4 @@
+import { Room } from "@prisma/client";
 import { randomBytes } from "crypto";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
@@ -59,7 +60,7 @@ export const roomRouter = createTRPCRouter({
   findUnique: protectedProcedure
     .input(z.object({ roomCode: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.db.room.findUnique({
+      const room = await ctx.db.room.findUnique({
         where: { code: input.roomCode },
         include: {
           users: {
@@ -68,6 +69,10 @@ export const roomRouter = createTRPCRouter({
           fakeDefinitions: true,
         },
       });
+
+      if (room?.definition) room.definition = "";
+
+      return room;
     }),
 
   exists: protectedProcedure

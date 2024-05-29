@@ -54,13 +54,13 @@ const Slug: React.FC = () => {
     return <WaitingRoom roomData={roomData} onStart={updateRoom} />;
   } else {
     if (sessionData.data?.user.id === roomData.chooserId) {
-      return !roomData.definition ? (
+      return !roomData.word ? (
         <ChooseWord updateRoom={updateRoom} />
       ) : (
         <ChooserWait />
       );
     } else {
-      if (!roomData.definition) {
+      if (!roomData.word) {
         return <WriterWaitForWord chooserId={roomData.chooserId ?? ""} />;
       }
 
