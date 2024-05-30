@@ -21,7 +21,9 @@ const Voting: React.FC<{ word: string }> = ({ word }) => {
           disabled={idx === -1}
           onClick={async () => {
             if (!definitions[idx]) return;
-            await voteMutation.mutateAsync({ definition: definitions[idx] });
+            await voteMutation.mutateAsync({
+              definition: definitions[idx]!,
+            });
           }}
         >
           Submit
