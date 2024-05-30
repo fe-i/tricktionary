@@ -20,7 +20,7 @@ const Header: React.FC = () => {
   return (
     <header className="container absolute left-auto right-auto top-0 z-50 flex items-center justify-between gap-8 px-6 py-4">
       <Link href="/" variant="getBolder">
-        FICTIONARY
+        TRICKTIONARY
       </Link>
       {status === "authenticated" ? (
         <DropdownMenu>

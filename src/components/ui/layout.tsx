@@ -12,18 +12,18 @@ const Layout: React.FC<
   return (
     <>
       <Head>
-        <title>{`${title ? title + " | " : ""}Fictionary`}</title>
+        <title>{`${title ? title + " | " : ""}Tricktionary`}</title>
         <link rel="icon" href="/favicon.ico" />
         <meta
           property="og:title"
-          content={`${title ? title + " | " : ""}Fictionary`}
+          content={`${title ? title + " | " : ""}Tricktionary`}
         />
         <meta property="og:type" content="website" />
         <meta
           property="og:url"
           content="https://dictionary-game-silk.vercel.app"
         />
-        <meta property="og:description" content="Fictionary" />
+        <meta property="og:description" content="Tricktionary" />
         {/* <meta property="og:image" content="" /> */}
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
