@@ -94,4 +94,19 @@ export const definitionsRouter = createTRPCRouter({
 
       return null;
     }),
+
+  voteExists: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.vote.findUnique({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        FakeDefinition: {
+          select: {
+            definition: true,
+          },
+        },
+      },
+    });
+  }),
 });

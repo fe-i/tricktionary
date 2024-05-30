@@ -1,7 +1,7 @@
 import { Layout } from "~/components/ui/layout";
 import { Button } from "~/components/button";
 import { cn } from "~/utils/cn";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 
 const Voting: React.FC<{ word: string }> = ({ word }) => {
@@ -9,6 +9,13 @@ const Voting: React.FC<{ word: string }> = ({ word }) => {
   const definitionsQuery = api.definitions.getDefinitionsForVoting.useQuery();
   const definitions = definitionsQuery.data;
   const voteMutation = api.definitions.voteForDefinition.useMutation();
+  const { data: vote } = api.definitions.voteExists.useQuery();
+
+  useEffect(() => {
+    if (definitions && vote?.FakeDefinition?.definition) {
+      setIdx(definitions.indexOf(vote.FakeDefinition.definition) ?? -1);
+    }
+  }, [definitions, vote]);
 
   if (!definitions) return <Layout>Loading...</Layout>;
 
@@ -18,13 +25,13 @@ const Voting: React.FC<{ word: string }> = ({ word }) => {
         <h1 className="font-bold">Voting time!</h1>
         <Button
           variant="primary"
-          disabled={idx === -1}
+          disabled={idx === -1 || !!vote}
           onClick={async () => {
             if (!definitions[idx]) return;
             await voteMutation.mutateAsync({ definition: definitions[idx] });
           }}
         >
-          Submit
+          {vote ? "Submitted!" : "Submit"}
         </Button>
       </div>
       <p className="-mt-4 w-full text-left">
@@ -36,7 +43,9 @@ const Voting: React.FC<{ word: string }> = ({ word }) => {
           <WordCard
             definition={def ?? ""}
             active={idx === i}
-            onClick={() => setIdx(i)}
+            onClick={() => {
+              if (!vote) setIdx(i);
+            }}
             key={i}
           />
         ))}
