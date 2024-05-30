@@ -13,9 +13,7 @@ const Word = async (req: NextApiRequest, res: NextApiResponse) => {
 
     for (let i = 0; i < quantity; i++) {
       const response = await fetch("https://randomword.com", {
-        headers: {
-          "User-Agent": Date.now().toFixed(), // USED TO GET NEW WORDS ON RELOAD
-        },
+        headers: { "User-Agent": Date.now().toFixed() },
       });
 
       const html = await response.text();
@@ -25,7 +23,7 @@ const Word = async (req: NextApiRequest, res: NextApiResponse) => {
         .trim()
         .split("\n\t\t\t\t");
 
-      words.push({ word: data[0], definition: data[1] });
+      words.push({ word: data[0], definition: data[1]?.split(";")[0] });
     }
 
     return res.status(200).send(JSON.stringify(words, null, 2));
