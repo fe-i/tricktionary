@@ -81,44 +81,44 @@ const WaitingRoom: React.FC<{
                 {roomData?.users.length === 1 ? "" : "s"}
               </p>
             </div>
-            <Button variant="danger" className="h-fit" onClick={leaveRoom}>
-              Leave Room
-            </Button>
-            {isOwner && (
-              <>
-                <Button
-                  onClick={async () => {
-                    if (editingGame === true) {
-                      await updateMutation.mutateAsync({
-                        difficulty,
-                        rounds,
-                      });
+            <div className="flex flex-wrap justify-end gap-2">
+              <Button variant="danger" onClick={leaveRoom}>
+                Leave Room
+              </Button>
+              {isOwner && (
+                <>
+                  <Button
+                    onClick={async () => {
+                      if (editingGame === true) {
+                        await updateMutation.mutateAsync({
+                          difficulty,
+                          rounds,
+                        });
+                        // PUSHER
+                      }
+                      setEditingGame((p) => !p);
+                    }}
+                    variant={editingGame ? "primary" : "gray"}
+                  >
+                    {editingGame ? "Save Game" : "Edit Game"}
+                  </Button>
+                  <Button
+                    onClick={async () => {
+                      await startMutation.mutateAsync();
+                      await onStart();
                       // PUSHER
+                    }}
+                    variant="primary"
+                    disabled={
+                      editingGame ||
+                      (roomData?.users && roomData?.users.length < 3)
                     }
-                    setEditingGame((p) => !p);
-                  }}
-                  variant={editingGame ? "primary" : "gray"}
-                  className="h-fit"
-                >
-                  {editingGame ? "Save Game" : "Edit Game"}
-                </Button>
-                <Button
-                  onClick={async () => {
-                    await startMutation.mutateAsync();
-                    await onStart();
-                    // PUSHER
-                  }}
-                  variant="primary"
-                  className="h-fit"
-                  disabled={
-                    editingGame ||
-                    (roomData?.users && roomData?.users.length < 3)
-                  }
-                >
-                  Play
-                </Button>
-              </>
-            )}
+                  >
+                    Play
+                  </Button>
+                </>
+              )}
+            </div>
           </div>
           <div
             className="mt-6 flex flex-col items-start justify-start gap-1 overflow-hidden transition-all"

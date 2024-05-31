@@ -7,7 +7,7 @@ const Background: React.FC = () => {
   return (
     <div className="absolute left-0 top-0 -z-10 h-screen w-screen overflow-hidden">
       {new Array(10).fill(0).map((_, i) => (
-        <Circle key={`circle-#${i}`} />
+        <Circle key={i} />
       ))}
     </div>
   );
@@ -56,6 +56,7 @@ const Circle: React.FC = () => {
       setSlope(m);
     }
   }, [windowSize, progress]);
+
   return (
     <motion.div
       style={{ x: progress, y: y_val, width: diameter.current }}

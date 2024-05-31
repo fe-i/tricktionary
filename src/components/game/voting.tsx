@@ -22,7 +22,7 @@ const Voting: React.FC<{ word: string }> = ({ word }) => {
   return (
     <Layout>
       <div className="mt-6 flex w-full items-center justify-between">
-        <h1 className="font-bold">Voting time!</h1>
+        <h1 className="font-bold">Voting Time!</h1>
         <Button
           variant="primary"
           disabled={idx === -1 || !!vote}
@@ -36,9 +36,9 @@ const Voting: React.FC<{ word: string }> = ({ word }) => {
           {vote ? "Submitted!" : "Submit"}
         </Button>
       </div>
-      <p className="-mt-4 w-full text-left">
+      <p className="-mt-4 w-full text-left text-lg">
         Find the real definition for <span className="font-bold">{word}</span>{" "}
-        among all of the other defintions! Good luck!
+        hidden among the other fake defintions!
       </p>
       <div className="grid w-full grid-rows-1 gap-4 px-4 md:grid-cols-2 md:gap-8 md:px-8 lg:grid-cols-3">
         {definitions.map((def, i) => (
