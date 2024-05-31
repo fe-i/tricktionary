@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "~/components/select";
 import autoAnimate from "@formkit/auto-animate";
+import { cn } from "~/utils/cn";
 
 const Profile: React.FC = () => {
   // HOOKS
@@ -48,7 +49,7 @@ const Profile: React.FC = () => {
   } else if (sessionData.status === "loading") {
     return <></>;
   }
-  if (!profile) return <></>;
+  if (!profile || !sessionData.data) return <></>;
 
   // MANAGING TITLES
   const createTitle = (title: string) => {
@@ -63,81 +64,81 @@ const Profile: React.FC = () => {
     <Layout title="Profile">
       <Modal className="flex flex-col items-center gap-4">
         <Avatar className="h-[4rem] w-[4rem]">
-          {sessionData.data?.user.image && (
+          {sessionData.data.user.image && (
             <AvatarImage src={sessionData.data.user.image} />
           )}
-          <AvatarFallback>{sessionData.data?.user.name?.at(0)}</AvatarFallback>
+          <AvatarFallback>{sessionData.data.user.name?.at(0)}</AvatarFallback>
         </Avatar>
-
-        {editing ? (
-          <div
-            className="flex w-full flex-col items-start justify-start gap-1 overflow-hidden transition-all"
-            ref={parent}
-          >
-            <h3 className="text-lg font-bold">Name</h3>
-            <input
-              className="text-md w-full rounded border border-text bg-background p-2 outline-none"
-              placeholder="Name"
-              maxLength={64}
-              defaultValue={sessionData.data?.user.name!}
-              onBlur={(e) => {
-                const value = e.currentTarget.value.trim();
-                if (value.length < 1 || value.length > 64)
-                  e.currentTarget.value = sessionData.data?.user.name!;
-                setName(value);
-              }}
-            />
-            <h3 className="mt-4 text-lg font-bold">Title</h3>
-            <Select
-              onValueChange={(value) => {
-                setTitleId(
-                  Number(
-                    (
-                      JSON.parse(value) as {
-                        id: number;
-                        title: string;
-                      }
-                    ).id,
-                  ),
-                );
-              }}
-            >
-              <SelectTrigger
-                disabled={
-                  !profile.titles.find(
-                    (t) => t.id === sessionData.data?.user.titleId,
-                  )?.title.length
-                }
+        <div
+          className={cn(
+            "flex w-full flex-col transition-all",
+            editing
+              ? "items-start justify-start overflow-hidden"
+              : "text-center",
+          )}
+          ref={parent}
+        >
+          {editing ? (
+            <>
+              <h3 className="text-lg font-bold">Name</h3>
+              <input
+                className="text-md w-full rounded border border-text/60 bg-background p-2 outline-none"
+                placeholder="Name"
+                maxLength={64}
+                defaultValue={sessionData.data.user.name!}
+                onBlur={(e) => {
+                  const value = e.currentTarget.value.trim();
+                  if (value.length < 1 || value.length > 64)
+                    e.currentTarget.value = sessionData.data.user.name!;
+                  setName(value);
+                }}
+              />
+              <h3 className="mt-4 text-lg font-bold">Title</h3>
+              <Select
+                onValueChange={(value) => {
+                  setTitleId(
+                    Number(
+                      (
+                        JSON.parse(value) as {
+                          id: number;
+                          title: string;
+                        }
+                      ).id,
+                    ),
+                  );
+                }}
               >
-                <SelectValue
-                  placeholder={
-                    profile.titles.find(
-                      (t) => t.id === sessionData.data?.user.titleId,
-                    )?.title ?? "No Title"
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {profile.titles.map((t, _) => (
-                  <SelectItem key={_} value={JSON.stringify(t)}>
-                    {t.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        ) : (
-          <div className="flex flex-col text-center">
-            <UnderlineHover>
-              <h1 className="font-bold">{sessionData.data?.user.name}</h1>
-            </UnderlineHover>
-            <h2 className="mt-3 text-lg">
-              {profile.titles.find(
-                (t) => t.id === sessionData.data?.user.titleId,
-              )?.title ?? "No Title"}
-            </h2>
-          </div>
-        )}
+                <SelectTrigger>
+                  <SelectValue
+                    placeholder={
+                      profile.titles.find(
+                        (t) => t.id === sessionData.data.user.titleId,
+                      )?.title ?? "No Title"
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {profile.titles.map((t, _) => (
+                    <SelectItem key={_} value={JSON.stringify(t)}>
+                      {t.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </>
+          ) : (
+            <>
+              <UnderlineHover>
+                <h1 className="font-bold">{sessionData.data.user.name}</h1>
+              </UnderlineHover>
+              <h2 className="mt-3 text-lg">
+                {profile.titles.find(
+                  (t) => t.id === sessionData.data.user.titleId,
+                )?.title ?? "No Title"}
+              </h2>
+            </>
+          )}
+        </div>
         <hr className={editing ? "my-2 w-full border-text" : ""} />
         <div className="flex w-full flex-col gap-2">
           <Stat title="Games Won" value={profile.gamesWon} />
@@ -149,9 +150,9 @@ const Profile: React.FC = () => {
           onClick={async () => {
             if (
               editing &&
-              name !== sessionData.data?.user.name &&
+              name !== sessionData.data.user.name &&
               name.length > 0 &&
-              titleId !== sessionData.data?.user.titleId
+              titleId !== sessionData.data.user.titleId
             ) {
               await updateMutation
                 .mutateAsync({
