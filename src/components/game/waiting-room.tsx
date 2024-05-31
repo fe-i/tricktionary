@@ -89,7 +89,7 @@ const WaitingRoom: React.FC<{
                 <>
                   <Button
                     onClick={async () => {
-                      if (editingGame === true) {
+                      if (editingGame) {
                         await updateMutation.mutateAsync({
                           difficulty,
                           rounds,
@@ -166,7 +166,6 @@ const WaitingRoom: React.FC<{
             )}
           </div>
         </div>
-
         <hr className="my-2 w-full border-text" />
         <div className="flex w-full flex-wrap justify-center gap-5">
           {roomData?.users.map((player, i) => (
