@@ -12,6 +12,7 @@ import {
   WriterWaitToVote,
   WriterWaitForWord,
 } from "~/components/game";
+import { usePusher } from "../api/pusher/usePusher";
 
 const Slug: React.FC = () => {
   const sessionData = useSession();
@@ -33,6 +34,10 @@ const Slug: React.FC = () => {
   const updateRoom: () => Promise<void> = async () => {
     await roomQuery.refetch();
   };
+
+  const pusher = usePusher(slug, async () => {
+    await roomQuery.refetch();
+  });
 
   if (authData === AuthStates.UNAUTHORIZED) {
     void router.push("/");
