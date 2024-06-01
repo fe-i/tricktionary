@@ -39,11 +39,11 @@ const Play: React.FC = () => {
     return <></>;
   }
 
-  if (!sessionData.data) return <></>;
-
   // ROOM CRUD FUNCTIONS
   const createRoom = async () => {
     const result = await createMutation.mutateAsync();
+    await sessionData.update();
+
     if (result) {
       await router.push(`/room/${result.code}`);
     }
@@ -52,11 +52,11 @@ const Play: React.FC = () => {
   const leaveRoom = async () => {
     const result = await leaveMutation.mutateAsync();
     if (result) {
+      await sessionData.update();
       toast({
         title: "Left your room!",
-        description: "Room successfully exited",
+        description: "Room successfully exited.",
       });
-      await sessionData.update();
     }
   };
 

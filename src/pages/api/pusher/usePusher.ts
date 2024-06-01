@@ -30,7 +30,7 @@ export const usePusher = (
       pusherRef.current.unbind_all();
       pusherRef.current.subscribe(roomCode);
       pusherRef.current.bind("updateRoom", async (d: { raw: string }) => {
-        console.log("Recieved update message");
+        console.log("Recieved update message.");
         await refetchRoom();
 
         const data: {
@@ -42,10 +42,12 @@ export const usePusher = (
 
         if (data.path) {
           toast({
-            title: `Room ${roomCode.toUpperCase()} closed`,
-            description: "Redirecting to home",
+            title: `Room ${roomCode.toUpperCase()} Closed`,
+            description: "Redirecting to home.",
           });
-          console.log(`Room ${roomCode} close, redirecting to home`);
+          console.log(
+            `Room ${roomCode.toUpperCase()} closed, redirecting to home.`,
+          );
           await router.push(data.path);
         }
 

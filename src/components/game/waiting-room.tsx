@@ -14,6 +14,7 @@ import {
 } from "~/components/select";
 import { api } from "~/utils/api";
 import type { Prisma } from "@prisma/client";
+import { useToast } from "~/components/use-toast";
 
 type RoomDataType =
   | Omit<
@@ -32,6 +33,8 @@ const WaitingRoom: React.FC<{
 }> = ({ onStart, roomData }) => {
   const sessionData = useSession();
   const router = useRouter();
+  const { toast } = useToast();
+
   const slug = router.query.slug?.toString() ?? "";
 
   const updateMutation = api.room.update.useMutation();
@@ -40,9 +43,14 @@ const WaitingRoom: React.FC<{
 
   const leaveRoom = async () => {
     const result = await leaveMutation.mutateAsync();
+
     if (result) {
       await router.push("/");
       await sessionData.update();
+      toast({
+        title: "Left your room!",
+        description: "Room successfully exited.",
+      });
     }
   };
 

@@ -53,7 +53,7 @@ export const roomRouter = createTRPCRouter({
           data: { users: { connect: { id: ctx.session.user.id } } },
         })
         .then(async (res) => {
-          await updateRoomData(ctx.session.user.roomCode!, ctx.session.user);
+          await updateRoomData(res.code, ctx.session.user);
           return res;
         });
     }),
@@ -84,7 +84,7 @@ export const roomRouter = createTRPCRouter({
           data: { hostId: roomUpdate.users[0]?.id },
         })
         .then(async (res) => {
-          await updateRoomData(ctx.session.user.roomCode!, ctx.session.user);
+          await updateRoomData(res.code, ctx.session.user);
           return res;
         });
     }
@@ -142,7 +142,7 @@ export const roomRouter = createTRPCRouter({
           data: { ...input },
         })
         .then(async (res) => {
-          await updateRoomData(ctx.session.user.roomCode!, ctx.session.user);
+          await updateRoomData(res.code, ctx.session.user);
           return res;
         });
     }),
@@ -165,7 +165,7 @@ export const roomRouter = createTRPCRouter({
         data: { playing: true, chooserId: chooser?.id },
       })
       .then(async (res) => {
-        await updateRoomData(ctx.session.user.roomCode!, ctx.session.user);
+        await updateRoomData(res.code, ctx.session.user);
         return res;
       });
   }),
@@ -228,7 +228,7 @@ export const roomRouter = createTRPCRouter({
           },
         })
         .then(async (res) => {
-          await updateRoomData(ctx.session.user.roomCode!, ctx.session.user);
+          await updateRoomData(res.code, ctx.session.user);
           return res;
         });
     }),

@@ -166,7 +166,7 @@ const Profile: React.FC = () => {
                 .then(() =>
                   toast({
                     title: "Profile updated!",
-                    description: "Changes saved successfully",
+                    description: "Changes saved successfully.",
                   }),
                 );
               await sessionData.update();

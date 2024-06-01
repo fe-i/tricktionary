@@ -12,7 +12,7 @@ import {
   WriterWaitToVote,
   WriterWaitForWord,
 } from "~/components/game";
-import { usePusher } from "../api/pusher/usePusher";
+import { usePusher } from "~/pages/api/pusher/usePusher";
 
 const Slug: React.FC = () => {
   const sessionData = useSession();
