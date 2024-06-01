@@ -7,7 +7,7 @@ const WriterWaitToVote: React.FC = () => {
     <Layout>
       <Background />
       <Modal>
-        <h1 className="mb-6 text-center font-bold">Definition submitted!</h1>
+        <h1 className="mb-6 text-center font-bold">Definition Submitted!</h1>
         <p className="text-center">
           Thanks for writing your definition! Once the rest of the players write
           theirs, voting will begin!

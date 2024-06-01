@@ -39,6 +39,8 @@ const Play: React.FC = () => {
     return <></>;
   }
 
+  if (!sessionData.data) return <></>;
+
   // ROOM CRUD FUNCTIONS
   const createRoom = async () => {
     const result = await createMutation.mutateAsync();

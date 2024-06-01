@@ -41,8 +41,8 @@ const WaitingRoom: React.FC<{
   const leaveRoom = async () => {
     const result = await leaveMutation.mutateAsync();
     if (result) {
-      await sessionData.update();
       await router.push("/");
+      await sessionData.update();
     }
   };
 
@@ -94,7 +94,6 @@ const WaitingRoom: React.FC<{
                           difficulty,
                           rounds,
                         });
-                        // PUSHER
                       }
                       setEditingGame((p) => !p);
                     }}
@@ -106,7 +105,6 @@ const WaitingRoom: React.FC<{
                     onClick={async () => {
                       await startMutation.mutateAsync();
                       await onStart();
-                      // PUSHER
                     }}
                     variant="primary"
                     disabled={
@@ -141,14 +139,14 @@ const WaitingRoom: React.FC<{
                     } else if (val < 3) {
                       e.currentTarget.value = "3";
                     }
-                    setRounds(parseInt(e.currentTarget.value)); // MUTATE ROOM HERE
+                    setRounds(parseInt(e.currentTarget.value));
                   }}
                 />
                 <h3 className="mt-4 text-lg font-medium">Difficulty:</h3>
                 <Select
                   defaultValue="Medium"
                   onValueChange={(value) => {
-                    setDifficulty(value as difficulties); // MUTATE ROOM HERE
+                    setDifficulty(value as difficulties);
                   }}
                 >
                   <SelectTrigger className="w-44 outline-none">

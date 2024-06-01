@@ -27,7 +27,8 @@ const Slug: React.FC = () => {
   const didWrite = didWriteQuery.data;
 
   const shouldVote =
-    roomData?.fakeDefinitions.length === roomData?.users.length;
+    roomData?.users.length &&
+    roomData?.users.length - 1 === roomData?.fakeDefinitions.length;
 
   const authData = useAuth(slug, !!roomData, roomQuery.isLoading);
 

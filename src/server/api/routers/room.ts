@@ -47,10 +47,15 @@ export const roomRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user.roomCode) return;
 
-      return await ctx.db.room.update({
-        where: { code: input.roomCode },
-        data: { users: { connect: { id: ctx.session.user.id } } },
-      });
+      return await ctx.db.room
+        .update({
+          where: { code: input.roomCode },
+          data: { users: { connect: { id: ctx.session.user.id } } },
+        })
+        .then(async (res) => {
+          await updateRoomData(ctx.session.user.roomCode!, ctx.session.user);
+          return res;
+        });
     }),
 
   leave: protectedProcedure.mutation(async ({ ctx }) => {
@@ -63,18 +68,28 @@ export const roomRouter = createTRPCRouter({
     });
 
     if (roomUpdate.users.length === 0) {
+      await ctx.db.vote.deleteMany({
+        where: { roomCode: ctx.session.user.roomCode },
+      });
+      await ctx.db.fakeDefinition.deleteMany({
+        where: { roomCode: ctx.session.user.roomCode },
+      });
       return await ctx.db.room.delete({
         where: { code: ctx.session.user.roomCode },
       });
     } else if (roomUpdate.hostId === ctx.session.user.id) {
-      return await ctx.db.room.update({
-        where: { code: ctx.session.user.roomCode },
-        data: {
-          hostId: roomUpdate.users[0]?.id,
-        },
-      });
+      return await ctx.db.room
+        .update({
+          where: { code: ctx.session.user.roomCode },
+          data: { hostId: roomUpdate.users[0]?.id },
+        })
+        .then(async (res) => {
+          await updateRoomData(ctx.session.user.roomCode!, ctx.session.user);
+          return res;
+        });
     }
 
+    await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
     return roomUpdate;
   }),
 
@@ -121,12 +136,15 @@ export const roomRouter = createTRPCRouter({
 
       if (room?.hostId !== ctx.session.user.id) return;
 
-      return await ctx.db.room.update({
-        where: { code: ctx.session.user.roomCode },
-        data: {
-          ...input,
-        },
-      });
+      return await ctx.db.room
+        .update({
+          where: { code: ctx.session.user.roomCode },
+          data: { ...input },
+        })
+        .then(async (res) => {
+          await updateRoomData(ctx.session.user.roomCode!, ctx.session.user);
+          return res;
+        });
     }),
 
   startGame: protectedProcedure.mutation(async ({ ctx }) => {
@@ -141,10 +159,15 @@ export const roomRouter = createTRPCRouter({
 
     const chooser = room.users[Math.floor(Math.random() * room.users.length)];
 
-    return await ctx.db.room.update({
-      where: { code: ctx.session.user.roomCode },
-      data: { playing: true, chooserId: chooser?.id },
-    });
+    return await ctx.db.room
+      .update({
+        where: { code: ctx.session.user.roomCode },
+        data: { playing: true, chooserId: chooser?.id },
+      })
+      .then(async (res) => {
+        await updateRoomData(ctx.session.user.roomCode!, ctx.session.user);
+        return res;
+      });
   }),
 
   chooseWord: protectedProcedure
@@ -188,24 +211,25 @@ export const roomRouter = createTRPCRouter({
 
       if (room?.chooserId === ctx.session.user.id) return;
       if (
-        room?.fakeDefinitions
-          .map((el) => el.userId)
-          .includes(ctx.session.user.id)
+        room?.fakeDefinitions.map((d) => d.userId).includes(ctx.session.user.id)
       )
         return;
 
-      await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
-
-      return await ctx.db.room.update({
-        where: { code: ctx.session.user.roomCode },
-        data: {
-          fakeDefinitions: {
-            create: {
-              definition: input.definition,
-              userId: ctx.session.user.id,
+      return await ctx.db.room
+        .update({
+          where: { code: ctx.session.user.roomCode },
+          data: {
+            fakeDefinitions: {
+              create: {
+                definition: input.definition,
+                userId: ctx.session.user.id,
+              },
             },
           },
-        },
-      });
+        })
+        .then(async (res) => {
+          await updateRoomData(ctx.session.user.roomCode!, ctx.session.user);
+          return res;
+        });
     }),
 });

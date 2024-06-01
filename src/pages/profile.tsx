@@ -86,20 +86,24 @@ const Profile: React.FC = () => {
                 placeholder="Name"
                 maxLength={64}
                 defaultValue={sessionData.data.user.name!}
+                onChange={(e) => {
+                  const val = e.currentTarget.value.trim();
+                  setName(val);
+                }}
                 onBlur={(e) => {
-                  const value = e.currentTarget.value.trim();
-                  if (value.length < 1 || value.length > 64)
+                  const val = e.currentTarget.value.trim();
+                  if (val.length < 1 || val.length > 64)
                     e.currentTarget.value = sessionData.data.user.name!;
-                  setName(value);
+                  setName(val);
                 }}
               />
               <h3 className="mt-4 text-lg font-bold">Title</h3>
               <Select
-                onValueChange={(value) => {
+                onValueChange={(val) => {
                   setTitleId(
                     Number(
                       (
-                        JSON.parse(value) as {
+                        JSON.parse(val) as {
                           id: number;
                           title: string;
                         }

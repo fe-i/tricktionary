@@ -103,6 +103,7 @@ export const definitionsRouter = createTRPCRouter({
     return await ctx.db.vote.findUnique({
       where: {
         userId: ctx.session.user.id,
+        roomCode: ctx.session.user.roomCode,
       },
       select: {
         FakeDefinition: {
