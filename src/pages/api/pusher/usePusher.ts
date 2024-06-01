@@ -4,13 +4,16 @@ import * as superjson from "superjson";
 import type { User } from "next-auth";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
+import { useToast } from "~/components/use-toast";
 
+// This connects the client to pusher and listen for events
 export const usePusher = (
   roomCode: string,
-  invalidate: () => Promise<void>,
+  refetchRoom: () => Promise<void>,
 ) => {
   const pusherRef = useRef<PusherJS>();
   const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     // Connect to pusher
@@ -26,9 +29,9 @@ export const usePusher = (
       pusherRef.current.unsubscribe(roomCode);
       pusherRef.current.unbind_all();
       pusherRef.current.subscribe(roomCode);
-      pusherRef.current.bind("invalidate", async (d: { raw: string }) => {
-        console.log("Recieved invalidate message");
-        await invalidate();
+      pusherRef.current.bind("updateRoom", async (d: { raw: string }) => {
+        console.log("Recieved update message");
+        await refetchRoom();
 
         const data: {
           userId: string;
@@ -36,17 +39,18 @@ export const usePusher = (
           user: User;
           path?: string;
         } = superjson.parse(d.raw);
+
         if (data.path) {
-          //   toast({
-          //     title: `Room ${id.toUpperCase()} closed`,
-          //     description: "Redirecting to home",
-          //   });
+          toast({
+            title: `Room ${roomCode.toUpperCase()} closed`,
+            description: "Redirecting to home",
+          });
           console.log(`Room ${roomCode} close, redirecting to home`);
           await router.push(data.path);
         }
 
         document.dispatchEvent(new Event("visibilitychange"));
-        await invalidate();
+        await refetchRoom();
       });
     }
 
@@ -56,5 +60,5 @@ export const usePusher = (
         pusherRef.current = undefined;
       }
     };
-  }, [roomCode, router, invalidate]);
+  }, [roomCode, router, refetchRoom, toast]);
 };

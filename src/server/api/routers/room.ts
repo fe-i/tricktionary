@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto";
 import { z } from "zod";
-import { invalidateRoom } from "~/pages/api/pusher";
+import { updateRoomData } from "~/pages/api/pusher";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 // import { omit } from "radash";
 
@@ -164,7 +164,7 @@ export const roomRouter = createTRPCRouter({
 
       if (room?.chooserId !== ctx.session.user.id) return;
 
-      await invalidateRoom(ctx.session.user.roomCode, ctx.session.user);
+      await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
 
       return await ctx.db.room.update({
         where: { code: ctx.session.user.roomCode },
@@ -193,6 +193,8 @@ export const roomRouter = createTRPCRouter({
           .includes(ctx.session.user.id)
       )
         return;
+
+      await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
 
       return await ctx.db.room.update({
         where: { code: ctx.session.user.roomCode },

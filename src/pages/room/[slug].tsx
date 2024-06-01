@@ -35,7 +35,7 @@ const Slug: React.FC = () => {
     await roomQuery.refetch();
   };
 
-  const pusher = usePusher(slug, async () => {
+  usePusher(slug, async () => {
     await roomQuery.refetch();
   });
 

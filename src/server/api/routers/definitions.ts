@@ -1,6 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { shuffle } from "~/utils/shuffle";
 import { z } from "zod";
+import { updateRoomData } from "~/pages/api/pusher";
 
 export const definitionsRouter = createTRPCRouter({
   getDefinitionsForVoting: protectedProcedure.query(async ({ ctx }) => {
@@ -62,6 +63,8 @@ export const definitionsRouter = createTRPCRouter({
         },
       });
 
+      await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
+
       if (input.definition === room?.definition) {
         return await ctx.db.room.update({
           where: { code: ctx.session.user.roomCode },
@@ -75,6 +78,7 @@ export const definitionsRouter = createTRPCRouter({
         });
       }
 
+      // Check if fake definitions length is 1 because only selecting fake definitions with the definition value set to input.definition
       if (
         room?.fakeDefinitions.length === 1 &&
         room.fakeDefinitions[0]?.userId !== ctx.session.user.id
