@@ -23,12 +23,19 @@ const Slug: React.FC = () => {
     roomCode: slug,
   });
   const roomData = roomQuery.data;
-  const didWriteQuery = api.user.didWriteDefinition.useQuery();
-  const didWrite = didWriteQuery.data;
+  const { data: didWrite } = api.user.didWriteDefinition.useQuery();
 
   const shouldVote =
     roomData?.users.length &&
     roomData?.users.length - 1 === roomData?.fakeDefinitions.length;
+
+  // const { data: countVotes } = api.definitions.countVotes.useQuery();
+  // const allVoted =
+  //   !shouldVote &&
+  //   roomData?.users.length &&
+  //   roomData?.users.length - 1 ===
+  //     roomData?.correct_voters.length +
+  //   countVotes?.length;
 
   const authData = useAuth(slug, !!roomData, roomQuery.isLoading);
 
@@ -36,9 +43,7 @@ const Slug: React.FC = () => {
     await roomQuery.refetch();
   };
 
-  usePusher(slug, async () => {
-    await roomQuery.refetch();
-  });
+  usePusher(slug, updateRoom);
 
   if (authData === AuthStates.UNAUTHORIZED) {
     void router.push("/");
@@ -61,13 +66,17 @@ const Slug: React.FC = () => {
         return <WriterWaitForWord chooserId={roomData.chooserId ?? ""} />;
       }
 
+      if (!didWrite) {
+        return <WriteFakes word={roomData.word} updateRoom={updateRoom} />;
+      }
+
       if (shouldVote) {
         return <Voting word={roomData.word} />;
       }
 
-      if (!didWrite) {
-        return <WriteFakes word={roomData.word} updateRoom={updateRoom} />;
-      }
+      // if (allVoted) {
+      //   return <Results />;
+      // }
 
       return <WriterWaitToVote />;
     }

@@ -63,19 +63,18 @@ export const definitionsRouter = createTRPCRouter({
         },
       });
 
-      await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
-
       if (input.definition === room?.definition) {
-        return await ctx.db.room.update({
-          where: { code: ctx.session.user.roomCode },
-          data: {
-            correct_voters: {
-              create: {
-                userId: ctx.session.user.id,
-              },
+        return await ctx.db.room
+          .update({
+            where: { code: ctx.session.user.roomCode },
+            data: {
+              correct_voters: { create: { userId: ctx.session.user.id } },
             },
-          },
-        });
+          })
+          .then(async (res) => {
+            await updateRoomData(res.code, ctx.session.user);
+            return res;
+          });
       }
 
       // Check if fake definitions length is 1 because only selecting fake definitions with the definition value set to input.definition
@@ -112,6 +111,13 @@ export const definitionsRouter = createTRPCRouter({
           },
         },
       },
+    });
+  }),
+
+  countVotes: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.vote.findMany({
+      where: { roomCode: ctx.session.user.roomCode },
+      select: { fakeDefinitionId: true },
     });
   }),
 });

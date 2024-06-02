@@ -61,7 +61,7 @@ export const roomRouter = createTRPCRouter({
   leave: protectedProcedure.mutation(async ({ ctx }) => {
     if (!ctx.session.user.roomCode) return;
 
-    const roomUpdate = await ctx.db.room.update({
+    let roomUpdate = await ctx.db.room.update({
       where: { code: ctx.session.user.roomCode },
       data: { users: { disconnect: { id: ctx.session.user.id } } },
       select: { users: { select: { id: true } }, hostId: true },
@@ -77,16 +77,28 @@ export const roomRouter = createTRPCRouter({
       return await ctx.db.room.delete({
         where: { code: ctx.session.user.roomCode },
       });
-    } else if (roomUpdate.hostId === ctx.session.user.id) {
-      return await ctx.db.room
-        .update({
-          where: { code: ctx.session.user.roomCode },
-          data: { hostId: roomUpdate.users[0]?.id },
-        })
-        .then(async (res) => {
-          await updateRoomData(res.code, ctx.session.user);
-          return res;
-        });
+    }
+
+    if (roomUpdate.hostId === ctx.session.user.id) {
+      roomUpdate = await ctx.db.room.update({
+        where: { code: ctx.session.user.roomCode },
+        data: { hostId: roomUpdate.users[0]?.id },
+        select: { users: { select: { id: true } }, hostId: true },
+      });
+    }
+
+    if (roomUpdate.users.length <= 2) {
+      await ctx.db.vote.deleteMany({
+        where: { roomCode: ctx.session.user.roomCode },
+      });
+      await ctx.db.fakeDefinition.deleteMany({
+        where: { roomCode: ctx.session.user.roomCode },
+      });
+      roomUpdate = await ctx.db.room.update({
+        where: { code: ctx.session.user.roomCode },
+        data: { playing: false, chooserId: null, word: null, definition: null },
+        select: { users: { select: { id: true } }, hostId: true },
+      });
     }
 
     await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
@@ -103,6 +115,7 @@ export const roomRouter = createTRPCRouter({
             select: { id: true, name: true, image: true },
           },
           fakeDefinitions: true,
+          correct_voters: true,
         },
       });
 
@@ -187,12 +200,15 @@ export const roomRouter = createTRPCRouter({
 
       if (room?.chooserId !== ctx.session.user.id) return;
 
-      await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
-
-      return await ctx.db.room.update({
-        where: { code: ctx.session.user.roomCode },
-        data: { ...input },
-      });
+      return await ctx.db.room
+        .update({
+          where: { code: ctx.session.user.roomCode },
+          data: { ...input },
+        })
+        .then(async (res) => {
+          await updateRoomData(res.code, ctx.session.user);
+          return res;
+        });
     }),
 
   submitDefinition: protectedProcedure
