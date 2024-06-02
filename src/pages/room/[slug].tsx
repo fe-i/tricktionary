@@ -23,13 +23,16 @@ const Slug: React.FC = () => {
     roomCode: slug,
   });
   const roomData = roomQuery.data;
-  const { data: didWrite } = api.user.didWriteDefinition.useQuery();
+
+  const didWriteQuery = api.user.didWriteDefinition.useQuery();
+  const didWrite = didWriteQuery.data;
 
   const shouldVote =
     roomData?.users.length &&
     roomData?.users.length - 1 === roomData?.fakeDefinitions.length;
 
-  // const { data: countVotes } = api.definitions.countVotes.useQuery();
+  // const countVotesQuery = api.definitions.countVotes.useQuery();
+  // const countVotes = countVotesQuery.data;
   // const allVoted =
   //   !shouldVote &&
   //   roomData?.users.length &&
@@ -41,6 +44,7 @@ const Slug: React.FC = () => {
 
   const updateRoom: () => Promise<void> = async () => {
     await roomQuery.refetch();
+    await didWriteQuery.refetch();
   };
 
   usePusher(slug, updateRoom);
@@ -66,12 +70,12 @@ const Slug: React.FC = () => {
         return <WriterWaitForWord chooserId={roomData.chooserId ?? ""} />;
       }
 
-      if (!didWrite) {
-        return <WriteFakes word={roomData.word} updateRoom={updateRoom} />;
-      }
-
       if (shouldVote) {
         return <Voting word={roomData.word} />;
+      }
+
+      if (!didWrite) {
+        return <WriteFakes word={roomData.word} updateRoom={updateRoom} />;
       }
 
       // if (allVoted) {
