@@ -23,6 +23,13 @@ const Word = async (req: NextApiRequest, res: NextApiResponse) => {
         .trim()
         .split("\n\t\t\t\t");
 
+      const definition = data[1]?.split(";")[0];
+
+      if (Number(definition?.split(" ")?.length) < 3) {
+        i--;
+        continue;
+      }
+
       words.push({ word: data[0], definition: data[1]?.split(";")[0] });
     }
 

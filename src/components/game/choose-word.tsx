@@ -3,22 +3,36 @@ import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
 import { Button } from "~/components/button";
+import { useToast } from "~/components/use-toast";
 
 type WordType = { word: string; definition: string };
 
 const ChooseWord: React.FC<{
   updateRoom: () => Promise<void>;
 }> = ({ updateRoom }) => {
+  const { toast } = useToast();
+
   const [words, setWords] = useState<WordType[]>([]);
   const [idx, setIdx] = useState(-1);
+  const [shuffling, setShuffling] = useState(false);
 
   const chooseWordMutation = api.room.chooseWord.useMutation();
 
   const getWords = () => {
+    setShuffling(true);
     fetch("/api/word?quantity=4")
-      .then((r) => r.json())
-      .then((data) => setWords(data as WordType[]))
-      .catch(() => 0);
+      .then((res) => res.json())
+      .then((data) => {
+        setWords(data as WordType[]);
+        setTimeout(() => setShuffling(false), 5000);
+      })
+      .catch(() => {
+        toast({
+          title: "Something went wrong!",
+          description: "Words not found.",
+        });
+        setTimeout(() => setShuffling(false), 3000);
+      });
   };
 
   useEffect(() => {
@@ -32,7 +46,7 @@ const ChooseWord: React.FC<{
     <Layout>
       <h2 className="-mb-4 text-3xl font-bold underline">Choose</h2>
       <p className="w-4/5 text-center">
-        Select a word you think will blend in with the fakes!
+        Select a word that you think will blend in with the fakes!
       </p>
       <div className="grid w-full grid-rows-1 gap-4 px-4 md:grid-cols-2 md:gap-8 md:px-8 lg:grid-cols-3">
         {words.map(({ word, definition }, i) => (
@@ -46,7 +60,7 @@ const ChooseWord: React.FC<{
         ))}
       </div>
       <div className="flex items-center gap-4">
-        <Button variant="gray" onClick={getWords}>
+        <Button variant="secondary" onClick={getWords} disabled={shuffling}>
           Shuffle
         </Button>
         <Button
