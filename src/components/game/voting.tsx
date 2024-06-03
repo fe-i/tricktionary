@@ -9,7 +9,8 @@ const Voting: React.FC<{ word: string }> = ({ word }) => {
   const definitionsQuery = api.definitions.getDefinitionsForVoting.useQuery();
   const definitions = definitionsQuery.data;
   const voteMutation = api.definitions.voteForDefinition.useMutation();
-  const { data: vote } = api.definitions.voteExists.useQuery();
+  const { data: vote, refetch: refetchHasVoted } =
+    api.definitions.voteExists.useQuery();
   useEffect(() => {
     if (definitions && vote?.FakeDefinition?.definition) {
       setIdx(definitions.indexOf(vote.FakeDefinition.definition) ?? -1);
@@ -30,6 +31,7 @@ const Voting: React.FC<{ word: string }> = ({ word }) => {
             await voteMutation.mutateAsync({
               definition: definitions[idx]!,
             });
+            await refetchHasVoted();
           }}
         >
           {vote ? "Submitted!" : "Submit"}
