@@ -5,13 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { Layout } from "~/components/ui/layout";
 import { Button } from "~/components/button";
 import autoAnimate from "@formkit/auto-animate";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/select";
 import { api } from "~/utils/api";
 import type { Prisma } from "@prisma/client";
 import { useToast } from "~/components/use-toast";
@@ -58,10 +51,6 @@ const WaitingRoom: React.FC<{
 
   const parent = useRef(null);
 
-  type difficulties = "Easy" | "Medium" | "Hard";
-  const [difficulty, setDifficulty] = useState<difficulties>(
-    (roomData?.difficulty as difficulties) ?? "Medium",
-  );
   const [rounds, setRounds] = useState(roomData?.rounds ?? 5);
 
   const isOwner = sessionData.data?.user.id === roomData?.hostId;
@@ -72,7 +61,6 @@ const WaitingRoom: React.FC<{
 
   useEffect(() => {
     if (!roomData) return;
-    setDifficulty(roomData.difficulty as difficulties);
     setRounds(roomData.rounds);
   }, [roomData]);
 
@@ -84,7 +72,6 @@ const WaitingRoom: React.FC<{
             <div className="flex flex-1 flex-col gap-3">
               <h1 className="text-4xl font-bold">#{slug}</h1>
               <p className="text-lg font-medium">
-                {rounds} rounds • {difficulty} difficulty •{" "}
                 {roomData?.users.length} player
                 {roomData?.users.length === 1 ? "" : "s"}
               </p>
@@ -99,7 +86,6 @@ const WaitingRoom: React.FC<{
                     onClick={async () => {
                       if (editingGame) {
                         await updateMutation.mutateAsync({
-                          difficulty,
                           rounds,
                         });
                       }
@@ -150,22 +136,6 @@ const WaitingRoom: React.FC<{
                     setRounds(parseInt(e.currentTarget.value));
                   }}
                 />
-                <h3 className="mt-4 text-lg font-medium">Difficulty:</h3>
-                <Select
-                  defaultValue="Medium"
-                  onValueChange={(value) => {
-                    setDifficulty(value as difficulties);
-                  }}
-                >
-                  <SelectTrigger className="w-44 outline-none">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Easy">Easy</SelectItem>
-                    <SelectItem value="Medium">Medium</SelectItem>
-                    <SelectItem value="Hard">Hard</SelectItem>
-                  </SelectContent>
-                </Select>
               </>
             ) : (
               <></>

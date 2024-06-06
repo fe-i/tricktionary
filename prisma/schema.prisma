@@ -16,12 +16,12 @@ datasource db {
 }
 
 model Room {
-    code       String  @id
-    users      User[]
-    rounds     Int     @default(5)
-    difficulty String  @default("Medium")
-    playing    Boolean @default(false)
-    hostId     String  @unique
+    code    String  @id
+    users   User[]
+    rounds  Int     @default(5)
+    // difficulty String  @default("Medium")
+    playing Boolean @default(false)
+    hostId  String  @unique
 
     // Differ by round
     chooserId       String?

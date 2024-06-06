@@ -167,7 +167,6 @@ export const roomRouter = createTRPCRouter({
   update: protectedProcedure
     .input(
       z.object({
-        difficulty: z.enum(["Easy", "Medium", "Hard"]),
         rounds: z.number(),
       }),
     )
