@@ -1,5 +1,5 @@
 import { Layout } from "~/components/ui/layout";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
 import { Button } from "~/components/button";
@@ -18,7 +18,7 @@ const ChooseWord: React.FC<{
 
   const chooseWordMutation = api.room.chooseWord.useMutation();
 
-  const getWords = () => {
+  const getWords = useCallback(() => {
     setShuffling(true);
     fetch("/api/word?quantity=4")
       .then((res) => res.json())
@@ -33,12 +33,12 @@ const ChooseWord: React.FC<{
         });
         setTimeout(() => setShuffling(false), 3000);
       });
-  };
+  }, [toast]);
 
   useEffect(() => {
     if (words.length) return;
     getWords();
-  }, [words]);
+  }, [words, getWords]);
 
   if (!words.length) return <Layout>Loading...</Layout>;
 
@@ -49,15 +49,18 @@ const ChooseWord: React.FC<{
         Select a word that you think will blend in with the fakes!
       </p>
       <div className="grid w-full grid-rows-1 gap-4 px-4 md:grid-cols-2 md:gap-8 md:px-8 lg:grid-cols-3">
-        {words.map(({ word, definition }, i) => (
-          <WordCard
-            word={word}
-            definition={definition}
-            active={idx === i}
-            onClick={() => setIdx(i)}
-            key={i}
-          />
-        ))}
+        {words.map(({ word, definition }, i) => {
+          console.log(word, "----", definition);
+          return (
+            <WordCard
+              word={word}
+              definition={definition}
+              active={idx === i}
+              onClick={() => setIdx(i)}
+              key={i}
+            />
+          );
+        })}
       </div>
       <div className="flex items-center gap-4">
         <Button variant="secondary" onClick={getWords} disabled={shuffling}>

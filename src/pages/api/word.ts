@@ -18,19 +18,16 @@ const Word = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const html = await response.text();
       const $ = cheerio.load(html);
-      const data = $(".section #shared_section")
-        .text()
-        .trim()
-        .split("\n\t\t\t\t");
+      const data = $(".section #shared_section").text().trim().split("\n");
 
-      const definition = data[1]?.split(";")[0];
+      const definition = data[1]?.split(";")[0]?.trim();
 
       if (Number(definition?.split(" ")?.length) < 3) {
         i--;
         continue;
       }
 
-      words.push({ word: data[0], definition: data[1]?.split(";")[0] });
+      words.push({ word: data[0], definition: definition });
     }
 
     return res.status(200).send(JSON.stringify(words, null, 2));
