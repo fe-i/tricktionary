@@ -48,8 +48,8 @@ const WaitingRoom: React.FC<{
       await router.push("/");
       await sessionData.update();
       toast({
-        title: "Left your room!",
-        description: "Room successfully exited.",
+        title: "Room Exited",
+        description: "You successfully left the room.",
       });
     }
   };
@@ -182,10 +182,9 @@ const WaitingRoom: React.FC<{
               <p className="text-lg">{player.name}</p>
               {isOwner && player.id !== roomData?.hostId ? (
                 <X
-                  onClick={() => {
-                    //Mutate room remove this player from the game
-                    // make sure mutation only works for owner
-                  }}
+                  onClick={async () =>
+                    await leaveMutation.mutateAsync({ id: player.id })
+                  }
                   className="group pointer-events-auto cursor-pointer transition-all hover:scale-110 hover:text-red-500 active:scale-90"
                 />
               ) : (

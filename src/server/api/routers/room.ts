@@ -58,52 +58,82 @@ export const roomRouter = createTRPCRouter({
         });
     }),
 
-  leave: protectedProcedure.mutation(async ({ ctx }) => {
-    if (!ctx.session.user.roomCode) return;
+  leave: protectedProcedure
+    .input(z.object({ id: z.string() }).optional())
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session.user.roomCode) return;
 
-    let roomUpdate = await ctx.db.room.update({
-      where: { code: ctx.session.user.roomCode },
-      data: { users: { disconnect: { id: ctx.session.user.id } } },
-      select: { users: { select: { id: true } }, hostId: true },
-    });
+      if (input?.id) {
+        const findHost = await ctx.db.room.findUnique({
+          select: { hostId: true },
+          where: { code: ctx.session.user.roomCode },
+        });
 
-    if (roomUpdate.users.length === 0) {
-      await ctx.db.vote.deleteMany({
-        where: { roomCode: ctx.session.user.roomCode },
-      });
-      await ctx.db.fakeDefinition.deleteMany({
-        where: { roomCode: ctx.session.user.roomCode },
-      });
-      return await ctx.db.room.delete({
+        if (findHost?.hostId === ctx.session.user.id) {
+          return ctx.db.user
+            .update({
+              where: { id: input.id },
+              data: { Room: { disconnect: true } },
+            })
+            .then(async (r) => {
+              await updateRoomData(
+                ctx.session.user.roomCode!,
+                ctx.session.user,
+              );
+              return r;
+            });
+        }
+        return;
+      }
+
+      let roomUpdate = await ctx.db.room.update({
         where: { code: ctx.session.user.roomCode },
-      });
-    }
-
-    if (roomUpdate.hostId === ctx.session.user.id) {
-      roomUpdate = await ctx.db.room.update({
-        where: { code: ctx.session.user.roomCode },
-        data: { hostId: roomUpdate.users[0]?.id },
+        data: { users: { disconnect: { id: ctx.session.user.id } } },
         select: { users: { select: { id: true } }, hostId: true },
       });
-    }
 
-    if (roomUpdate.users.length <= 2) {
-      await ctx.db.vote.deleteMany({
-        where: { roomCode: ctx.session.user.roomCode },
-      });
-      await ctx.db.fakeDefinition.deleteMany({
-        where: { roomCode: ctx.session.user.roomCode },
-      });
-      roomUpdate = await ctx.db.room.update({
-        where: { code: ctx.session.user.roomCode },
-        data: { playing: false, chooserId: null, word: null, definition: null },
-        select: { users: { select: { id: true } }, hostId: true },
-      });
-    }
+      if (roomUpdate.users.length === 0) {
+        await ctx.db.vote.deleteMany({
+          where: { roomCode: ctx.session.user.roomCode },
+        });
+        await ctx.db.fakeDefinition.deleteMany({
+          where: { roomCode: ctx.session.user.roomCode },
+        });
+        return await ctx.db.room.delete({
+          where: { code: ctx.session.user.roomCode },
+        });
+      }
 
-    await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
-    return roomUpdate;
-  }),
+      if (roomUpdate.hostId === ctx.session.user.id) {
+        roomUpdate = await ctx.db.room.update({
+          where: { code: ctx.session.user.roomCode },
+          data: { hostId: roomUpdate.users[0]?.id },
+          select: { users: { select: { id: true } }, hostId: true },
+        });
+      }
+
+      if (roomUpdate.users.length <= 2) {
+        await ctx.db.vote.deleteMany({
+          where: { roomCode: ctx.session.user.roomCode },
+        });
+        await ctx.db.fakeDefinition.deleteMany({
+          where: { roomCode: ctx.session.user.roomCode },
+        });
+        roomUpdate = await ctx.db.room.update({
+          where: { code: ctx.session.user.roomCode },
+          data: {
+            playing: false,
+            chooserId: null,
+            word: null,
+            definition: null,
+          },
+          select: { users: { select: { id: true } }, hostId: true },
+        });
+      }
+
+      await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
+      return roomUpdate;
+    }),
 
   findUnique: protectedProcedure
     .input(z.object({ roomCode: z.string() }))
@@ -128,6 +158,7 @@ export const roomRouter = createTRPCRouter({
     .input(z.object({ roomCode: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.room.findUnique({
+        select: { playing: true },
         where: { code: input.roomCode },
       });
     }),

@@ -28,8 +28,8 @@ const ChooseWord: React.FC<{
       })
       .catch(() => {
         toast({
-          title: "Something went wrong!",
-          description: "Words not found.",
+          title: "Words Not Found",
+          description: "Something went wrong, try again in a few seconds!",
         });
         setTimeout(() => setShuffling(false), 3000);
       });

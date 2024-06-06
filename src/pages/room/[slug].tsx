@@ -14,7 +14,7 @@ import {
 } from "~/components/game";
 import { usePusher } from "~/pages/api/pusher/usePusher";
 
-const Slug: React.FC = () => {
+const Room: React.FC = () => {
   const sessionData = useSession();
   const router = useRouter();
   const slug = router.query.slug?.toString() ?? "";
@@ -87,4 +87,4 @@ const Slug: React.FC = () => {
   }
 };
 
-export default Slug;
+export default Room;

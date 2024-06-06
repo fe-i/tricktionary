@@ -54,8 +54,8 @@ const Play: React.FC = () => {
     if (result) {
       await sessionData.update();
       toast({
-        title: "Left your room!",
-        description: "Room successfully exited.",
+        title: "Room Exited",
+        description: "You successfully left the room.",
       });
     }
   };
@@ -67,11 +67,18 @@ const Play: React.FC = () => {
     });
 
     if (existsResult) {
-      const result = await joinMutation.mutateAsync({ roomCode: codeVal });
-      await sessionData.update();
+      if (!existsResult.playing) {
+        const result = await joinMutation.mutateAsync({ roomCode: codeVal });
+        await sessionData.update();
 
-      if (result) {
-        await router.push(`/room/${codeVal}`);
+        if (result) {
+          await router.push(`/room/${codeVal}`);
+        }
+      } else {
+        toast({
+          title: "Game In Progress",
+          description: "Please wait until the round ends and try again!",
+        });
       }
     } else {
       toast({
