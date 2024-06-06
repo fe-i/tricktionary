@@ -5,6 +5,7 @@ import WaitingRoom from "./waiting-room";
 import WriteFakes from "./write-fakes";
 import WriterWaitForWord from "./writer-wait-for-word";
 import WriterWaitToVote from "./writer-wait-to-vote";
+import RoundResults from "./round-results";
 
 export {
   ChooseWord,
@@ -14,4 +15,5 @@ export {
   WriteFakes,
   WriterWaitForWord,
   WriterWaitToVote,
+  RoundResults,
 };

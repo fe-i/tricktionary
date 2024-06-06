@@ -25,6 +25,7 @@ model Room {
 
     // Differ by round
     chooserId       String?
+    currentRound    Int              @default(0)
     word            String?
     definition      String?
     fakeDefinitions FakeDefinition[]

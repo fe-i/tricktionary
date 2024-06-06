@@ -11,11 +11,12 @@ import {
   WriteFakes,
   WriterWaitToVote,
   WriterWaitForWord,
+  RoundResults,
 } from "~/components/game";
 import { usePusher } from "~/pages/api/pusher/usePusher";
 
 const Room: React.FC = () => {
-  const sessionData = useSession();
+  const { data: sessionData } = useSession();
   const router = useRouter();
   const slug = router.query.slug?.toString() ?? "";
 
@@ -31,14 +32,12 @@ const Room: React.FC = () => {
     roomData?.users.length &&
     roomData?.users.length - 1 === roomData?.fakeDefinitions.length;
 
-  // const countVotesQuery = api.definitions.countVotes.useQuery();
-  // const countVotes = countVotesQuery.data;
-  // const allVoted =
-  //   !shouldVote &&
-  //   roomData?.users.length &&
-  //   roomData?.users.length - 1 ===
-  //     roomData?.correct_voters.length +
-  //   countVotes?.length;
+  const countVotesQuery = api.definitions.countVotes.useQuery();
+  const countVotes = countVotesQuery.data;
+  const allVoted =
+    roomData?.users.length &&
+    countVotes?.length &&
+    roomData?.users.length === countVotes.length;
 
   const authData = useAuth(slug, !!roomData, roomQuery.isLoading);
 
@@ -59,7 +58,7 @@ const Room: React.FC = () => {
   if (!roomData?.playing) {
     return <WaitingRoom roomData={roomData} onStart={updateRoom} />;
   } else {
-    if (sessionData.data?.user.id === roomData.chooserId) {
+    if (sessionData?.user.id === roomData.chooserId) {
       return !roomData.word ? (
         <ChooseWord updateRoom={updateRoom} />
       ) : (
@@ -70,6 +69,16 @@ const Room: React.FC = () => {
         return <WriterWaitForWord chooserId={roomData.chooserId ?? ""} />;
       }
 
+      if (allVoted) {
+        return (
+          <RoundResults
+            currentRound={roomData.currentRound}
+            isChooser={sessionData?.user.id === roomData.chooserId}
+            isHost={sessionData?.user.id === roomData.hostId}
+          />
+        );
+      }
+
       if (shouldVote) {
         return <Voting word={roomData.word} />;
       }
@@ -77,10 +86,6 @@ const Room: React.FC = () => {
       if (!didWrite) {
         return <WriteFakes word={roomData.word} updateRoom={updateRoom} />;
       }
-
-      // if (allVoted) {
-      //   return <Results />;
-      // }
 
       return <WriterWaitToVote />;
     }

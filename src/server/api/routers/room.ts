@@ -155,6 +155,45 @@ export const roomRouter = createTRPCRouter({
       return omit<typeof room, ["definition"]>(room, "definition");
     }),
 
+  getRoundResults: protectedProcedure.query(async ({ ctx }) => {
+    if (!ctx.session.user.roomCode) return;
+
+    const room = await ctx.db.room.findUnique({
+      where: { code: ctx.session.user.roomCode },
+      select: {
+        word: true,
+        definition: true,
+        correct_voters: true,
+        fakeDefinitions: {
+          select: {
+            votes: true,
+            definition: true,
+            userId: true,
+          },
+        },
+      },
+    });
+
+    if (!room) return;
+
+    const fakeVotes = room.fakeDefinitions.map((def) => def.votes.length);
+    const mostChosenDefinition =
+      room.correct_voters.length >= Math.max(...fakeVotes)
+        ? room.definition
+        : room.fakeDefinitions.find(
+            (def) => def.votes.length === Math.max(...fakeVotes),
+          )?.definition;
+
+    return {
+      realWord: room.word,
+      realDefinition: room.definition,
+      mostChosenDefinition: mostChosenDefinition,
+      currentUserDefinition: room.fakeDefinitions.find(
+        (def) => def.userId === ctx.session.user.id,
+      )?.definition,
+    };
+  }),
+
   exists: protectedProcedure
     .input(z.object({ roomCode: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -206,12 +245,43 @@ export const roomRouter = createTRPCRouter({
     return await ctx.db.room
       .update({
         where: { code: ctx.session.user.roomCode },
-        data: { playing: true, chooserId: chooser?.id },
+        data: { playing: true, chooserId: chooser?.id, currentRound: 1 },
       })
       .then(async (res) => {
         await updateRoomData(res.code, ctx.session.user);
         return res;
       });
+  }),
+
+  nextRound: protectedProcedure.mutation(async ({ ctx }) => {
+    if (!ctx.session.user.roomCode) return;
+
+    const room = await ctx.db.room.findUnique({
+      where: { code: ctx.session.user.roomCode },
+      select: {
+        hostId: true,
+        users: { select: { id: true } },
+        currentRound: true,
+      },
+    });
+
+    if (!room || room.hostId !== ctx.session.user.id) return;
+
+    const chooser = room.users[Math.floor(Math.random() * room.users.length)];
+
+    if (room)
+      return await ctx.db.room
+        .update({
+          where: { code: ctx.session.user.roomCode },
+          data: {
+            chooserId: chooser?.id,
+            currentRound: { increment: 1 },
+          },
+        })
+        .then(async (res) => {
+          await updateRoomData(res.code, ctx.session.user);
+          return res;
+        });
   }),
 
   chooseWord: protectedProcedure
