@@ -38,7 +38,7 @@ const ChooseWord: React.FC<{
   useEffect(() => {
     if (words.length) return;
     getWords();
-  }, [words]);
+  }, [words, getWords]);
 
   if (!words.length) return <Layout>Loading...</Layout>;
 
