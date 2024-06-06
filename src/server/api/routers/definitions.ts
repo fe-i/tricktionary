@@ -64,6 +64,7 @@ export const definitionsRouter = createTRPCRouter({
       });
 
       if (input.definition === room?.definition) {
+        await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
         return await ctx.db.room
           .update({
             where: { code: ctx.session.user.roomCode },
@@ -82,6 +83,7 @@ export const definitionsRouter = createTRPCRouter({
         room?.fakeDefinitions.length === 1 &&
         room.fakeDefinitions[0]?.userId !== ctx.session.user.id
       ) {
+        await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
         return await ctx.db.fakeDefinition.update({
           where: { id: room.fakeDefinitions[0]?.id },
           data: {
