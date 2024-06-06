@@ -5,6 +5,7 @@ import type { User } from "next-auth";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { useToast } from "~/components/use-toast";
+import { useSession } from "next-auth/react";
 
 // This connects the client to pusher and listen for events
 export const usePusher = (
@@ -14,6 +15,7 @@ export const usePusher = (
   const pusherRef = useRef<PusherJS>();
   const router = useRouter();
   const { toast } = useToast();
+  const { data: sessionData } = useSession();
 
   useEffect(() => {
     // Connect to pusher
@@ -54,6 +56,22 @@ export const usePusher = (
         document.dispatchEvent(new Event("visibilitychange"));
         await refetchRoom();
       });
+      pusherRef.current.bind("kick", async (d: { raw: string }) => {
+        const data: {
+          redeemedAt: number;
+          kickeeId: string;
+        } = superjson.parse(d.raw);
+
+        if (sessionData?.user.id === data.kickeeId) {
+          toast({
+            title: `You have been removed from room ${roomCode.toUpperCase()}`,
+            description: "Redirecting to home.",
+          });
+          await router.push("/");
+        } else {
+          await refetchRoom();
+        }
+      });
     }
 
     return () => {
@@ -62,5 +80,5 @@ export const usePusher = (
         pusherRef.current = undefined;
       }
     };
-  }, [roomCode, router, refetchRoom, toast]);
+  }, [roomCode, router, refetchRoom, toast, sessionData?.user.id]);
 };

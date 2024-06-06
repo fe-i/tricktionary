@@ -30,3 +30,12 @@ export const updateRoomData = async (
     }),
   });
 };
+
+export const kickUser = async (roomId: string, kickeeId: string) => {
+  await pusherPush.trigger(roomId, "kick", {
+    raw: superjson.stringify({
+      redeemedAt: Date.now(),
+      kickeeId: kickeeId,
+    }),
+  });
+};

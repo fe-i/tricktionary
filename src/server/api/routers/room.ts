@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto";
 import { z } from "zod";
-import { updateRoomData } from "~/pages/api/pusher";
+import { kickUser, updateRoomData } from "~/pages/api/pusher";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 // import { omit } from "radash";
 
@@ -80,6 +80,7 @@ export const roomRouter = createTRPCRouter({
                 ctx.session.user.roomCode!,
                 ctx.session.user,
               );
+              await kickUser(ctx.session.user.roomCode!, input.id);
               return r;
             });
         }
