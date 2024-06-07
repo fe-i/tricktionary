@@ -39,8 +39,8 @@ const Profile: React.FC = () => {
   const updateMutation = api.user.update.useMutation();
 
   // MANAGING TITLES
-  const createTitleMutation = api.titles.create.useMutation();
-  const obtainTitleMutation = api.titles.obtainTitle.useMutation();
+  const createTitleMutation = api.title.create.useMutation();
+  const obtainTitleMutation = api.title.obtainTitle.useMutation();
 
   // AUTHENTICATION
   if (sessionData.status === "unauthenticated") {
