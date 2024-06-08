@@ -1,6 +1,6 @@
-import { Layout } from "~/components/ui/layout";
+import { Layout } from "~/components/shared/layout";
 import { api } from "~/utils/api";
-import { Button } from "~/components/button";
+import { Button } from "~/components/ui/button";
 
 const RoundResults: React.FC<{
   currentRound: number;

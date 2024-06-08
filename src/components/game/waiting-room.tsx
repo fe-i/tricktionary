@@ -2,12 +2,12 @@ import { X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { Layout } from "~/components/ui/layout";
-import { Button } from "~/components/button";
+import { Layout } from "~/components/shared/layout";
+import { Button } from "~/components/ui/button";
 import autoAnimate from "@formkit/auto-animate";
 import { api } from "~/utils/api";
 import type { Prisma } from "@prisma/client";
-import { useToast } from "~/components/use-toast";
+import { useToast } from "~/components/ui/use-toast";
 
 type RoomDataType =
   | Omit<

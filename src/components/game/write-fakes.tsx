@@ -1,8 +1,8 @@
-import { Layout } from "~/components/ui/layout";
-import { Button } from "~/components/button";
+import { Layout } from "~/components/shared/layout";
+import { Button } from "~/components/ui/button";
 import { useState } from "react";
 import { api } from "~/utils/api";
-import { Modal } from "~/components/modal";
+import { Modal } from "~/components/ui/modal";
 
 const WriteFakes: React.FC<{
   word: string;

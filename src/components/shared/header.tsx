@@ -1,6 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Button } from "~/components/button";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/avatar";
+import { Button } from "~/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -8,9 +8,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "~/components/dropdown-menu";
-import { UnderlineHover } from "~/components/underline-hover";
-import { Link } from "~/components/link";
+} from "~/components/ui/dropdown-menu";
+import { UnderlineHover } from "~/components/ui/underline-hover";
+import { Link } from "~/components/ui/link";
 import { useRouter } from "next/router";
 
 const Header: React.FC = () => {

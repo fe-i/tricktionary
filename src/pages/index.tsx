@@ -1,9 +1,9 @@
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Layout } from "~/components/ui/layout";
-import { Button } from "~/components/button";
-import { LinkButton } from "~/components/link-button";
-import { Modal } from "~/components/modal";
+import { Layout } from "~/components/shared/layout";
+import { Button } from "~/components/ui/button";
+import { LinkButton } from "~/components/ui/link-button";
+import { Modal } from "~/components/ui/modal";
 
 const Home: React.FC = () => {
   const sessionData = useSession();

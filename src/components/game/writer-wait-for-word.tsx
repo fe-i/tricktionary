@@ -1,6 +1,6 @@
-import { Layout } from "~/components/ui/layout";
-import { Background } from "~/components/ui/background";
-import { Modal } from "~/components/modal";
+import { Layout } from "~/components/shared/layout";
+import { Background } from "~/components/shared/background";
+import { Modal } from "~/components/ui/modal";
 import { api } from "~/utils/api";
 
 const WriterWaitForWord: React.FC<{ chooserId: string }> = ({ chooserId }) => {

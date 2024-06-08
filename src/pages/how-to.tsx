@@ -1,11 +1,11 @@
-import { Layout } from "~/components/ui/layout";
+import { Layout } from "~/components/shared/layout";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "~/components/accordion";
-import { UnderlineHover } from "~/components/underline-hover";
+} from "~/components/ui/accordion";
+import { UnderlineHover } from "~/components/ui/underline-hover";
 
 const faq: { q: string; a: string }[] = [
   {

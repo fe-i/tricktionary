@@ -4,7 +4,7 @@ import * as superjson from "superjson";
 import type { User } from "next-auth";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import { useToast } from "~/components/use-toast";
+import { useToast } from "~/components/ui/use-toast";
 import { useSession } from "next-auth/react";
 
 // This connects the client to pusher and listen for events

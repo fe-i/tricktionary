@@ -1,9 +1,9 @@
-import { Layout } from "~/components/ui/layout";
+import { Layout } from "~/components/shared/layout";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
-import { Button } from "~/components/button";
-import { useToast } from "~/components/use-toast";
+import { Button } from "~/components/ui/button";
+import { useToast } from "~/components/ui/use-toast";
 
 type WordType = { word: string; definition: string };
 

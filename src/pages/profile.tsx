@@ -1,20 +1,20 @@
-import { Layout } from "~/components/ui/layout";
+import { Layout } from "~/components/shared/layout";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import { useToast } from "~/components/use-toast";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/avatar";
-import { Button } from "~/components/button";
+import { useToast } from "~/components/ui/use-toast";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
 import { useEffect, useRef, useState } from "react";
-import { UnderlineHover } from "~/components/underline-hover";
-import { Modal } from "~/components/modal";
+import { UnderlineHover } from "~/components/ui/underline-hover";
+import { Modal } from "~/components/ui/modal";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/select";
+} from "~/components/ui/select";
 import autoAnimate from "@formkit/auto-animate";
 import { cn } from "~/utils/cn";
 

@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Header } from "~/components/ui/header";
+import { Header } from "~/components/shared/header";
 import { cn } from "~/utils/cn";
 
 const Layout: React.FC<
@@ -30,7 +30,7 @@ const Layout: React.FC<
 
       <div
         className={cn(
-          "container mt-16 flex flex-col items-center justify-center gap-8 px-6 text-text",
+          "container mb-4 mt-16 flex flex-col items-center justify-center gap-8 px-6 text-text",
           className,
         )}
       >

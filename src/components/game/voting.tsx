@@ -1,5 +1,5 @@
-import { Layout } from "~/components/ui/layout";
-import { Button } from "~/components/button";
+import { Layout } from "~/components/shared/layout";
+import { Button } from "~/components/ui/button";
 import { cn } from "~/utils/cn";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
