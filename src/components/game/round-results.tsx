@@ -10,6 +10,8 @@ const RoundResults: React.FC<{
   const resultsQuery = api.room.getRoundResults.useQuery();
   const results = resultsQuery.data;
 
+  const nextRoundMutation = api.room.nextRound.useMutation();
+
   return (
     <Layout>
       <div className="mt-6 flex w-full items-center justify-between">
@@ -18,10 +20,7 @@ const RoundResults: React.FC<{
           <Button
             variant="primary"
             onClick={async () => {
-              // await voteMutation.mutateAsync({
-              //   definition: definitions[idx]!,
-              // });
-              // await refetchHasVoted();
+              await nextRoundMutation.mutateAsync();
             }}
           >
             Next Round

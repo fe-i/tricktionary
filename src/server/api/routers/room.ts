@@ -260,6 +260,7 @@ export const roomRouter = createTRPCRouter({
       where: { code: ctx.session.user.roomCode },
       select: {
         hostId: true,
+        chooserId: true,
         users: { select: { id: true } },
         currentRound: true,
       },
@@ -267,21 +268,32 @@ export const roomRouter = createTRPCRouter({
 
     if (!room || room.hostId !== ctx.session.user.id) return;
 
-    const chooser = room.users[Math.floor(Math.random() * room.users.length)];
+    let chooser;
+    do {
+      chooser = room.users[Math.floor(Math.random() * room.users.length)];
+    } while (room.chooserId === chooser?.id);
 
-    if (room)
-      return await ctx.db.room
-        .update({
-          where: { code: ctx.session.user.roomCode },
-          data: {
-            chooserId: chooser?.id,
-            currentRound: { increment: 1 },
-          },
-        })
-        .then(async (res) => {
-          await updateRoomData(res.code, ctx.session.user);
-          return res;
-        });
+    await ctx.db.vote.deleteMany({
+      where: { roomCode: ctx.session.user.roomCode },
+    });
+    await ctx.db.fakeDefinition.deleteMany({
+      where: { roomCode: ctx.session.user.roomCode },
+    });
+
+    return await ctx.db.room
+      .update({
+        where: { code: ctx.session.user.roomCode },
+        data: {
+          word: null,
+          definition: null,
+          chooserId: chooser?.id,
+          currentRound: { increment: 1 },
+        },
+      })
+      .then(async (res) => {
+        await updateRoomData(res.code, ctx.session.user);
+        return res;
+      });
   }),
 
   chooseWord: protectedProcedure
