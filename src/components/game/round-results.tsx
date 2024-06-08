@@ -48,6 +48,17 @@ const RoundResults: React.FC<{
           </InfoBox>
         )}
       </div>
+      <div className="flex w-full flex-col">
+        {results?.topFive.map(({ name, score }) => (
+          <>
+            <div className="mb-2 flex w-full justify-between">
+              <p className="text-xl font-bold">{name}</p>
+              <p className="text-xl font-light">{score}</p>
+            </div>
+            <hr className="border border-text" />
+          </>
+        ))}
+      </div>
     </Layout>
   );
 };

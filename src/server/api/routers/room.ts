@@ -73,7 +73,7 @@ export const roomRouter = createTRPCRouter({
           return ctx.db.user
             .update({
               where: { id: input.id },
-              data: { Room: { disconnect: true } },
+              data: { Room: { disconnect: true }, score: 0 },
             })
             .then(async (r) => {
               await updateRoomData(
@@ -171,6 +171,14 @@ export const roomRouter = createTRPCRouter({
             userId: true,
           },
         },
+        users: {
+          select: {
+            score: true,
+            name: true,
+          },
+          orderBy: { score: "desc" },
+          take: 5,
+        },
       },
     });
 
@@ -191,6 +199,7 @@ export const roomRouter = createTRPCRouter({
       currentUserDefinition: room.fakeDefinitions.find(
         (def) => def.userId === ctx.session.user.id,
       )?.definition,
+      topFive: room.users,
     };
   }),
 
@@ -242,10 +251,19 @@ export const roomRouter = createTRPCRouter({
 
     const chooser = room.users[Math.floor(Math.random() * room.users.length)];
 
+    await ctx.db.user.updateMany({
+      where: { roomCode: ctx.session.user.roomCode },
+      data: { score: 0 },
+    });
+
     return await ctx.db.room
       .update({
         where: { code: ctx.session.user.roomCode },
-        data: { playing: true, chooserId: chooser?.id, currentRound: 1 },
+        data: {
+          playing: true,
+          chooserId: chooser?.id,
+          currentRound: 1,
+        },
       })
       .then(async (res) => {
         await updateRoomData(res.code, ctx.session.user);
