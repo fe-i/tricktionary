@@ -15,7 +15,7 @@ const RoundResults: React.FC<{
   return (
     <Layout>
       <div className="mt-6 flex w-full items-center justify-between">
-        <h1 className="font-bold">Round #{currentRound} Results!</h1>
+        <h1 className="font-bold">Round #{currentRound}</h1>
         {isHost && (
           <Button
             variant="primary"
@@ -48,12 +48,15 @@ const RoundResults: React.FC<{
           </InfoBox>
         )}
       </div>
-      <div className="flex w-full flex-col">
-        {results?.topFive.map(({ name, score }) => (
+      <div className="mt-8 flex w-full flex-col gap-2">
+        <h1 className="mb-4 font-bold">Leaderboard</h1>
+        {results?.topFive.map(({ name, score }, _) => (
           <>
-            <div className="mb-2 flex w-full justify-between">
-              <p className="text-xl font-bold">{name}</p>
-              <p className="text-xl font-light">{score}</p>
+            <div className="flex w-full justify-between transition-transform duration-200 hover:translate-x-1">
+              <p className="text-xl font-bold">
+                {_ + 1}. {name}
+              </p>
+              <p className="text-xl font-light">{score.toLocaleString()}</p>
             </div>
             <hr className="border border-text" />
           </>

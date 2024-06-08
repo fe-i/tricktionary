@@ -63,8 +63,13 @@ export const definitionsRouter = createTRPCRouter({
         },
       });
 
+      // Vote for real definition
       if (input.definition === room?.definition) {
-        await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
+        await ctx.db.user.update({
+          where: { id: ctx.session.user.id },
+          data: { score: { increment: 4 } },
+        });
+
         return await ctx.db.room
           .update({
             where: { code: ctx.session.user.roomCode },
@@ -83,18 +88,22 @@ export const definitionsRouter = createTRPCRouter({
         room?.fakeDefinitions.length === 1 &&
         room.fakeDefinitions[0]?.userId !== ctx.session.user.id
       ) {
-        await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
-        return await ctx.db.fakeDefinition.update({
-          where: { id: room.fakeDefinitions[0]?.id },
-          data: {
-            votes: {
-              create: {
-                userId: ctx.session.user.id,
-                roomCode: ctx.session.user.roomCode,
+        return await ctx.db.fakeDefinition
+          .update({
+            where: { id: room.fakeDefinitions[0]?.id },
+            data: {
+              votes: {
+                create: {
+                  userId: ctx.session.user.id,
+                  roomCode: ctx.session.user.roomCode,
+                },
               },
             },
-          },
-        });
+          })
+          .then(async (res) => {
+            await updateRoomData(res.roomCode, ctx.session.user);
+            return res;
+          });
       }
 
       return null;
