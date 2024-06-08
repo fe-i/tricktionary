@@ -7,7 +7,8 @@
     "build": "next build",
     "dev": "next dev",
     "studio": "drizzle-kit introspect && drizzle-kit studio",
-    "seed": "tsx seed.ts",
+    "seed": "tsx scripts/seed.ts",
+    "migrate": "prisma generate && prisma migrate dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start"
