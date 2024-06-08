@@ -1,6 +1,8 @@
 import { Layout } from "~/components/shared/layout";
 import { api } from "~/utils/api";
 import { Button } from "~/components/ui/button";
+import { UnderlineHover } from "~/components/ui/underline-hover";
+import { Leaderboard, Podium } from "~/components/ui/leaderboard";
 
 const RoundResults: React.FC<{
   currentRound: number;
@@ -27,10 +29,12 @@ const RoundResults: React.FC<{
           </Button>
         )}
       </div>
-      <h3 className="mt-3 text-4xl font-bold capitalize">
-        {results?.realWord}
-      </h3>
-      <div className="flex w-full gap-4">
+      <UnderlineHover>
+        <h3 className="mt-3 text-4xl font-bold capitalize">
+          {results?.realWord}
+        </h3>
+      </UnderlineHover>
+      <div className="flex w-full flex-col gap-4 md:flex-row">
         <InfoBox>
           <p className="mb-3 text-xl font-bold">Definition</p>
           <p className="text-xl font-light">{results?.realDefinition}</p>
@@ -48,20 +52,7 @@ const RoundResults: React.FC<{
           </InfoBox>
         )}
       </div>
-      <div className="mt-8 flex w-full flex-col gap-2">
-        <h1 className="mb-4 font-bold">Leaderboard</h1>
-        {results?.topFive.map(({ name, score }, _) => (
-          <>
-            <div className="flex w-full justify-between transition-transform duration-200 hover:translate-x-1">
-              <p className="text-xl font-bold">
-                {_ + 1}. {name}
-              </p>
-              <p className="text-xl font-light">{score.toLocaleString()}</p>
-            </div>
-            <hr className="border border-text" />
-          </>
-        ))}
-      </div>
+      <Leaderboard topFive={results?.topFive} />
     </Layout>
   );
 };
