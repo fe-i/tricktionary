@@ -37,12 +37,13 @@ const Room: React.FC = () => {
   const allVoted =
     roomData?.users.length &&
     countVotes?.length &&
-    roomData?.users.length === countVotes.length;
+    roomData?.users.length - 1 === countVotes.length;
 
   const authData = useAuth(slug, !!roomData, roomQuery.isLoading);
 
   const updateRoom: () => Promise<void> = async () => {
     await roomQuery.refetch();
+    await countVotesQuery.refetch();
     await didWriteQuery.refetch();
   };
 
@@ -59,11 +60,21 @@ const Room: React.FC = () => {
     return <WaitingRoom roomData={roomData} onStart={updateRoom} />;
   } else {
     if (sessionData?.user.id === roomData.chooserId) {
-      return !roomData.word ? (
-        <ChooseWord updateRoom={updateRoom} />
-      ) : (
-        <ChooserWait />
-      );
+      if (!roomData.word) {
+        return <ChooseWord updateRoom={updateRoom} />;
+      }
+
+      if (allVoted) {
+        return (
+          <RoundResults
+            currentRound={roomData.currentRound}
+            isHost={sessionData?.user.id === roomData.hostId}
+            isChooser
+          />
+        );
+      }
+
+      return <ChooserWait />;
     } else {
       if (!roomData.word) {
         return <WriterWaitForWord chooserId={roomData.chooserId ?? ""} />;
@@ -73,7 +84,6 @@ const Room: React.FC = () => {
         return (
           <RoundResults
             currentRound={roomData.currentRound}
-            isChooser={sessionData?.user.id === roomData.chooserId}
             isHost={sessionData?.user.id === roomData.hostId}
           />
         );

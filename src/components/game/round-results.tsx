@@ -1,12 +1,12 @@
-import { Layout } from "../ui/layout";
+import { Layout } from "~/components/ui/layout";
 import { api } from "~/utils/api";
-import { Button } from "../button";
+import { Button } from "~/components/button";
 
 const RoundResults: React.FC<{
   currentRound: number;
-  isChooser: boolean;
   isHost: boolean;
-}> = ({ currentRound, isChooser, isHost }) => {
+  isChooser?: boolean;
+}> = ({ currentRound, isHost, isChooser = false }) => {
   const resultsQuery = api.room.getRoundResults.useQuery();
   const results = resultsQuery.data;
 
@@ -28,24 +28,21 @@ const RoundResults: React.FC<{
           </Button>
         )}
       </div>
-
       <h3 className="mt-3 text-4xl font-bold capitalize">
         {results?.realWord}
       </h3>
       <div className="flex w-full gap-4">
         <InfoBox>
-          <p className="text-xl underline">The definition was:</p>
+          <p className="mb-3 text-xl font-bold">Definition</p>
           <p className="text-xl font-light">{results?.realDefinition}</p>
         </InfoBox>
         <InfoBox>
-          <p className="mb-3 text-xl underline">
-            The most chosen definition was:
-          </p>
+          <p className="mb-3 text-xl font-bold">Most Chosen Definition</p>
           <p className="text-xl font-light">{results?.mostChosenDefinition}</p>
         </InfoBox>
         {!isChooser && results?.currentUserDefinition && (
           <InfoBox>
-            <p className="mb-3 text-xl underline">Your fake definition was:</p>
+            <p className="mb-3 text-xl font-bold">Your Fake Definition</p>
             <p className="text-xl font-light">
               {results?.currentUserDefinition}
             </p>
@@ -60,7 +57,7 @@ export default RoundResults;
 
 const InfoBox: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center rounded-md border border-text px-6 py-8">
+    <div className="flex flex-1 flex-col items-center justify-center rounded-md border border-text px-6 py-8 text-center">
       {children}
     </div>
   );
