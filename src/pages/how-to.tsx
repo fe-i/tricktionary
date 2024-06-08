@@ -8,8 +8,14 @@ import {
 import { UnderlineHover } from "~/components/underline-hover";
 
 const faq: { q: string; a: string }[] = [
-  //TODO: add FAQ
-  // { q: "", a: "" },
+  {
+    q: "How are points awarded in Tricktionary?",
+    a: "Players earn points for guessing the correct definition and for having their fake definitions chosen by others. Players who guessed it correctly get 4 points, and all players get 1 point for each vote that their fake definitions received.",
+  },
+  {
+    q: "When does the game end?",
+    a: "The game can end after a set number of rounds or when players decide. The player with the most points wins.",
+  },
 ];
 
 const HowTo: React.FC = () => {
@@ -35,9 +41,7 @@ const HowTo: React.FC = () => {
           it to the group. All of the definitions (including the correct one)
           are shuffled, then displayed for all players to read. All players
           except the Know-it-All vote for the definition they think is correct.
-          The correct definition is then revealed. Players who guessed it
-          correctly get 4 points, and all players get 1 point for each vote that
-          their fake definitions received.
+          The correct definition is then revealed.
         </p>
         {!!faq.length && (
           <>

@@ -72,7 +72,7 @@ const WaitingRoom: React.FC<{
             <div className="flex flex-1 flex-col gap-3">
               <h1 className="text-4xl font-bold">#{slug}</h1>
               <p className="text-lg font-medium">
-                {roomData?.users.length} player
+                {rounds} rounds • {roomData?.users.length} player
                 {roomData?.users.length === 1 ? "" : "s"}
               </p>
             </div>
@@ -119,7 +119,9 @@ const WaitingRoom: React.FC<{
             {editingGame ? (
               <>
                 <h3 className="text-lg font-medium">Rounds:</h3>
-                <p>Enter a number of rounds between 3 and 10</p>
+                <p className="text-slate-800">
+                  Enter a number between 3 and 10.
+                </p>
                 <input
                   type="number"
                   className="w-44 rounded-md bg-background px-4 py-2 outline-none"

@@ -64,8 +64,8 @@ export const usePusher = (
 
         if (sessionData?.user.id === data.kickeeId) {
           toast({
-            title: `You have been removed from room ${roomCode.toUpperCase()}`,
-            description: "Redirecting to home.",
+            title: `Kicked From ${roomCode.toUpperCase()}`,
+            description: "You have been removed from the room.",
           });
           await router.push("/");
         } else {
