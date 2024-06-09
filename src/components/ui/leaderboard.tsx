@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
+import { Medal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { api } from "~/utils/api";
-import { cn } from "~/utils/cn";
 
 const positions: Record<number, string> = {
   0: "1st",
@@ -20,7 +20,7 @@ const Podium: React.FC<{
   }[];
 }> = ({ topFive }) => {
   return (
-    <div className="mt-8 grid h-28 grid-flow-col-dense content-end items-end justify-center gap-2">
+    <div className="grid h-52 grid-flow-col-dense content-end items-end justify-center gap-2">
       {topFive?.map((player, _) => (
         <PodiumStep player={player} position={_} key={_} />
       ))}
@@ -38,20 +38,17 @@ const PodiumStep: React.FC<{
   };
 }> = ({ position, player }) => {
   return (
-    <div className="flex flex-col place-content-center">
+    <div className="flex flex-col justify-center">
       <motion.div
         custom={position}
-        initial="hidden"
-        animate="visible"
-        variants={{
-          visible: () => ({
-            opacity: 1,
-            transition: {
-              delay: 1 + (5 - position + 1),
-              duration: 1,
-            },
-          }),
-          hidden: { opacity: 0 },
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: 1,
+          transition: {
+            delay: 0.75 * (5 - position),
+            duration: 0.75,
+            ease: "backInOut",
+          },
         }}
         className="mb-2 self-center"
       >
@@ -62,28 +59,21 @@ const PodiumStep: React.FC<{
       </motion.div>
       <motion.div
         custom={position}
-        initial="hidden"
-        animate="visible"
-        variants={{
-          visible: () => ({
-            height: 200 * ((5 - position) / 5),
-            opacity: 2,
-            transition: {
-              delay: 5 - position,
-              duration: 1,
-              ease: "backInOut",
-            },
-          }),
-          hidden: { opacity: 0, height: 0 },
+        initial={{ opacity: 0, height: 0 }}
+        animate={{
+          height: 150 * ((5 - position) / 5),
+          opacity: 1,
+          transition: {
+            delay: 0.75 * (5 - position),
+            duration: 0.75,
+          },
         }}
-        className={cn(
-          `opacity-[${0.1 + ((5 - position) / 5) * 2}]`,
-          "flex w-16 justify-center rounded-t-xl border-secondary bg-primary shadow transition-all hover:bg-primary/90",
-        )}
+        className="flex w-14 justify-center rounded-t-xl border-secondary bg-primary shadow transition-all hover:bg-primary/90 sm:w-16"
       >
-        <span className="self-end font-semibold text-white">
+        <p className="flex flex-col gap-4 self-end font-semibold text-white">
+          {position === 0 && <Medal strokeWidth={1.5} />}
           {positions[position]}
-        </span>
+        </p>
       </motion.div>
     </div>
   );
@@ -123,24 +113,21 @@ const LeaderboardCard: React.FC<{
   return (
     <motion.div
       custom={position}
-      initial="hidden"
-      animate="visible"
-      variants={{
-        visible: () => ({
-          opacity: 1,
-          y: 0,
-          transition: {
-            duration: 0.75,
-            ease: "backInOut",
-          },
-        }),
-        hidden: { opacity: 0, y: -100 },
+      initial={{ opacity: 0, x: -100 }}
+      animate={{
+        opacity: 1,
+        x: 0,
+        transition: {
+          delay: 0.75 * (5 - position),
+          duration: 0.75,
+          ease: "backInOut",
+        },
       }}
       key={position}
     >
-      <div className="flex items-center justify-between rounded-lg border border-gray-300 bg-white px-6 py-4 shadow transition-all hover:translate-y-1 hover:bg-accent/50">
+      <div className="flex items-center justify-between rounded-lg border border-gray-300 bg-white px-6 py-4 shadow transition-all hover:translate-y-1">
         <div className="flex items-center justify-center gap-4">
-          <div className="text-lg">{positions[position]}</div>
+          <div className="text-lg font-semibold">{positions[position]}</div>
           <Avatar className="h-11 w-11 overflow-hidden shadow-sm">
             {player.image && <AvatarImage src={player.image} />}
             <AvatarFallback>{player.name?.at(0)}</AvatarFallback>

@@ -398,6 +398,13 @@ export const roomRouter = createTRPCRouter({
 
     if (!room || room.hostId !== ctx.session.user.id) return;
 
+    await ctx.db.vote.deleteMany({
+      where: { roomCode: ctx.session.user.roomCode },
+    });
+    await ctx.db.fakeDefinition.deleteMany({
+      where: { roomCode: ctx.session.user.roomCode },
+    });
+
     await ctx.db.room
       .update({
         where: { code: ctx.session.user.roomCode },
@@ -441,12 +448,5 @@ export const roomRouter = createTRPCRouter({
       });
     }
     // -------------------------------------------
-
-    await ctx.db.vote.deleteMany({
-      where: { roomCode: ctx.session.user.roomCode },
-    });
-    await ctx.db.fakeDefinition.deleteMany({
-      where: { roomCode: ctx.session.user.roomCode },
-    });
   }),
 });

@@ -36,7 +36,9 @@ const WriteFakes: React.FC<{
           <Button
             className="w-full"
             onClick={async () => {
-              await submitMutation.mutateAsync({ definition: fakeDefinition });
+              await submitMutation.mutateAsync({
+                definition: fakeDefinition.split("\n").join(" "),
+              });
               await updateRoom();
             }}
             disabled={fakeDefinition.length < 4}

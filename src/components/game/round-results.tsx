@@ -59,7 +59,10 @@ const RoundResults: React.FC<{
         )}
       </div>
       {numRounds === currentRound ? (
-        <Podium topFive={results?.topFive} />
+        <>
+          <Podium topFive={results?.topFive} />
+          <Leaderboard topFive={results?.topFive} />
+        </>
       ) : (
         <Leaderboard topFive={results?.topFive} />
       )}

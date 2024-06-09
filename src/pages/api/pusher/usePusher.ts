@@ -15,7 +15,7 @@ export const usePusher = (
   const pusherRef = useRef<PusherJS>();
   const router = useRouter();
   const { toast } = useToast();
-  const { data: sessionData } = useSession();
+  const { data: sessionData, update: updateSession } = useSession();
 
   useEffect(() => {
     // Connect to pusher
@@ -63,11 +63,12 @@ export const usePusher = (
         } = superjson.parse(d.raw);
 
         if (sessionData?.user.id === data.kickeeId) {
+          await router.push("/");
+          await updateSession();
           toast({
             title: `Kicked From ${roomCode.toUpperCase()}`,
             description: "You have been removed from the room.",
           });
-          await router.push("/");
         } else {
           await refetchRoom();
         }
@@ -80,5 +81,12 @@ export const usePusher = (
         pusherRef.current = undefined;
       }
     };
-  }, [roomCode, router, refetchRoom, toast, sessionData?.user.id]);
+  }, [
+    roomCode,
+    router,
+    refetchRoom,
+    toast,
+    sessionData?.user.id,
+    updateSession,
+  ]);
 };

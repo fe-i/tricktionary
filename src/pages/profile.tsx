@@ -37,9 +37,6 @@ const Profile: React.FC = () => {
   // QUERIES & MUTATIONS
   const { data: profile } = api.user.getProfile.useQuery();
   const updateMutation = api.user.update.useMutation();
-
-  // MANAGING TITLES
-  const createTitleMutation = api.title.create.useMutation();
   const obtainTitleMutation = api.title.obtainTitle.useMutation();
 
   // AUTHENTICATION
@@ -51,13 +48,15 @@ const Profile: React.FC = () => {
   }
   if (!profile || !sessionData.data) return <></>;
 
-  // MANAGING TITLES
-  const createTitle = (title: string) => {
-    void createTitleMutation.mutateAsync({ title });
+  // TITLES
+  const codes: Record<string, number> = {
+    WINNER: 1,
+    THEGOAT: 2,
   };
-
-  const obtainTitle = (titleId: number) => {
-    void obtainTitleMutation.mutateAsync({ titleId });
+  const obtainTitle = async (code: string) => {
+    const id = Number(codes[code]);
+    if (isNaN(id) || id < 1) return alert("Invalid code.");
+    await obtainTitleMutation.mutateAsync({ titleId: id });
   };
 
   return (
@@ -98,6 +97,16 @@ const Profile: React.FC = () => {
                 }}
               />
               <h3 className="mt-4 text-lg font-bold">Title</h3>
+              <Button
+                variant="secondary"
+                className="my-2 w-full"
+                onClick={() => {
+                  const code = prompt("Enter a code:");
+                  if (code) void obtainTitle(code.toUpperCase());
+                }}
+              >
+                Redeem Title
+              </Button>
               <Select
                 onValueChange={(val) => {
                   setTitleId(
@@ -153,10 +162,10 @@ const Profile: React.FC = () => {
           onClick={async () => {
             if (
               editing &&
-              name !== sessionData.data.user.name &&
-              name.length > 0 &&
-              titleId !== sessionData.data.user.titleId
+              (name !== sessionData.data.user.name ||
+                titleId !== sessionData.data.user.titleId)
             ) {
+              if (name.length === 0) setName(sessionData.data.user.name!);
               await updateMutation
                 .mutateAsync({
                   name,

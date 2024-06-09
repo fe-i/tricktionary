@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { Crown, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -146,11 +146,12 @@ const WaitingRoom: React.FC<{
         </div>
         <hr className="my-2 w-full border-text" />
         <div className="flex w-full flex-wrap justify-center gap-5">
-          {roomData?.users.map((player, i) => (
+          {roomData?.users.map((player, _) => (
             <div
               className="pointer-events-none flex items-center gap-3 rounded-lg border border-text px-6 py-3 hover:border-red-600"
-              key={i}
+              key={_}
             >
+              {player.id === roomData.hostId && <Crown />}
               <p className="text-lg">{player.name}</p>
               {isOwner && player.id !== roomData?.hostId ? (
                 <X
