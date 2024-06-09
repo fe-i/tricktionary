@@ -88,6 +88,11 @@ export const definitionsRouter = createTRPCRouter({
         room?.fakeDefinitions.length === 1 &&
         room.fakeDefinitions[0]?.userId !== ctx.session.user.id
       ) {
+        await ctx.db.user.update({
+          where: { id: room.fakeDefinitions[0]?.userId },
+          data: { score: { increment: 1 } },
+        });
+
         return await ctx.db.fakeDefinition
           .update({
             where: { id: room.fakeDefinitions[0]?.id },
