@@ -2,7 +2,6 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Layout } from "~/components/shared/layout";
 import { Button } from "~/components/ui/button";
-import { LinkButton } from "~/components/ui/link-button";
 import { Modal } from "~/components/ui/modal";
 
 const Home: React.FC = () => {
@@ -21,9 +20,9 @@ const Home: React.FC = () => {
         <h3 className="text-2xl font-bold">TRICKTIONARY</h3>
         <p>The game of weird words and wacky definitions!</p>
         <div className="flex w-full items-center justify-end gap-4">
-          <LinkButton href="/how-to" variant="gray">
+          <Button onClick={() => void router.push("/how-to")} variant="gray">
             Learn to Play
-          </LinkButton>
+          </Button>
           <Button onClick={() => signIn("google")} variant="primary">
             Sign In
           </Button>

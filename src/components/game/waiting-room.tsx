@@ -8,6 +8,7 @@ import autoAnimate from "@formkit/auto-animate";
 import { api } from "~/utils/api";
 import type { Prisma } from "@prisma/client";
 import { useToast } from "~/components/ui/use-toast";
+import { Link } from "~/components/ui/link";
 
 type RoomDataType =
   | Omit<
@@ -71,6 +72,9 @@ const WaitingRoom: React.FC<{
           <div className="flex w-full items-end gap-3">
             <div className="flex flex-1 flex-col gap-3">
               <h1 className="text-4xl font-bold">#{slug}</h1>
+              <Link target="_blank" href={`/host/${slug}`} variant="blank">
+                Host View
+              </Link>
               <p className="text-lg font-medium">
                 {rounds} rounds • {roomData?.users.length} player
                 {roomData?.users.length === 1 ? "" : "s"}
