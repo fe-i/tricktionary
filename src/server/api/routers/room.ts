@@ -381,4 +381,66 @@ export const roomRouter = createTRPCRouter({
           return res;
         });
     }),
+
+  endGame: protectedProcedure.mutation(async ({ ctx }) => {
+    if (!ctx.session.user.roomCode) return;
+
+    const room = await ctx.db.room.findUnique({
+      where: { code: ctx.session.user.roomCode },
+      select: { hostId: true, users: { select: { id: true } } },
+    });
+
+    if (!room || room.hostId !== ctx.session.user.id) return;
+
+    await ctx.db.room
+      .update({
+        where: { code: ctx.session.user.roomCode },
+        data: {
+          playing: false,
+          currentRound: 0,
+          chooserId: null,
+          definition: null,
+          word: null,
+        },
+      })
+      .then(async (res) => {
+        await updateRoomData(res.code, ctx.session.user);
+        return res;
+      });
+
+    // UNTIL PRISMA ISSUE #19442 IS FIXED, THIS IS THE BEST WAY TO DO THIS
+    const users = await ctx.db.user.findMany({
+      where: {
+        highScore: {
+          lt: ctx.db.user.fields.score,
+        },
+      },
+      select: {
+        id: true,
+        score: true,
+      },
+    });
+
+    for (const user of users) {
+      await ctx.db.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          highScore: user.score,
+          gamesPlayed: {
+            increment: 1,
+          },
+        },
+      });
+    }
+    // -------------------------------------------
+
+    await ctx.db.vote.deleteMany({
+      where: { roomCode: ctx.session.user.roomCode },
+    });
+    await ctx.db.fakeDefinition.deleteMany({
+      where: { roomCode: ctx.session.user.roomCode },
+    });
+  }),
 });
