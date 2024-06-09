@@ -5,7 +5,11 @@ import { sql } from "drizzle-orm";
 import dotenv from "dotenv";
 dotenv.config();
 
-const titles = [{ title: "Deceiver" }, { title: "is the best" }];
+const titles = [
+  { title: "made this game" },
+  { title: "Deceiver" },
+  { title: "is the best" },
+];
 
 const client = createClient({
   url: process.env.DATABASE_URL as string,

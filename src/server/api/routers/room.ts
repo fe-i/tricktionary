@@ -2,7 +2,6 @@ import { randomBytes } from "crypto";
 import { z } from "zod";
 import { kickUser, updateRoomData } from "~/pages/api/pusher";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-// import { omit } from "radash";
 
 type Omit = <T extends object, K extends [...(keyof T)[]]>(
   obj: T,
