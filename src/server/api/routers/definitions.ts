@@ -133,7 +133,7 @@ export const definitionsRouter = createTRPCRouter({
   countVotes: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.vote.findMany({
       where: { roomCode: ctx.session.user.roomCode },
-      select: { fakeDefinitionId: true },
+      select: { userId: true },
     });
   }),
 });

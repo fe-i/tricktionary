@@ -65,7 +65,7 @@ const WaitingRoom: React.FC<{
   }, [roomData]);
 
   return (
-    <Layout>
+    <Layout title={`Room ${slug}`}>
       <div className="flex w-full flex-col items-start justify-start gap-3 px-2 py-4">
         <div className="flex w-full flex-col items-start justify-start">
           <div className="flex w-full items-end gap-3">
@@ -103,7 +103,7 @@ const WaitingRoom: React.FC<{
                     variant="primary"
                     disabled={
                       editingGame ||
-                      (roomData?.users && roomData?.users.length < 3)
+                      (roomData?.users && roomData?.users.length < 2)
                     }
                   >
                     Play
