@@ -421,6 +421,8 @@ export const roomRouter = createTRPCRouter({
       },
     });
 
+    //Help
+
     for (const user of users) {
       await ctx.db.user.update({
         where: {
