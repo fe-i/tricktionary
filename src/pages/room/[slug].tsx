@@ -68,6 +68,7 @@ const Room: React.FC = () => {
         return (
           <RoundResults
             currentRound={roomData.currentRound}
+            numRounds={roomData.rounds}
             isHost={sessionData?.user.id === roomData.hostId}
             isChooser
           />
@@ -84,6 +85,7 @@ const Room: React.FC = () => {
         return (
           <RoundResults
             currentRound={roomData.currentRound}
+            numRounds={roomData.rounds}
             isHost={sessionData?.user.id === roomData.hostId}
           />
         );

@@ -6,13 +6,15 @@ import { Leaderboard, Podium } from "~/components/ui/leaderboard";
 
 const RoundResults: React.FC<{
   currentRound: number;
+  numRounds: number;
   isHost: boolean;
   isChooser?: boolean;
-}> = ({ currentRound, isHost, isChooser = false }) => {
+}> = ({ currentRound, numRounds, isHost, isChooser = false }) => {
   const resultsQuery = api.room.getRoundResults.useQuery();
   const results = resultsQuery.data;
 
   const nextRoundMutation = api.room.nextRound.useMutation();
+  const endGameMutation = api.room.endGame.useMutation();
 
   return (
     <Layout>
@@ -22,10 +24,14 @@ const RoundResults: React.FC<{
           <Button
             variant="primary"
             onClick={async () => {
-              await nextRoundMutation.mutateAsync();
+              if (numRounds === currentRound) {
+                await endGameMutation.mutateAsync();
+              } else {
+                await nextRoundMutation.mutateAsync();
+              }
             }}
           >
-            Next Round
+            {numRounds === currentRound ? "End Game" : "Next Round"}
           </Button>
         )}
       </div>
@@ -52,7 +58,11 @@ const RoundResults: React.FC<{
           </InfoBox>
         )}
       </div>
-      <Leaderboard topFive={results?.topFive} />
+      {numRounds === currentRound ? (
+        <Podium topFive={results?.topFive} />
+      ) : (
+        <Leaderboard topFive={results?.topFive} />
+      )}
     </Layout>
   );
 };

@@ -283,10 +283,16 @@ export const roomRouter = createTRPCRouter({
         chooserId: true,
         users: { select: { id: true } },
         currentRound: true,
+        rounds: true,
       },
     });
 
-    if (!room || room.hostId !== ctx.session.user.id) return;
+    if (
+      !room ||
+      room.hostId !== ctx.session.user.id ||
+      room.currentRound === room.rounds
+    )
+      return;
 
     let chooser;
     do {
