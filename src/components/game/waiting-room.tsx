@@ -103,7 +103,7 @@ const WaitingRoom: React.FC<{
                     variant="primary"
                     disabled={
                       editingGame ||
-                      (roomData?.users && roomData?.users.length < 2)
+                      (roomData?.users && roomData?.users.length < 3)
                     }
                   >
                     Play

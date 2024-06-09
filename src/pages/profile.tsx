@@ -32,7 +32,6 @@ const Profile: React.FC = () => {
   // STATE
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState<string>("");
-  const [titleId, setTitleId] = useState<number | undefined>(undefined);
 
   // QUERIES & MUTATIONS
   const { data: profile } = api.user.getProfile.useQuery();
@@ -51,12 +50,7 @@ const Profile: React.FC = () => {
   // TITLES
   const codes: Record<string, number> = {
     WINNER: 1,
-    THEGOAT: 2,
-  };
-  const obtainTitle = async (code: string) => {
-    const id = Number(codes[code]);
-    if (isNaN(id) || id < 1) return alert("Invalid code.");
-    await obtainTitleMutation.mutateAsync({ titleId: id });
+    THEBEST: 2,
   };
 
   return (
@@ -100,25 +94,44 @@ const Profile: React.FC = () => {
               <Button
                 variant="secondary"
                 className="my-2 w-full"
-                onClick={() => {
-                  const code = prompt("Enter a code:");
-                  if (code) void obtainTitle(code.toUpperCase());
+                onClick={async () => {
+                  const code = prompt("Enter a code:")?.toUpperCase();
+                  if (!code) return;
+                  const id = Number(codes[code]);
+                  if (isNaN(id) || id < 1) return alert("Invalid code.");
+                  await obtainTitleMutation
+                    .mutateAsync({ titleId: id })
+                    .then((r) =>
+                      toast({
+                        title: "Title Unlocked",
+                        description: `New title: ${r?.title}`,
+                      }),
+                    );
+                  void router.reload();
                 }}
               >
                 Redeem Title
               </Button>
               <Select
-                onValueChange={(val) => {
-                  setTitleId(
-                    Number(
-                      (
-                        JSON.parse(val) as {
-                          id: number;
-                          title: string;
-                        }
-                      ).id,
-                    ),
-                  );
+                onValueChange={async (val) => {
+                  await updateMutation
+                    .mutateAsync({
+                      titleId: Number(
+                        (
+                          JSON.parse(val) as {
+                            id: number;
+                            title: string;
+                          }
+                        ).id,
+                      ),
+                    })
+                    .then(() =>
+                      toast({
+                        title: "Profile Updated",
+                        description: "Title changed successfully.",
+                      }),
+                    );
+                  await sessionData.update();
                 }}
               >
                 <SelectTrigger>
@@ -162,14 +175,13 @@ const Profile: React.FC = () => {
           onClick={async () => {
             if (
               editing &&
-              (name !== sessionData.data.user.name ||
-                titleId !== sessionData.data.user.titleId)
+              name.length > 0 &&
+              name !== sessionData.data.user.name
             ) {
               if (name.length === 0) setName(sessionData.data.user.name!);
               await updateMutation
                 .mutateAsync({
                   name,
-                  titleId,
                 })
                 .then(() =>
                   toast({
