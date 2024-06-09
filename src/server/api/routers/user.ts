@@ -17,7 +17,6 @@ export const userRouter = createTRPCRouter({
     return await ctx.db.user.findUnique({
       select: {
         gamesPlayed: true,
-        gamesWon: true,
         highScore: true,
         titles: { where: { users: { some: { id: ctx.session.user.id } } } },
       },

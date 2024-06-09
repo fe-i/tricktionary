@@ -145,7 +145,6 @@ const Profile: React.FC = () => {
         </div>
         <hr className={editing ? "my-2 w-full border-text" : ""} />
         <div className="flex w-full flex-col gap-2">
-          <Stat title="Games Won" value={profile.gamesWon} />
           <Stat title="Games Played" value={profile.gamesPlayed} />
           <Stat title="High Score" value={profile.highScore} />
         </div>
