@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "~/utils/cn";
 
 const Background: React.FC = () => {
+  const { isMobile } = useWindowSize();
+  if (isMobile) return <></>;
+
   return (
     <div className="absolute left-0 top-0 -z-10 h-screen w-screen overflow-hidden">
       {new Array(10).fill(0).map((_, i) => (
