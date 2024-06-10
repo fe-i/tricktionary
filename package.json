@@ -43,6 +43,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-timer-hook": "^3.0.7",
+    "rword": "^3.2.1",
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.2.2",
     "zod": "^3.22.4"
