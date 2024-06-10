@@ -6,8 +6,11 @@ import { AuthStates, useAuth } from "~/components/game/use-auth";
 import { usePusher } from "~/pages/api/pusher/usePusher";
 import { Leaderboard, Podium } from "~/components/ui/leaderboard";
 import { BadgeCheck, Crown, Pencil, Vote, X } from "lucide-react";
+import { useWindowSize } from "~/utils/use-window-size";
+import QRCode from "react-qr-code";
 
 const Host: React.FC = () => {
+  const { isMobile } = useWindowSize();
   const { data: sessionData } = useSession();
   const router = useRouter();
   const slug = router.query.slug?.toString() ?? "";
@@ -59,14 +62,26 @@ const Host: React.FC = () => {
 
   return (
     <Layout title={`Room ${slug} Host View`}>
-      <div className="flex w-full flex-col gap-4">
-        <h1 className="text-4xl font-bold">#{slug}</h1>
-        <p className="text-lg font-medium">
-          {roomData?.currentRound} of {roomData?.rounds} rounds •{" "}
-          {roomData?.users.length} player
-          {roomData?.users.length === 1 ? "" : "s"}
-        </p>
+      <div className="flex w-full flex-col gap-8">
+        <div className="flex items-center justify-center gap-6">
+          {!isMobile && !roomData?.playing && (
+            <QRCode
+              size={160}
+              bgColor="#abcdef"
+              value="https://tricktionary.vercel.app"
+            />
+          )}
+          <div className="flex flex-col justify-between">
+            <h1 className="text-6xl font-bold">#{slug}</h1>
+            <p className="text-lg font-medium">
+              {roomData?.currentRound} of {roomData?.rounds} rounds •{" "}
+              {roomData?.users.length} player
+              {roomData?.users.length === 1 ? "" : "s"}
+            </p>
+          </div>
+        </div>
         <div className="flex flex-1 flex-col items-center justify-center rounded-md border border-text px-4 py-6 text-center">
+          {/**ugly box */}
           <p className="mb-3 text-xl font-bold">{roomData?.word ?? "???"}</p>
           <p className="text-xl font-light">
             {results?.realDefinition ? "Real Definition Hidden" : "???"}
@@ -84,48 +99,47 @@ const Host: React.FC = () => {
             {roomData?.users.length && roomData?.users.length - 1}
           </p>
         )}
-        <div className="mt-6 flex flex-wrap justify-center gap-4">
-          {roomData?.users.map((player, _) => (
-            <div
-              className="pointer-events-none flex items-center gap-3 rounded-lg border border-text px-6 py-3 hover:border-red-600"
-              key={_}
-            >
-              {player.id === roomData.hostId && <Crown />}
-              <p className="text-lg">{player.name}</p>
-              {roomData.playing && player.id === roomData.chooserId && (
-                <BadgeCheck />
-              )}
-              {roomData.playing &&
-                player.id !== roomData.chooserId &&
-                roomData.word &&
-                !roomData.fakeDefinitions.find(
-                  (fd) => fd.userId === player.id,
-                ) && <Pencil />}
-              {roomData.playing &&
-                shouldVote &&
-                player.id !== roomData.chooserId &&
-                !countVotes?.find((v) => v.userId === player.id) && <Vote />}
-              {isOwner && player.id !== roomData?.hostId ? (
-                <X
-                  onClick={async () =>
-                    await leaveMutation.mutateAsync({ id: player.id })
-                  }
-                  className="group pointer-events-auto cursor-pointer transition-all hover:scale-110 hover:text-red-500 active:scale-90"
-                />
-              ) : (
-                <></>
-              )}
-            </div>
-          ))}
-        </div>
-        {roomData?.playing && (
-          <>
-            <hr className="my-4 w-full border-text" />
-            <Podium topFive={results?.topFive} />
-            <Leaderboard topFive={results?.topFive} />
-          </>
-        )}
       </div>
+      <div className="mt-6 flex flex-wrap justify-center gap-4">
+        {roomData?.users.map((player, _) => (
+          <div
+            className="pointer-events-none flex items-center gap-3 rounded-lg border border-text px-6 py-3 hover:border-red-600"
+            key={_}
+          >
+            {player.id === roomData.hostId && <Crown />}
+            <p className="text-lg">{player.name}</p>
+            {roomData.playing && player.id === roomData.chooserId && (
+              <BadgeCheck />
+            )}
+            {roomData.playing &&
+              player.id !== roomData.chooserId &&
+              roomData.word &&
+              !roomData.fakeDefinitions.find(
+                (fd) => fd.userId === player.id,
+              ) && <Pencil />}
+            {roomData.playing &&
+              shouldVote &&
+              player.id !== roomData.chooserId &&
+              !countVotes?.find((v) => v.userId === player.id) && <Vote />}
+            {isOwner && player.id !== roomData?.hostId ? (
+              <X
+                onClick={async () =>
+                  await leaveMutation.mutateAsync({ id: player.id })
+                }
+                className="group pointer-events-auto cursor-pointer transition-all hover:scale-110 hover:text-red-500 active:scale-90"
+              />
+            ) : (
+              <></>
+            )}
+          </div>
+        ))}
+      </div>
+      {roomData?.playing && (
+        <div className="border border-text">
+          <Podium topFive={results?.topFive} />
+          <Leaderboard topFive={results?.topFive} />
+        </div>
+      )}
     </Layout>
   );
 };

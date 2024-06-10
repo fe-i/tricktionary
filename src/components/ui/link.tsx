@@ -1,9 +1,8 @@
 import { forwardRef } from "react";
 import { cn } from "~/utils/cn";
-import { UnderlineHover } from "./underline-hover";
 import NextLink from "next/link";
 
-export type linkVariantTypes = "underlineOnHover" | "getBolder" | "blank";
+export type linkVariantTypes = "standard" | "getBolder";
 
 interface LinkProps extends React.HTMLProps<HTMLAnchorElement> {
   variant?: linkVariantTypes;
@@ -11,21 +10,19 @@ interface LinkProps extends React.HTMLProps<HTMLAnchorElement> {
 }
 
 const Link = forwardRef<HTMLAnchorElement, React.PropsWithChildren<LinkProps>>(
-  (
-    { children, className = "", variant = "underlineOnHover", ...linkProps },
-    ref,
-  ) => {
-    if (variant === "underlineOnHover") {
+  ({ children, className = "", variant = "standard", ...linkProps }, ref) => {
+    if (variant === "standard") {
       return (
-        <UnderlineHover>
-          <NextLink
-            className={cn("text-text transition-all", className)}
-            {...linkProps}
-            ref={ref}
-          >
-            {children}
-          </NextLink>
-        </UnderlineHover>
+        <NextLink
+          className={cn(
+            "text-blue-700 underline-offset-2 transition-all hover:underline",
+            className,
+          )}
+          {...linkProps}
+          ref={ref}
+        >
+          {children}
+        </NextLink>
       );
     }
 

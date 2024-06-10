@@ -72,9 +72,11 @@ const WaitingRoom: React.FC<{
           <div className="flex w-full items-end gap-3">
             <div className="flex flex-1 flex-col gap-3">
               <h1 className="text-4xl font-bold">#{slug}</h1>
-              <Link target="_blank" href={`/host/${slug}`} variant="blank">
-                Host View
-              </Link>
+              <span className="text-xl">
+                <Link target="_blank" href={`/host/${slug}`}>
+                  Host View
+                </Link>
+              </span>
               <p className="text-lg font-medium">
                 {rounds} rounds • {roomData?.users.length} player
                 {roomData?.users.length === 1 ? "" : "s"}

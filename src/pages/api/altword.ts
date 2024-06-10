@@ -27,11 +27,11 @@ const Word = async (req: NextApiRequest, res: NextApiResponse) => {
       );
 
       try {
-        const defs = (await response.json()) as {
+        const query = (await response.json()) as {
           meanings: { definitions: { definition: string }[] }[];
         }[];
 
-        const definition = defs[0]?.meanings[0]?.definitions[0]?.definition;
+        const definition = query[0]?.meanings[0]?.definitions[0]?.definition;
 
         if (!definition) {
           i--;
