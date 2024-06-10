@@ -49,8 +49,8 @@ const Profile: React.FC = () => {
 
   // TITLES
   const codes: Record<string, number> = {
-    WINNER: 1,
-    THEBEST: 2,
+    WINNER: 2,
+    THEBEST: 3,
   };
 
   return (
@@ -101,13 +101,13 @@ const Profile: React.FC = () => {
                   if (isNaN(id) || id < 1) return alert("Invalid code.");
                   await obtainTitleMutation
                     .mutateAsync({ titleId: id })
-                    .then((r) =>
+                    .then((r) => {
+                      void router.reload();
                       toast({
                         title: "Title Unlocked",
                         description: `New title: ${r?.title}`,
-                      }),
-                    );
-                  void router.reload();
+                      });
+                    });
                 }}
               >
                 Redeem Title
