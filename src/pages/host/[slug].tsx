@@ -35,6 +35,9 @@ const Host: React.FC = () => {
     roomData?.users.length &&
     roomData?.fakeDefinitions.length === numUsersPlaying;
 
+  const nextRoundMutation = api.room.nextRound.useMutation();
+  const endGameMutation = api.room.endGame.useMutation();
+
   const countVotesQuery = api.definitions.countVotes.useQuery();
   const countVotes = countVotesQuery.data;
   const allVoted =
@@ -151,6 +154,24 @@ const Host: React.FC = () => {
                     Play
                   </Button>
                 </>
+              )}
+              {allVoted ? (
+                <Button
+                  variant="primary"
+                  onClick={async () => {
+                    if (roomData?.rounds === roomData?.currentRound) {
+                      await endGameMutation.mutateAsync();
+                    } else {
+                      await nextRoundMutation.mutateAsync();
+                    }
+                  }}
+                >
+                  {roomData?.rounds === roomData?.currentRound
+                    ? "End Game"
+                    : "Next Round"}
+                </Button>
+              ) : (
+                <></>
               )}
             </>
           )}
