@@ -8,12 +8,17 @@ import { Leaderboard, Podium } from "~/components/ui/leaderboard";
 import { BadgeCheck, Crown, Pencil, Vote, X } from "lucide-react";
 import { useWindowSize } from "~/utils/use-window-size";
 import QRCode from "react-qr-code";
+import { Button } from "~/components/ui/button";
+import { useEffect, useRef, useState } from "react";
+import autoAnimate from "@formkit/auto-animate";
 
 const Host: React.FC = () => {
   const { isMobile } = useWindowSize();
   const { data: sessionData } = useSession();
   const router = useRouter();
   const slug = router.query.slug?.toString() ?? "";
+
+  const [editingGame, setEditingGame] = useState(false);
 
   const leaveMutation = api.room.leave.useMutation();
 
@@ -40,6 +45,16 @@ const Host: React.FC = () => {
   const resultsQuery = api.room.getRoundResults.useQuery();
   const results = resultsQuery.data;
 
+  const parent = useRef(null);
+
+  useEffect(() => {
+    parent.current && autoAnimate(parent.current);
+  }, [parent]);
+
+  const updateMutation = api.room.update.useMutation();
+  const startMutation = api.room.startGame.useMutation();
+
+  const [rounds, setRounds] = useState(roomData?.rounds ?? 5);
   const authData = useAuth(slug, !!roomData, roomQuery.isLoading);
 
   const updateRoom: () => Promise<void> = async () => {
@@ -84,6 +99,7 @@ const Host: React.FC = () => {
             </p>
           </div>
         </div>
+
         <div className="flex w-3/5 flex-1 flex-col items-center justify-center rounded-md border border-text px-4 py-6 text-center">
           {roomData?.playing ? (
             <>
@@ -102,6 +118,74 @@ const Host: React.FC = () => {
             </>
           )}
         </div>
+        <div className="flex w-3/5 flex-wrap justify-end gap-2">
+          {isOwner && (
+            <>
+              {!roomData?.playing && (
+                <>
+                  <Button
+                    onClick={async () => {
+                      if (editingGame) {
+                        await updateMutation.mutateAsync({
+                          rounds,
+                        });
+                      }
+                      setEditingGame((p) => !p);
+                    }}
+                    variant={editingGame ? "primary" : "gray"}
+                  >
+                    {editingGame ? "Save Game" : "Edit Game"}
+                  </Button>
+
+                  <Button
+                    onClick={async () => {
+                      await startMutation.mutateAsync();
+                      await updateRoom();
+                    }}
+                    variant="primary"
+                    disabled={
+                      editingGame ||
+                      (roomData?.users && roomData?.users.length < 3)
+                    }
+                  >
+                    Play
+                  </Button>
+                </>
+              )}
+            </>
+          )}
+        </div>
+        <div
+          className="mt-6 flex flex-col items-start justify-start gap-1 overflow-hidden transition-all"
+          ref={parent}
+        >
+          {editingGame ? (
+            <>
+              <h3 className="text-lg font-medium">Rounds:</h3>
+              <p className="text-slate-800">Enter a number between 3 and 10.</p>
+              <input
+                type="number"
+                className="w-44 rounded-md bg-background px-4 py-2 outline-none"
+                min={3}
+                max={10}
+                defaultValue={rounds}
+                onBlur={(e) => {
+                  const val = parseInt(e.currentTarget.value);
+                  if (val > 10) {
+                    e.currentTarget.value = "10";
+                  } else if (val < 3) {
+                    e.currentTarget.value = "3";
+                  }
+                  setRounds(parseInt(e.currentTarget.value));
+                }}
+              />
+            </>
+          ) : (
+            <></>
+          )}
+        </div>
+
+        <hr className="my-2 w-full border-text" />
         {roomData?.playing && !shouldVote && (
           <p className="text-xl font-light">
             Fake Definitions: {roomData?.fakeDefinitions.length} of{" "}
@@ -127,6 +211,7 @@ const Host: React.FC = () => {
               <BadgeCheck />
             )}
             {roomData.playing &&
+              !(!roomData.hostPlays && player.id === roomData.hostId) &&
               player.id !== roomData.chooserId &&
               roomData.word &&
               !roomData.fakeDefinitions.find(
@@ -134,6 +219,7 @@ const Host: React.FC = () => {
               ) && <Pencil />}
             {roomData.playing &&
               shouldVote &&
+              !(!roomData.hostPlays && player.id === roomData.hostId) &&
               player.id !== roomData.chooserId &&
               !countVotes?.find((v) => v.userId === player.id) && <Vote />}
             {isOwner && player.id !== roomData?.hostId ? (
