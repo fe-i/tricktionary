@@ -64,7 +64,7 @@ const ChooseWord: React.FC<{
       </div>
       <div className="flex items-center gap-4">
         <Button variant="secondary" onClick={getWords} disabled={shuffling}>
-          Shuffle
+          Regenerate
         </Button>
         <Button
           onClick={async () => {
