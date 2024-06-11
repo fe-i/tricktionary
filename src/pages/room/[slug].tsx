@@ -25,19 +25,23 @@ const Room: React.FC = () => {
   });
   const roomData = roomQuery.data;
 
+  const numUsersPlaying = roomData?.users
+    ? roomData.users.length - (roomData.hostPlays ? 1 : 2)
+    : 0;
+
   const didWriteQuery = api.user.didWriteDefinition.useQuery();
   const didWrite = didWriteQuery.data;
 
   const shouldVote =
     roomData?.users.length &&
-    roomData?.users.length - 1 === roomData?.fakeDefinitions.length;
+    numUsersPlaying === roomData?.fakeDefinitions.length;
 
   const countVotesQuery = api.definitions.countVotes.useQuery();
   const countVotes = countVotesQuery.data;
   const allVoted =
     roomData?.users.length &&
     countVotes?.length &&
-    roomData?.users.length - 1 === countVotes.length;
+    numUsersPlaying === countVotes.length;
 
   const authData = useAuth(slug, !!roomData, roomQuery.isLoading);
 

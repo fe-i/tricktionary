@@ -22,17 +22,20 @@ const Host: React.FC = () => {
   });
   const roomData = roomQuery.data;
 
+  const numUsersPlaying = roomData?.users
+    ? roomData.users.length - (roomData.hostPlays ? 1 : 2)
+    : 0;
+
   const shouldVote =
     roomData?.users.length &&
-    roomData?.fakeDefinitions.length ===
-      roomData?.users.length - (roomData.hostPlays ? 1 : 2);
+    roomData?.fakeDefinitions.length === numUsersPlaying;
 
   const countVotesQuery = api.definitions.countVotes.useQuery();
   const countVotes = countVotesQuery.data;
   const allVoted =
     roomData?.users.length &&
     countVotes?.length &&
-    countVotes.length === roomData?.users.length - (roomData.hostPlays ? 1 : 2);
+    countVotes.length === numUsersPlaying;
 
   const resultsQuery = api.room.getRoundResults.useQuery();
   const results = resultsQuery.data;
@@ -102,13 +105,13 @@ const Host: React.FC = () => {
         {roomData?.playing && !shouldVote && (
           <p className="text-xl font-light">
             Fake Definitions: {roomData?.fakeDefinitions.length} of{" "}
-            {roomData?.users.length && roomData?.users.length - 1}
+            {roomData?.users.length && numUsersPlaying}
           </p>
         )}
         {roomData?.playing && !allVoted && (
           <p className="text-xl font-light">
             Votes: {countVotes?.length} of{" "}
-            {roomData?.users.length && roomData?.users.length - 1}
+            {roomData?.users.length && numUsersPlaying}
           </p>
         )}
       </div>
