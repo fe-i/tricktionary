@@ -62,6 +62,10 @@ export const roomRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       if (!ctx.session.user.roomCode) return;
 
+      await ctx.db.vote.deleteMany({
+        where: { userId: ctx.session.user.id },
+      });
+
       if (input?.id) {
         const findHost = await ctx.db.room.findUnique({
           select: { hostId: true },
@@ -245,12 +249,19 @@ export const roomRouter = createTRPCRouter({
 
     const room = await ctx.db.room.findUnique({
       where: { code: ctx.session.user.roomCode },
-      select: { hostId: true, users: { select: { id: true } } },
+      select: {
+        hostId: true,
+        hostPlays: true,
+        users: { select: { id: true } },
+      },
     });
 
     if (!room || room.hostId !== ctx.session.user.id) return;
 
-    const chooser = room.users[Math.floor(Math.random() * room.users.length)];
+    let chooser;
+    do {
+      chooser = room.users[Math.floor(Math.random() * room.users.length)];
+    } while (!room.hostPlays && room.hostId === chooser?.id);
 
     await ctx.db.user.updateMany({
       where: { roomCode: ctx.session.user.roomCode },
@@ -283,6 +294,7 @@ export const roomRouter = createTRPCRouter({
         users: { select: { id: true } },
         currentRound: true,
         rounds: true,
+        hostPlays: true,
       },
     });
 
@@ -296,7 +308,10 @@ export const roomRouter = createTRPCRouter({
     let chooser;
     do {
       chooser = room.users[Math.floor(Math.random() * room.users.length)];
-    } while (room.chooserId === chooser?.id);
+    } while (
+      room.chooserId === chooser?.id ||
+      (!room.hostPlays && room.hostId === chooser?.id)
+    );
 
     await ctx.db.vote.deleteMany({
       where: { roomCode: ctx.session.user.roomCode },
@@ -360,10 +375,19 @@ export const roomRouter = createTRPCRouter({
 
       const room = await ctx.db.room.findUnique({
         where: { code: ctx.session.user.roomCode },
-        select: { chooserId: true, fakeDefinitions: true },
+        select: {
+          chooserId: true,
+          fakeDefinitions: true,
+          hostPlays: true,
+          hostId: true,
+        },
       });
 
-      if (room?.chooserId === ctx.session.user.id) return;
+      if (
+        room?.chooserId === ctx.session.user.id ||
+        (!room?.hostPlays && room?.hostId === ctx.session.user.id)
+      )
+        return;
       if (
         room?.fakeDefinitions.map((d) => d.userId).includes(ctx.session.user.id)
       )

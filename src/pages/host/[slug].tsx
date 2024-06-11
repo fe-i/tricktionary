@@ -24,14 +24,15 @@ const Host: React.FC = () => {
 
   const shouldVote =
     roomData?.users.length &&
-    roomData?.users.length - 1 === roomData?.fakeDefinitions.length;
+    roomData?.fakeDefinitions.length ===
+      roomData?.users.length - (roomData.hostPlays ? 1 : 2);
 
   const countVotesQuery = api.definitions.countVotes.useQuery();
   const countVotes = countVotesQuery.data;
   const allVoted =
     roomData?.users.length &&
     countVotes?.length &&
-    roomData?.users.length - 1 === countVotes.length;
+    countVotes.length === roomData?.users.length - (roomData.hostPlays ? 1 : 2);
 
   const resultsQuery = api.room.getRoundResults.useQuery();
   const results = resultsQuery.data;

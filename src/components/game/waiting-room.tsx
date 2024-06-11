@@ -73,8 +73,13 @@ const WaitingRoom: React.FC<{
             <div className="flex flex-1 flex-col gap-3">
               <h1 className="text-4xl font-bold">#{slug}</h1>
               <span className="text-xl">
-                <Link target="_blank" href={`/host/${slug}`}>
-                  Host View
+                <Link
+                  target="_blank"
+                  href={`/host/${slug}`}
+                  className="underline underline-offset-2"
+                  variant="getBolder"
+                >
+                  Go to Host View →
                 </Link>
               </span>
               <p className="text-lg font-medium">
