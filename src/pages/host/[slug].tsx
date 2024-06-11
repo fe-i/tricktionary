@@ -62,30 +62,41 @@ const Host: React.FC = () => {
 
   return (
     <Layout title={`Room ${slug} Host View`}>
-      <div className="flex w-full flex-col gap-8">
-        <div className="flex items-center justify-center gap-6">
+      <div className="flex w-full flex-col items-center gap-8">
+        <div className="mt-5 flex items-center justify-start gap-6">
           {!isMobile && !roomData?.playing && (
             <QRCode
-              size={160}
-              bgColor="#abcdef"
+              size={120}
+              bgColor="transparent"
               value="https://tricktionary.vercel.app"
             />
           )}
           <div className="flex flex-col justify-between">
-            <h1 className="text-6xl font-bold">#{slug}</h1>
-            <p className="text-lg font-medium">
+            <h1 className="text-7xl font-bold">#{slug}</h1>
+            <p className="font-regular text-2xl">
               {roomData?.currentRound} of {roomData?.rounds} rounds •{" "}
               {roomData?.users.length} player
               {roomData?.users.length === 1 ? "" : "s"}
             </p>
           </div>
         </div>
-        <div className="flex flex-1 flex-col items-center justify-center rounded-md border border-text px-4 py-6 text-center">
-          {/**ugly box */}
-          <p className="mb-3 text-xl font-bold">{roomData?.word ?? "???"}</p>
-          <p className="text-xl font-light">
-            {results?.realDefinition ? "Real Definition Hidden" : "???"}
-          </p>
+        <div className="flex w-3/5 flex-1 flex-col items-center justify-center rounded-md border border-text px-4 py-6 text-center">
+          {roomData?.playing ? (
+            <>
+              <p className="mb-3 text-xl font-bold">
+                {roomData?.word ?? "???"}
+              </p>
+              <p className="text-xl font-light">
+                {results?.realDefinition ? "Real Definition Hidden" : "???"}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-xl font-bold">
+                Start the game to get your first word!
+              </p>
+            </>
+          )}
         </div>
         {roomData?.playing && !shouldVote && (
           <p className="text-xl font-light">
@@ -135,7 +146,7 @@ const Host: React.FC = () => {
         ))}
       </div>
       {roomData?.playing && (
-        <div className="border border-text">
+        <div className="w-3/5">
           <Podium topFive={results?.topFive} />
           <Leaderboard topFive={results?.topFive} />
         </div>
