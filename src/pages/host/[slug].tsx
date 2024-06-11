@@ -176,6 +176,31 @@ const Host: React.FC = () => {
             </>
           )}
         </div>
+        {allVoted ? (
+          <div className="flex w-full flex-col gap-4 md:flex-row">
+            <InfoBox>
+              <p className="mb-3 text-xl font-bold">Definition</p>
+              <p className="text-xl font-light">{results?.realDefinition}</p>
+            </InfoBox>
+            <InfoBox>
+              <p className="mb-3 text-xl font-bold">Most Chosen Definition</p>
+              <p className="text-xl font-light">
+                {results?.mostChosenDefinition}
+              </p>
+            </InfoBox>
+            {roomData?.chooserId !== sessionData?.user.id &&
+              results?.currentUserDefinition && (
+                <InfoBox>
+                  <p className="mb-3 text-xl font-bold">Your Fake Definition</p>
+                  <p className="text-xl font-light">
+                    {results?.currentUserDefinition}
+                  </p>
+                </InfoBox>
+              )}
+          </div>
+        ) : (
+          <></>
+        )}
         <div
           className="mt-6 flex flex-col items-start justify-start gap-1 overflow-hidden transition-all"
           ref={parent}
@@ -267,3 +292,11 @@ const Host: React.FC = () => {
 };
 
 export default Host;
+
+const InfoBox: React.FC<React.PropsWithChildren> = ({ children }) => {
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center rounded-md border border-text px-6 py-8 text-center">
+      {children}
+    </div>
+  );
+};
