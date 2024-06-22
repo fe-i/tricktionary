@@ -18,7 +18,6 @@ export const userRouter = createTRPCRouter({
       select: {
         gamesPlayed: true,
         highScore: true,
-        titles: { where: { users: { some: { id: ctx.session.user.id } } } },
       },
       where: { id: ctx.session.user.id },
     });
@@ -28,7 +27,6 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().optional(),
-        titleId: z.number().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

@@ -179,7 +179,6 @@ export const roomRouter = createTRPCRouter({
             score: true,
             name: true,
             image: true,
-            titleId: true,
           },
           orderBy: { score: "desc" },
           take: 5,

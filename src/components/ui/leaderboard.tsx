@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Medal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { api } from "~/utils/api";
 
 const positions: Record<number, string> = {
   0: "1st",
@@ -16,7 +15,6 @@ const Podium: React.FC<{
     name: string | null;
     image: string | null;
     score: number;
-    titleId: number | null;
   }[];
 }> = ({ topFive }) => {
   return (
@@ -34,7 +32,6 @@ const PodiumStep: React.FC<{
     name: string | null;
     image: string | null;
     score: number;
-    titleId: number | null;
   };
 }> = ({ position, player }) => {
   return (
@@ -84,7 +81,6 @@ const Leaderboard: React.FC<{
     name: string | null;
     image: string | null;
     score: number;
-    titleId: number | null;
   }[];
 }> = ({ topFive }) => {
   return (
@@ -105,11 +101,8 @@ const LeaderboardCard: React.FC<{
     name: string | null;
     image: string | null;
     score: number;
-    titleId: number | null;
   };
 }> = ({ position, player }) => {
-  const { data: profile } = api.user.getProfile.useQuery();
-
   return (
     <motion.div
       custom={position}
@@ -132,14 +125,7 @@ const LeaderboardCard: React.FC<{
             {player.image && <AvatarImage src={player.image} />}
             <AvatarFallback>{player.name?.at(0)}</AvatarFallback>
           </Avatar>
-          <div className="flex flex-col justify-between">
-            <p className="font-bold">{player.name}</p>
-            {profile?.titles.find((t) => t.id === player.titleId)?.title && (
-              <p>
-                {profile?.titles.find((t) => t.id === player.titleId)?.title}
-              </p>
-            )}
-          </div>
+          <p className="font-bold">{player.name}</p>
         </div>
         <div>{player.score} points</div>
       </div>

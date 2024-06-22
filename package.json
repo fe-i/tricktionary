@@ -7,7 +7,6 @@
     "build": "next build",
     "dev": "next dev",
     "studio": "drizzle-kit introspect && drizzle-kit studio",
-    "seed": "tsx scripts/seed.ts",
     "migrate": "prisma generate && prisma migrate dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
@@ -64,7 +63,6 @@
     "prettier-plugin-tailwindcss": "^0.5.11",
     "prisma": "^5.10.2",
     "tailwindcss": "^3.4.1",
-    "tsx": "^4.12.0",
     "typescript": "^5.4.5"
   },
   "ct3aMetadata": {

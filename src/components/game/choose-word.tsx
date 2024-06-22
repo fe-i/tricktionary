@@ -20,7 +20,7 @@ const ChooseWord: React.FC<{
 
   const getWords = useCallback(() => {
     setShuffling(true);
-    fetch("/api/altword?quantity=4")
+    fetch("/api/word?quantity=4")
       .then((res) => res.json())
       .then((data) => {
         setWords(data as WordType[]);

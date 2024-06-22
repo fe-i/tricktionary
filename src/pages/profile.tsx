@@ -8,13 +8,6 @@ import { Button } from "~/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import { UnderlineHover } from "~/components/ui/underline-hover";
 import { Modal } from "~/components/ui/modal";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 import autoAnimate from "@formkit/auto-animate";
 import { cn } from "~/utils/cn";
 
@@ -36,7 +29,6 @@ const Profile: React.FC = () => {
   // QUERIES & MUTATIONS
   const { data: profile } = api.user.getProfile.useQuery();
   const updateMutation = api.user.update.useMutation();
-  const obtainTitleMutation = api.title.obtainTitle.useMutation();
 
   // AUTHENTICATION
   if (sessionData.status === "unauthenticated") {
@@ -46,12 +38,6 @@ const Profile: React.FC = () => {
     return <></>;
   }
   if (!profile || !sessionData.data) return <></>;
-
-  // TITLES
-  const codes: Record<string, number> = {
-    WINNER: 2,
-    THEBEST: 3,
-  };
 
   return (
     <Layout title="Profile">
@@ -90,79 +76,11 @@ const Profile: React.FC = () => {
                   setName(val);
                 }}
               />
-              <h3 className="mt-4 text-lg font-bold">Title</h3>
-              <Button
-                variant="secondary"
-                className="my-2 w-full"
-                onClick={async () => {
-                  const code = prompt("Enter a code:")?.toUpperCase();
-                  if (!code) return;
-                  const id = Number(codes[code]);
-                  if (isNaN(id) || id < 1) return alert("Invalid code.");
-                  await obtainTitleMutation
-                    .mutateAsync({ titleId: id })
-                    .then((r) => {
-                      void router.reload();
-                      toast({
-                        title: "Title Unlocked",
-                        description: `New title: ${r?.title}`,
-                      });
-                    });
-                }}
-              >
-                Redeem Title
-              </Button>
-              <Select
-                onValueChange={async (val) => {
-                  await updateMutation
-                    .mutateAsync({
-                      titleId: Number(
-                        (
-                          JSON.parse(val) as {
-                            id: number;
-                            title: string;
-                          }
-                        ).id,
-                      ),
-                    })
-                    .then(() =>
-                      toast({
-                        title: "Profile Updated",
-                        description: "Title changed successfully.",
-                      }),
-                    );
-                  await sessionData.update();
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue
-                    placeholder={
-                      profile.titles.find(
-                        (t) => t.id === sessionData.data.user.titleId,
-                      )?.title ?? "No Title"
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {profile.titles.map((t, _) => (
-                    <SelectItem key={_} value={JSON.stringify(t)}>
-                      {t.title}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </>
           ) : (
-            <>
-              <UnderlineHover>
-                <h1 className="font-bold">{sessionData.data.user.name}</h1>
-              </UnderlineHover>
-              <h2 className="mt-3 text-lg">
-                {profile.titles.find(
-                  (t) => t.id === sessionData.data.user.titleId,
-                )?.title ?? "No Title"}
-              </h2>
-            </>
+            <UnderlineHover>
+              <h1 className="font-bold">{sessionData.data.user.name}</h1>
+            </UnderlineHover>
           )}
         </div>
         <hr className={editing ? "my-2 w-full border-text" : ""} />
