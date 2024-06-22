@@ -14,24 +14,24 @@ const ChooseWord: React.FC<{
 
   const [words, setWords] = useState<WordType[]>([]);
   const [idx, setIdx] = useState(-1);
-  const [shuffling, setShuffling] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
 
   const chooseWordMutation = api.room.chooseWord.useMutation();
 
   const getWords = useCallback(() => {
-    setShuffling(true);
+    setRegenerating(true);
     fetch("/api/word?quantity=4")
       .then((res) => res.json())
       .then((data) => {
         setWords(data as WordType[]);
-        setTimeout(() => setShuffling(false), 5000);
+        setTimeout(() => setRegenerating(false), 5000);
       })
       .catch(() => {
         toast({
           title: "Words Not Found",
           description: "Something went wrong, try again in a few seconds!",
         });
-        setTimeout(() => setShuffling(false), 3000);
+        setTimeout(() => setRegenerating(false), 3000);
       });
   }, [toast]);
 
@@ -63,7 +63,7 @@ const ChooseWord: React.FC<{
         })}
       </div>
       <div className="flex items-center gap-4">
-        <Button variant="secondary" onClick={getWords} disabled={shuffling}>
+        <Button variant="secondary" onClick={getWords} disabled={regenerating}>
           Regenerate
         </Button>
         <Button

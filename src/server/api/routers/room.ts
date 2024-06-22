@@ -220,6 +220,7 @@ export const roomRouter = createTRPCRouter({
     .input(
       z.object({
         rounds: z.number(),
+        hostPlays: z.boolean(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

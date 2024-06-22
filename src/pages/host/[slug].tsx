@@ -11,6 +11,7 @@ import QRCode from "react-qr-code";
 import { Button } from "~/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import autoAnimate from "@formkit/auto-animate";
+import { Switch } from "~/components/ui/switch";
 
 const Host: React.FC = () => {
   const { isMobile } = useWindowSize();
@@ -58,6 +59,10 @@ const Host: React.FC = () => {
   const startMutation = api.room.startGame.useMutation();
 
   const [rounds, setRounds] = useState(roomData?.rounds ?? 5);
+  const [hostPlays, setHostPlays] = useState(
+    roomData?.hostPlays ? true : false,
+  );
+
   const authData = useAuth(slug, !!roomData, roomQuery.isLoading);
 
   const updateRoom: () => Promise<void> = async () => {
@@ -131,6 +136,7 @@ const Host: React.FC = () => {
                       if (editingGame) {
                         await updateMutation.mutateAsync({
                           rounds,
+                          hostPlays,
                         });
                       }
                       setEditingGame((p) => !p);
@@ -207,7 +213,12 @@ const Host: React.FC = () => {
         >
           {editingGame ? (
             <>
-              <h3 className="text-lg font-medium">Rounds:</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-medium">Participate as Host</h3>
+                <Switch checked={hostPlays} onCheckedChange={setHostPlays} />
+              </div>
+              <br />
+              <h3 className="text-lg font-medium">Rounds</h3>
               <p className="text-slate-800">Enter a number between 3 and 10.</p>
               <input
                 type="number"

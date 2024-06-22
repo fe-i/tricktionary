@@ -9,6 +9,7 @@ import { api } from "~/utils/api";
 import type { Prisma } from "@prisma/client";
 import { useToast } from "~/components/ui/use-toast";
 import { Link } from "~/components/ui/link";
+import { Switch } from "~/components/ui/switch";
 
 type RoomDataType =
   | Omit<
@@ -53,6 +54,9 @@ const WaitingRoom: React.FC<{
   const parent = useRef(null);
 
   const [rounds, setRounds] = useState(roomData?.rounds ?? 5);
+  const [hostPlays, setHostPlays] = useState(
+    roomData?.hostPlays ? true : false,
+  );
 
   const isOwner = sessionData.data?.user.id === roomData?.hostId;
 
@@ -63,6 +67,7 @@ const WaitingRoom: React.FC<{
   useEffect(() => {
     if (!roomData) return;
     setRounds(roomData.rounds);
+    setHostPlays(roomData.hostPlays);
   }, [roomData]);
 
   return (
@@ -103,6 +108,7 @@ const WaitingRoom: React.FC<{
                       if (editingGame) {
                         await updateMutation.mutateAsync({
                           rounds,
+                          hostPlays,
                         });
                       }
                       setEditingGame((p) => !p);
@@ -134,7 +140,12 @@ const WaitingRoom: React.FC<{
           >
             {editingGame ? (
               <>
-                <h3 className="text-lg font-medium">Rounds:</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-medium">Participate as Host</h3>
+                  <Switch checked={hostPlays} onCheckedChange={setHostPlays} />
+                </div>
+                <br />
+                <h3 className="text-lg font-medium">Rounds</h3>
                 <p className="text-slate-800">
                   Enter a number between 3 and 10.
                 </p>
