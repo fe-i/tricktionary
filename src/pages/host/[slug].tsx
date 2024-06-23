@@ -89,7 +89,7 @@ const Host: React.FC = () => {
 
   return (
     <Layout title={`Room ${slug} Host View`}>
-      <div className="flex w-full flex-col items-center gap-8">
+      <div className="flex w-full flex-col items-center gap-6">
         <div className="mt-5 flex items-center justify-start gap-6">
           {!isMobile && !roomData?.playing && (
             <QRCode
@@ -107,7 +107,6 @@ const Host: React.FC = () => {
             </p>
           </div>
         </div>
-
         <div className="flex w-3/5 flex-1 flex-col items-center justify-center rounded-md border border-text px-4 py-6 text-center">
           {roomData?.playing ? (
             <>
@@ -126,41 +125,74 @@ const Host: React.FC = () => {
             </>
           )}
         </div>
-        <div className="flex w-3/5 flex-wrap justify-end gap-2">
+        <div className="flex w-3/5 flex-wrap items-start justify-end gap-4">
           {isOwner && (
             <>
-              {!roomData?.playing && (
-                <>
-                  <Button
-                    onClick={async () => {
-                      if (editingGame) {
-                        await updateMutation.mutateAsync({
-                          rounds,
-                          hostPlays,
-                        });
-                      }
-                      setEditingGame((p) => !p);
-                    }}
-                    variant={editingGame ? "primary" : "gray"}
-                  >
-                    {editingGame ? "Save Game" : "Edit Game"}
-                  </Button>
-
-                  <Button
-                    onClick={async () => {
-                      await startMutation.mutateAsync();
-                      await updateRoom();
-                    }}
-                    variant="primary"
-                    disabled={
-                      editingGame ||
-                      (roomData?.users && roomData?.users.length < 3)
-                    }
-                  >
-                    Play
-                  </Button>
-                </>
-              )}
+              <div
+                className="flex flex-col items-start justify-start gap-1 overflow-hidden transition-all"
+                ref={parent}
+              >
+                {editingGame && (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-medium">
+                        Participate as Host
+                      </h3>
+                      <Switch
+                        checked={hostPlays}
+                        onCheckedChange={setHostPlays}
+                      />
+                    </div>
+                    <br />
+                    <h3 className="text-lg font-medium">Rounds</h3>
+                    <p className="text-slate-800">
+                      Enter a number between 3 and 10.
+                    </p>
+                    <input
+                      type="number"
+                      className="w-44 rounded-md bg-background px-4 py-2 outline-none"
+                      min={3}
+                      max={10}
+                      defaultValue={rounds}
+                      onBlur={(e) => {
+                        const val = parseInt(e.currentTarget.value);
+                        if (val > 10) {
+                          e.currentTarget.value = "10";
+                        } else if (val < 3) {
+                          e.currentTarget.value = "3";
+                        }
+                        setRounds(parseInt(e.currentTarget.value));
+                      }}
+                    />
+                  </>
+                )}
+              </div>
+              <Button
+                onClick={async () => {
+                  if (editingGame) {
+                    await updateMutation.mutateAsync({
+                      rounds,
+                      hostPlays,
+                    });
+                  }
+                  setEditingGame((p) => !p);
+                }}
+                variant={editingGame ? "primary" : "gray"}
+              >
+                {editingGame ? "Save Game" : "Edit Game"}
+              </Button>
+              <Button
+                onClick={async () => {
+                  await startMutation.mutateAsync();
+                  await updateRoom();
+                }}
+                variant="primary"
+                disabled={
+                  editingGame || (roomData?.users && roomData?.users.length < 3)
+                }
+              >
+                Play
+              </Button>
               {allVoted ? (
                 <Button
                   variant="primary"
@@ -207,42 +239,7 @@ const Host: React.FC = () => {
         ) : (
           <></>
         )}
-        <div
-          className="mt-6 flex flex-col items-start justify-start gap-1 overflow-hidden transition-all"
-          ref={parent}
-        >
-          {editingGame ? (
-            <>
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-medium">Participate as Host</h3>
-                <Switch checked={hostPlays} onCheckedChange={setHostPlays} />
-              </div>
-              <br />
-              <h3 className="text-lg font-medium">Rounds</h3>
-              <p className="text-slate-800">Enter a number between 3 and 10.</p>
-              <input
-                type="number"
-                className="w-44 rounded-md bg-background px-4 py-2 outline-none"
-                min={3}
-                max={10}
-                defaultValue={rounds}
-                onBlur={(e) => {
-                  const val = parseInt(e.currentTarget.value);
-                  if (val > 10) {
-                    e.currentTarget.value = "10";
-                  } else if (val < 3) {
-                    e.currentTarget.value = "3";
-                  }
-                  setRounds(parseInt(e.currentTarget.value));
-                }}
-              />
-            </>
-          ) : (
-            <></>
-          )}
-        </div>
-
-        <hr className="my-2 w-full border-text" />
+        <hr className="w-full border-text" />
         {roomData?.playing && !shouldVote && (
           <p className="text-xl font-light">
             Fake Definitions: {roomData?.fakeDefinitions.length} of{" "}

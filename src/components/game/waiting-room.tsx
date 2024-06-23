@@ -138,7 +138,7 @@ const WaitingRoom: React.FC<{
             className="mt-6 flex flex-col items-start justify-start gap-1 overflow-hidden transition-all"
             ref={parent}
           >
-            {editingGame ? (
+            {editingGame && (
               <>
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg font-medium">Participate as Host</h3>
@@ -166,12 +166,10 @@ const WaitingRoom: React.FC<{
                   }}
                 />
               </>
-            ) : (
-              <></>
             )}
           </div>
         </div>
-        <hr className="my-2 w-full border-text" />
+        <hr className="w-full border-text" />
         <div className="flex w-full flex-wrap justify-center gap-5">
           {roomData?.users.map((player, _) => (
             <div
