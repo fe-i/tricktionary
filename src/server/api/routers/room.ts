@@ -60,71 +60,63 @@ export const roomRouter = createTRPCRouter({
   leave: protectedProcedure
     .input(z.object({ id: z.string() }).optional())
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.session.user.roomCode) return;
+      const { user } = ctx.session;
+      const { id, roomCode } = user;
 
-      await ctx.db.vote.deleteMany({
-        where: { userId: ctx.session.user.id },
-      });
+      if (!roomCode) return;
+
+      const disconnect = async (userId: string) => {
+        await ctx.db.vote.deleteMany({ where: { userId } });
+        await ctx.db.fakeDefinition.deleteMany({ where: { userId } });
+
+        await ctx.db.user.update({
+          where: { id: userId },
+          data: { score: 0 },
+        });
+
+        return await ctx.db.room.update({
+          where: { code: roomCode },
+          data: { users: { disconnect: { id: user.id } } },
+          select: { users: { select: { id: true } }, hostId: true },
+        });
+      };
 
       if (input?.id) {
         const findHost = await ctx.db.room.findUnique({
           select: { hostId: true },
-          where: { code: ctx.session.user.roomCode },
+          where: { code: roomCode },
         });
 
-        if (findHost?.hostId === ctx.session.user.id) {
-          return ctx.db.user
-            .update({
-              where: { id: input.id },
-              data: { Room: { disconnect: true }, score: 0 },
-            })
-            .then(async (r) => {
-              await updateRoomData(
-                ctx.session.user.roomCode!,
-                ctx.session.user,
-              );
-              await kickUser(ctx.session.user.roomCode!, input.id);
-              return r;
-            });
+        if (findHost?.hostId === id) {
+          const result = await disconnect(input.id);
+          await updateRoomData(roomCode, user);
+          await kickUser(roomCode, input.id);
+          return result;
         }
         return;
       }
 
-      let roomUpdate = await ctx.db.room.update({
-        where: { code: ctx.session.user.roomCode },
-        data: { users: { disconnect: { id: ctx.session.user.id } } },
-        select: { users: { select: { id: true } }, hostId: true },
-      });
+      let roomUpdate = await disconnect(id);
 
       if (roomUpdate.users.length === 0) {
-        await ctx.db.vote.deleteMany({
-          where: { roomCode: ctx.session.user.roomCode },
-        });
-        await ctx.db.fakeDefinition.deleteMany({
-          where: { roomCode: ctx.session.user.roomCode },
-        });
-        return await ctx.db.room.delete({
-          where: { code: ctx.session.user.roomCode },
-        });
+        await ctx.db.vote.deleteMany({ where: { roomCode } });
+        await ctx.db.fakeDefinition.deleteMany({ where: { roomCode } });
+        return await ctx.db.room.delete({ where: { code: roomCode } });
       }
 
-      if (roomUpdate.hostId === ctx.session.user.id) {
+      if (roomUpdate.hostId === id) {
         roomUpdate = await ctx.db.room.update({
-          where: { code: ctx.session.user.roomCode },
+          where: { code: roomCode },
           data: { hostId: roomUpdate.users[0]?.id },
           select: { users: { select: { id: true } }, hostId: true },
         });
       }
 
       if (roomUpdate.users.length <= 2) {
-        await ctx.db.vote.deleteMany({
-          where: { roomCode: ctx.session.user.roomCode },
-        });
-        await ctx.db.fakeDefinition.deleteMany({
-          where: { roomCode: ctx.session.user.roomCode },
-        });
+        await ctx.db.vote.deleteMany({ where: { roomCode } });
+        await ctx.db.fakeDefinition.deleteMany({ where: { roomCode } });
         roomUpdate = await ctx.db.room.update({
-          where: { code: ctx.session.user.roomCode },
+          where: { code: roomCode },
           data: {
             playing: false,
             chooserId: null,
@@ -135,7 +127,7 @@ export const roomRouter = createTRPCRouter({
         });
       }
 
-      await updateRoomData(ctx.session.user.roomCode, ctx.session.user);
+      await updateRoomData(roomCode, user);
       return roomUpdate;
     }),
 

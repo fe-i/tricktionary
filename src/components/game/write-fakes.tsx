@@ -37,7 +37,11 @@ const WriteFakes: React.FC<{
             className="w-full"
             onClick={async () => {
               await submitMutation.mutateAsync({
-                definition: fakeDefinition.split("\n").join(" "),
+                definition: fakeDefinition
+                  .split("\n")
+                  .join(" ")
+                  .trim()
+                  .replace(/\.$/, ""),
               });
               await updateRoom();
             }}

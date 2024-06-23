@@ -39,7 +39,7 @@ const Voting: React.FC<{ word: string }> = ({ word }) => {
       </div>
       <p className="-mt-4 w-full text-left text-lg">
         Find the real definition for <span className="font-bold">{word}</span>{" "}
-        hidden among the other fake defintions!
+        hidden among the fake defintions!
       </p>
       <div className="grid w-full grid-rows-1 gap-4 px-4 md:grid-cols-2 md:gap-8 md:px-8 lg:grid-cols-3">
         {definitions.map((def, i) => (
@@ -74,7 +74,7 @@ const WordCard: React.FC<{
       )}
       onClick={onClick}
     >
-      <p className="w-[90%] text-center">{definition}</p>
+      <p className="w-[90%] text-center">{definition.toUpperCase()}</p>
     </div>
   );
 };
